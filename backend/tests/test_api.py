@@ -19,7 +19,7 @@ def _jpeg(blur=False):
 
 
 def _patrol(client):
-    r = client.post("/patrols", json={"patrol_type": "PT-01", "beat_from_km": "1204/0", "beat_to_km": "1207/4",
+    r = client.post("/patrols", json={"patrol_type": "CP-01", "beat_from_km": "1204/0", "beat_to_km": "1207/4",
                                       "line": "UP", "kit_check_ok": True}, headers=KEYMAN)
     assert r.status_code == 201
     return r.json()["id"]
@@ -79,3 +79,21 @@ def test_full_lifecycle_with_quality_gate_and_closure(client):
 
 def test_r6_audit_chain_valid(client):
     assert client.get("/audit/verify").json()["chain_valid"] is True
+
+
+def test_r2_ohe_danger_requires_tpc(client):
+    pid = _patrol(client)
+    body = {"patrol_id": pid, "class_id": "EL-OH-005", "km_reference": "1205/14", "line": "UP"}
+    assert client.post("/findings", json=body, headers=KEYMAN).status_code == 422
+    body |= {"tpc_informed_at": datetime.now(UTC).isoformat(), "action_taken": "TPC informed; kept clear; SM informed"}
+    assert client.post("/findings", json=body, headers=KEYMAN).status_code == 201
+
+
+def test_combined_diary_splits_track_and_ohe(client):
+    pid = _patrol(client)
+    for cid in ("PW-FS-001", "EL-OH-004", "EL-OH-013"):
+        client.post("/findings", json={"patrol_id": pid, "class_id": cid, "km_reference": "1205/6", "line": "UP"}, headers=KEYMAN)
+    r = client.get(f"/patrols/{pid}/report").json()
+    assert len(r["track"]) == 1 and len(r["ohe"]) == 2
+    assert {x["route"] for x in r["ohe"]} == {"SSE/TRD (OHE depot)"}
+    assert sorted(x["ohe_category"] for x in r["ohe"]) == ["A", "B"]

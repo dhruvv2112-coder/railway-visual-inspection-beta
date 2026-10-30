@@ -40,8 +40,8 @@ import org.rvi.inspect.ui.screens.SettingsState
 import org.rvi.inspect.ui.screens.SummaryScreen
 import org.rvi.inspect.voice.VoiceController
 
-/** Most frequent foot-patrol findings first (Phase 1 prioritisation UC-01/02/03). */
-val SUGGESTED = listOf("PW-FS-001", "PW-FS-002", "PW-RL-008", "PW-JT-001", "PW-SL-001", "PW-BF-001", "PW-BF-007")
+/** Most frequent combined-patrol findings first: track (Phase 1 UC-01/02/03) then OHE (RDSO TI/MI/0060 6.1(4)). */
+val SUGGESTED = listOf("PW-FS-001", "EL-OH-004", "PW-RL-008", "EL-OH-001", "PW-FS-002", "EL-OH-008", "EL-OH-014", "PW-JT-001", "PW-BF-007")
 
 fun currentLang(): String = AppCompatDelegate.getApplicationLocales().get(0)?.language ?: java.util.Locale.getDefault().language
 
@@ -62,6 +62,7 @@ fun AppNav(vm: PatrolViewModel = viewModel()) {
     val vstate by voice.state.collectAsState()
     var heard by remember { mutableStateOf<String?>(null) }
     var danger by remember { mutableStateOf(false) }
+    var dangerKind by remember { mutableStateOf<String?>(null) }
     val perms = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
     LaunchedEffect(Unit) { perms.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION)) }
     DisposableEffect(Unit) { onDispose { voice.release() } }
@@ -78,7 +79,7 @@ fun AppNav(vm: PatrolViewModel = viewModel()) {
         when (val c = CommandMatcher.match(text)) {
             Command.Capture -> capture()
             Command.EndPatrol -> { vm.endPatrol(); nav.navigate("summary") }
-            Command.Danger -> danger = true
+            Command.Danger -> { dangerKind = null; danger = true }
             is Command.Defect -> vm.update { it.copy(classId = c.classId) }
             is Command.Note -> vm.update { it.copy(note = c.text) }
             Command.Save -> if (vm.saveDraft(lang)) { confirm(R.string.saved_offline); nav.popBackStack() }
@@ -90,50 +91,64 @@ fun AppNav(vm: PatrolViewModel = viewModel()) {
     NavHost(nav, startDestination = "home") {
         composable("home") {
             HomeScreen(HomeState(settings?.inspectorId ?: "", patrol?.beatFromKm ?: "1204/0", patrol?.beatToKm ?: "1207/4",
-                patrol?.line ?: "UP", context.getString(R.string.role_keyman) + " · PT-01", patrol != null, pending, true),
+                patrol?.line ?: "UP", context.getString(R.string.role_keyman) + " · CP-01", patrol != null, pending, true),
                 onStart = { nav.navigate("kit") }, onResume = { nav.navigate("patrol") },
                 onSettings = { nav.navigate("settings") }, onReview = { nav.navigate("review") })
         }
         composable("kit") {
-            val checked = remember { mutableStateListOf(false, false, false, false, false, false) }
+            val checked = remember { mutableStateListOf(*Array(org.rvi.inspect.ui.screens.KIT_ITEMS.size) { false }) }
             KitCheckScreen(checked, { checked[it] = !checked[it] }) {
-                vm.startPatrol("PT-01", "1204/0", "1207/4", "UP"); nav.navigate("patrol") { popUpTo("home") }
+                vm.startPatrol("CP-01", "1204/0", "1207/4", "UP"); nav.navigate("patrol") { popUpTo("home") }
             }
         }
         composable("patrol") {
             PatrolHud(km = draft.km.ifBlank { patrol?.beatFromKm ?: "—" }, findings = findings.size,
                 listening = vstate is VoiceController.State.Listening, heard = heard,
-                onCapture = { capture() }, onVoice = { voice.listen(voiceTag) }, onDanger = { danger = true },
+                onCapture = { capture() }, onVoice = { voice.listen(voiceTag) }, onDanger = { dangerKind = null; danger = true },
                 onEnd = { vm.endPatrol(); nav.navigate("summary") }, background = { CameraPreview(camera) })
-            if (danger) DangerSheet(draft.protectedAt != null, draft.smInformedAt != null,
+            if (danger) DangerSheet(dangerKind, draft.protectedAt != null, draft.smInformedAt != null, draft.tpcInformedAt != null,
+                draft.keptClearAt != null, onKind = { dangerKind = it },
                 onProtected = { vm.update { it.copy(protectedAt = System.currentTimeMillis()) } },
                 onSm = { vm.update { it.copy(smInformedAt = System.currentTimeMillis()) } },
+                onTpc = { vm.update { it.copy(tpcInformedAt = System.currentTimeMillis()) } },
+                onClear = { vm.update { it.copy(keptClearAt = System.currentTimeMillis()) } },
+                onCallTpc = { context.startActivity(android.content.Intent(android.content.Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + (settings?.tpcNumber ?: "")))) },
                 onContinue = { danger = false; capture() })
         }
         composable("classify") {
             var q by remember { mutableStateOf("") }
+            var dom by remember { mutableStateOf("all") }
             val tax = vm.taxonomy
             val sel = tax.classes.firstOrNull { it.id == draft.classId }
-            ClassifyScreen(ClassifyState(lang, q, SUGGESTED.mapNotNull { id -> tax.beta.firstOrNull { it.id == id } }, tax.search(q, lang), sel,
+            ClassifyScreen(ClassifyState(lang, q, SUGGESTED.mapNotNull { id -> tax.beta.firstOrNull { it.id == id } }, tax.search(q, lang, dom), sel,
                 draft.quality?.passed, draft.km, draft.line, draft.rail, draft.action, draft.note,
-                draft.lat?.let { "GNSS %.5f, %.5f ±%.0f m".format(it, draft.lon, draft.accuracy ?: 0f) }),
+                draft.lat?.let { "GNSS %.5f, %.5f ±%.0f m".format(it, draft.lon, draft.accuracy ?: 0f) }, dom),
                 onQuery = { q = it }, onSelect = { c -> vm.update { it.copy(classId = c.id) } }, onKm = { v -> vm.update { it.copy(km = v) } },
                 onLine = { v -> vm.update { it.copy(line = v) } }, onRail = { v -> vm.update { it.copy(rail = v) } },
                 onAction = { v -> vm.update { it.copy(action = v) } }, onNote = { v -> vm.update { it.copy(note = v) } },
                 onDictate = { voice.listen(voiceTag) },
-                onSave = { if (vm.saveDraft(lang)) { confirm(R.string.saved_offline); nav.popBackStack() } else danger = true })
+                onSave = { if (vm.saveDraft(lang)) { confirm(R.string.saved_offline); nav.popBackStack() } else { dangerKind = sel?.danger; danger = true } },
+                onDomain = { dom = it })
+            if (danger) DangerSheet(dangerKind, draft.protectedAt != null, draft.smInformedAt != null, draft.tpcInformedAt != null,
+                draft.keptClearAt != null, onKind = { dangerKind = it },
+                onProtected = { vm.update { it.copy(protectedAt = System.currentTimeMillis()) } },
+                onSm = { vm.update { it.copy(smInformedAt = System.currentTimeMillis()) } },
+                onTpc = { vm.update { it.copy(tpcInformedAt = System.currentTimeMillis()) } },
+                onClear = { vm.update { it.copy(keptClearAt = System.currentTimeMillis()) } },
+                onCallTpc = { context.startActivity(android.content.Intent(android.content.Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + (settings?.tpcNumber ?: "")))) },
+                onContinue = { danger = false })
         }
         composable("summary") {
             val tax = vm.taxonomy
             SummaryScreen(findings.map { f -> BookRow(f.kmReference, tax.classes.firstOrNull { it.id == f.classId }?.label?.forLang(lang) ?: f.classId,
-                f.actionTaken, f.lineProtectedAt != null) }) { nav.navigate("home") { popUpTo("home") { inclusive = true } } }
+                f.actionTaken, f.lineProtectedAt != null, tax.classes.firstOrNull { it.id == f.classId }?.domain ?: "track") }) { nav.navigate("home") { popUpTo("home") { inclusive = true } } }
         }
         composable("review") {
             val recent by vm.recent.collectAsState()
             val sev = remember { mutableStateMapOf<String, String>() }
             val tax = vm.taxonomy
             ReviewScreen(recent.map { f -> ReviewItem(f.id, f.kmReference, tax.classes.firstOrNull { it.id == f.classId }?.label?.forLang(lang) ?: f.classId,
-                f.classId.take(5), settings?.inspectorId ?: "", f.note) }, sev, { id, s -> sev[id] = s }, { }, { })
+                f.classId.take(5), settings?.inspectorId ?: "", f.note, tax.classes.firstOrNull { it.id == f.classId }?.route ?: "") }, sev, { id, s -> sev[id] = s }, { }, { })
         }
         composable("settings") {
             val s = settings

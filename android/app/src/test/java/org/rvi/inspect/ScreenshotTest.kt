@@ -47,36 +47,48 @@ abstract class Shots(private val lang: String) {
     private fun FakeFeed() = Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFF5A5A5A), Color(0xFF2B2B2B), Color(0xFF8A8A8A)))))
 
     @Test fun s01_home() = shot("01_home") {
-        HomeScreen(HomeState("KM-0412", "1204/0", "1207/4", "UP", "Keyman · PT-01", false, 3, true), {}, {}, {}, {})
+        HomeScreen(HomeState("CP-0412", "1204/0", "1207/4", "UP", if (lang == "hi") "संयुक्त पैदल गश्त · ट्रैक + OHE · CP-01" else "Combined foot patrol · Track + OHE · CP-01", false, 3, true), {}, {}, {}, {})
     }
 
-    @Test fun s02_kit() = shot("02_kit_check") { KitCheckScreen(listOf(true, true, true, false, false, false), {}, {}) }
+    @Test fun s02_kit() = shot("02_kit_check") { KitCheckScreen(listOf(true, true, true, true, false, false, false, false), {}, {}) }
 
     @Test fun s03_patrol() = shot("03_patrol_hud") {
         PatrolHud("1205/6", 2, false, if (lang == "hi") "क्लिप गायब" else "missing clip", {}, {}, {}, {}) { FakeFeed() }
     }
 
     @Test fun s04_danger() = shot("04_protect_first") {
-        Box { PatrolHud("1205/8", 2, false, null, {}, {}, {}, {}) { FakeFeed() }; DangerSheet(true, false, {}, {}, {}) }
+        Box { PatrolHud("1205/8", 2, false, null, {}, {}, {}, {}) { FakeFeed() }
+            DangerSheet("track", true, false, false, false, {}, {}, {}, {}, {}, {}, {}) }
+    }
+
+    @Test fun s04b_ohe_danger() = shot("04b_ohe_danger") {
+        Box { PatrolHud("1205/14", 3, false, null, {}, {}, {}, {}) { FakeFeed() }
+            DangerSheet("ohe", false, false, true, true, {}, {}, {}, {}, {}, {}, {}) }
+    }
+
+    @Test fun s04c_danger_choice() = shot("04c_danger_choice") {
+        Box { PatrolHud("1205/14", 3, false, null, {}, {}, {}, {}) { FakeFeed() }
+            DangerSheet(null, false, false, false, false, {}, {}, {}, {}, {}, {}, {}) }
     }
 
     @Test fun s05_classify() = shot("05_classify") {
-        val sel = tax.beta.first { it.id == "PW-FS-001" }
-        ClassifyScreen(ClassifyState(lang, "", SUGGESTED.mapNotNull { id -> tax.beta.firstOrNull { it.id == id } }, tax.beta, sel, true,
-            "1205/6", "UP", "R", if (lang == "hi") "ERC लगाया" else "Recouped ERC", "", "GNSS 26.91234, 75.78781 ±4 m"),
+        val sel = tax.beta.first { it.id == "EL-OH-004" }
+        ClassifyScreen(ClassifyState(lang, "", SUGGESTED.mapNotNull { id -> tax.beta.firstOrNull { it.id == id } }, tax.search("", lang, "ohe"), sel, true,
+            "1205/12", "UP", "B", if (lang == "hi") "OHE डिपो को सूचित" else "OHE depot informed", "", "GNSS 26.91234, 75.78781 ±4 m", "ohe"),
             {}, {}, {}, {}, {}, {}, {}, {}, {})
     }
 
     @Test fun s06_summary() = shot("06_summary") {
         val l = { id: String -> tax.classes.first { it.id == id }.label.forLang(lang) }
         SummaryScreen(listOf(BookRow("1205/6", l("PW-FS-001"), "Recouped ERC", false), BookRow("1206/2", l("PW-RL-008"), "Watched; JE informed", false),
-            BookRow("1206/9", l("PW-BF-007"), "", false))) {}
+            BookRow("1205/12", l("EL-OH-004"), "OHE depot informed", false, "ohe"), BookRow("1206/4", l("EL-OH-014"), "Bond tightened on the spot", false, "ohe"),
+            BookRow("1206/9", l("EL-OH-008"), "TPC and depot informed", false, "ohe"))) {}
     }
 
     @Test fun s07_review() = shot("07_review") {
         val l = { id: String -> tax.classes.first { it.id == id }.label.forLang(lang) }
-        ReviewScreen(listOf(ReviewItem("a", "1205/6", l("PW-FS-001"), "A", "KM-0412", ""),
-            ReviewItem("b", "1206/2", l("PW-RL-008"), "A", "KM-0412", "Mark faded; joggled plate absent")), mapOf("a" to "RF-P3"), { _, _ -> }, {}, {})
+        ReviewScreen(listOf(ReviewItem("a", "1205/12", l("EL-OH-004"), "B", "CP-0412", "", "SSE/TRD (OHE depot)"),
+            ReviewItem("b", "1206/2", l("PW-RL-008"), "A", "CP-0412", "Mark faded; joggled plate absent", "SSE/P.Way")), mapOf("a" to "RF-P2"), { _, _ -> }, {}, {})
     }
 
     @Test fun s08_settings() = shot("08_settings") { SettingsScreen(SettingsState(lang, true, true, false, true), {}, { _, _ -> }) }

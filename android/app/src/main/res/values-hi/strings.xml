@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">RVI निरीक्षण</string>
     <string name="greeting">सुप्रभात, %1$s</string>
-    <string name="role_keyman">कीमैन</string>
+    <string name="role_keyman">संयुक्त पैदल गश्त · ट्रैक + OHE</string>
     <string name="today_beat">आज की बीट</string>
     <string name="beat_range">किमी %1$s → %2$s · %3$s लाइन</string>
     <string name="patrol_type">गश्त का प्रकार</string>
@@ -13,12 +13,12 @@
     <string name="sync_done">सभी रिपोर्ट भेज दी गईं</string>
     <string name="offline">ऑफ़लाइन – फ़ोन में सुरक्षित</string>
     <string name="kit_check">उपकरण जाँच</string>
-    <string name="kit_check_hint">बीट पर चलने से पहले हर वस्तु की पुष्टि करें</string>
+    <string name="kit_check_hint">बीट पर चलने से पहले हर वस्तु की पुष्टि करें (ट्रैक + OHE)</string>
     <string name="kit_flags">2 लाल झंडी, 1 हरी झंडी</string>
     <string name="kit_detonators">10 पटाखे (डेटोनेटर), 5 वर्ष की अवधि के भीतर</string>
     <string name="kit_tools">कीइंग हथौड़ा, स्पैनर, टेपर्ड गेज</string>
     <string name="kit_spares">अतिरिक्त फिटिंग, 30 मिमी रेल क्लोज़र</string>
-    <string name="kit_book">कीमैन पुस्तिका</string>
+    <string name="kit_book">पैदल गश्त डायरी (ट्रैक + OHE) इस फ़ोन पर</string>
     <string name="kit_gps">निर्धारित GPS उपकरण चालू</string>
     <string name="kit_confirm">उपकरण पूर्ण – आगे बढ़ें</string>
     <string name="patrol_live">गश्त जारी है</string>
@@ -27,7 +27,7 @@
     <string name="capture">फोटो लें</string>
     <string name="voice">आवाज़</string>
     <string name="listening">सुन रहा है…</string>
-    <string name="say_command">बोलें “फोटो लो”, “क्लिप गायब”, “गश्त समाप्त”</string>
+    <string name="say_command">बोलें “फोटो लो”, “ड्रॉपर टूटा”, “क्लिप गायब”</string>
     <string name="danger_title">गाड़ियों को खतरा?</string>
     <string name="danger_body">पहले लाइन की सुरक्षा करें। झंडी और पटाखे लगाएँ: 600 मी पर 1, 1200 मी पर 3 (BG)। स्टेशन मास्टर को सूचित करें। सुरक्षा के बाद ही यहाँ दर्ज करें।</string>
     <string name="danger_protected">लाइन सुरक्षित की</string>
@@ -52,8 +52,8 @@
     <string name="needs_measurement">माप आवश्यक – केवल फोटो पर्याप्त नहीं</string>
     <string name="protect_first">पहले सुरक्षा वाला दोष</string>
     <string name="summary">गश्त सारांश</string>
-    <string name="keyman_book">कीमैन पुस्तिका (स्वतः तैयार)</string>
-    <string name="submit">JE/SSE को भेजें</string>
+    <string name="keyman_book">पैदल गश्त डायरी – ट्रैक और OHE (स्वतः तैयार)</string>
+    <string name="submit">SSE/P.Way और SSE/TRD को भेजें</string>
     <string name="review_inbox">समीक्षा सूची</string>
     <string name="confirm">पुष्टि करें</string>
     <string name="reject">अस्वीकार करें</string>
@@ -65,7 +65,7 @@
     <string name="spoken_feedback">बोलकर पुष्टि</string>
     <string name="large_text">बड़ा अक्षर</string>
     <string name="haptics">कंपन से पुष्टि</string>
-    <string name="ai_disclaimer">सुझाव निर्णय नहीं हैं। गंभीरता केवल JE/SSE तय करेंगे।</string>
+    <string name="ai_disclaimer">सुझाव निर्णय नहीं हैं। गंभीरता केवल SSE/JE (P.Way या TRD) तय करते हैं।</string>
     <string name="home">होम</string>
     <string name="findings">दोष</string>
     <string name="cat_a">दिखने योग्य</string>
@@ -73,4 +73,21 @@
     <string name="cat_c">माप आवश्यक</string>
     <string name="saved_offline">सहेजा गया। ऑनलाइन होने पर भेजा जाएगा।</string>
     <string name="command_not_understood">आदेश समझ नहीं आया</string>
+    <string name="kit_ohe_tools">OHE स्पैनर, बॉन्ड बोल्ट-नट, छोटा चॉपर, स्प्रिंग बैलेंस</string>
+    <string name="kit_tpc">मोबाइल चार्ज, TPC नंबर सेव, आपातकालीन टेलीफोन उपकरण</string>
+    <string name="danger_choose">खतरा किसका है?</string>
+    <string name="danger_track">ट्रैक – रेल फ्रैक्चर, कटाव, अवरोध</string>
+    <string name="danger_ohe">OHE – तार गिरा, तार पर शाखा या वस्तु</string>
+    <string name="ohe_danger_title">लाइव OHE खतरा</string>
+    <string name="ohe_danger_body">हर तार को चालू (लाइव) मानें। उसे न छुएँ, पास न जाएँ, दूसरों को भी दूर रखें। अभी TPC को मस्त नंबर और स्थिति बताएँ ताकि TPC गाड़ियों को नियंत्रित कर सके। स्टेशन मास्टर को सूचित करें। सूचना देने के बाद ही यहाँ दर्ज करें।</string>
+    <string name="ohe_tpc">TPC को सूचित किया</string>
+    <string name="ohe_clear">तार से दूरी बनाए रखी</string>
+    <string name="call_tpc">TPC को कॉल करें</string>
+    <string name="tpc_first">पहले TPC – लाइव OHE खतरा</string>
+    <string name="filter_all">सभी</string>
+    <string name="filter_track">ट्रैक</string>
+    <string name="filter_ohe">OHE</string>
+    <string name="section_track">ट्रैक</string>
+    <string name="section_ohe">OHE</string>
+    <string name="routed_to">%1$s को</string>
 </resources>

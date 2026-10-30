@@ -24,10 +24,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.CloudDone
 import androidx.compose.material.icons.outlined.CloudOff
+import androidx.compose.material.icons.outlined.ElectricBolt
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
@@ -121,11 +123,14 @@ fun HomeScreen(s: HomeState, onStart: () -> Unit, onResume: () -> Unit, onSettin
     }
 }
 
-// ---------------------------------------------------------------- Kit check
+// ---------------------------------------------------------------- Kit check (track: G&SR / keyman kit; OHE: RDSO TI/MI/0060 6.1(3))
+val KIT_ITEMS = listOf(R.string.kit_flags, R.string.kit_detonators, R.string.kit_tools, R.string.kit_ohe_tools, R.string.kit_spares,
+    R.string.kit_tpc, R.string.kit_book, R.string.kit_gps)
+
 @Composable
 fun KitCheckScreen(checked: List<Boolean>, onToggle: (Int) -> Unit, onConfirm: () -> Unit) = AmbientBackground {
-    val items = listOf(R.string.kit_flags, R.string.kit_detonators, R.string.kit_tools, R.string.kit_spares, R.string.kit_book, R.string.kit_gps)
-    Column(Pad) {
+    val items = KIT_ITEMS
+    Column(Pad.verticalScroll(rememberScrollState())) {
         TopBar(stringResource(R.string.kit_check))
         Text(stringResource(R.string.kit_check_hint), style = MaterialTheme.typography.bodyMedium, color = Grey.G300)
         Spacer(Modifier.height(20.dp))
@@ -140,7 +145,7 @@ fun KitCheckScreen(checked: List<Boolean>, onToggle: (Int) -> Unit, onConfirm: (
                 }
             }
         }
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(20.dp))
         PrimaryButton(stringResource(R.string.kit_confirm), onConfirm, enabled = checked.all { it })
         Spacer(Modifier.height(16.dp))
     }
@@ -184,21 +189,48 @@ fun PatrolHud(km: String, findings: Int, listening: Boolean, heard: String?, onC
     }
 }
 
-/** Protect-first guidance. It never replaces protection; it records that it was done. */
+/** Danger guidance for the combined patrol. It never replaces protection; it records that it was done.
+ *  kind = null asks what the danger is; "track" = protect the line and inform SM; "ohe" = treat as live and report TPC. */
 @Composable
-fun DangerSheet(protectedDone: Boolean, smDone: Boolean, onProtected: () -> Unit, onSm: () -> Unit, onContinue: () -> Unit) {
+fun DangerSheet(kind: String?, protectedDone: Boolean, smDone: Boolean, tpcDone: Boolean, clearDone: Boolean,
+                onKind: (String) -> Unit, onProtected: () -> Unit, onSm: () -> Unit, onTpc: () -> Unit, onClear: () -> Unit,
+                onCallTpc: () -> Unit, onContinue: () -> Unit) {
     // Safety prompt: deliberately NOT translucent – nothing behind it may compete for attention.
     Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color(0xE6000000)), contentAlignment = Alignment.BottomCenter) {
         Column(Pad.fillMaxWidth().padding(bottom = 16.dp).background(Grey.G900, org.rvi.inspect.ui.components.GlassShape)
             .border(1.dp, Grey.White, org.rvi.inspect.ui.components.GlassShape).padding(20.dp)) {
-            Text(stringResource(R.string.danger_title), style = MaterialTheme.typography.headlineSmall, color = Grey.White)
-            Spacer(Modifier.height(12.dp))
-            Text(stringResource(R.string.danger_body), style = MaterialTheme.typography.bodyLarge, color = Grey.G200)
-            Spacer(Modifier.height(18.dp))
-            CheckRow(stringResource(R.string.danger_protected), protectedDone, onProtected)
-            CheckRow(stringResource(R.string.danger_sm), smDone, onSm)
-            Spacer(Modifier.height(16.dp))
-            PrimaryButton(stringResource(R.string.capture), onContinue, icon = Icons.Outlined.CameraAlt, enabled = protectedDone && smDone)
+            when (kind) {
+                null -> {
+                    Text(stringResource(R.string.danger_choose), style = MaterialTheme.typography.headlineSmall, color = Grey.White)
+                    Spacer(Modifier.height(16.dp))
+                    PrimaryButton(stringResource(R.string.danger_track), { onKind("track") }, icon = Icons.Outlined.ReportProblem)
+                    Spacer(Modifier.height(10.dp))
+                    PrimaryButton(stringResource(R.string.danger_ohe), { onKind("ohe") }, icon = Icons.Outlined.ElectricBolt)
+                }
+                "ohe" -> {
+                    Text(stringResource(R.string.ohe_danger_title), style = MaterialTheme.typography.headlineSmall, color = Grey.White)
+                    Spacer(Modifier.height(12.dp))
+                    Text(stringResource(R.string.ohe_danger_body), style = MaterialTheme.typography.bodyLarge, color = Grey.G200)
+                    Spacer(Modifier.height(14.dp))
+                    GhostButton(stringResource(R.string.call_tpc), onCallTpc, Modifier.fillMaxWidth(), Icons.Outlined.Call)
+                    Spacer(Modifier.height(6.dp))
+                    CheckRow(stringResource(R.string.ohe_tpc), tpcDone, onTpc)
+                    CheckRow(stringResource(R.string.ohe_clear), clearDone, onClear)
+                    CheckRow(stringResource(R.string.danger_sm), smDone, onSm)
+                    Spacer(Modifier.height(16.dp))
+                    PrimaryButton(stringResource(R.string.capture), onContinue, icon = Icons.Outlined.CameraAlt, enabled = tpcDone && clearDone && smDone)
+                }
+                else -> {
+                    Text(stringResource(R.string.danger_title), style = MaterialTheme.typography.headlineSmall, color = Grey.White)
+                    Spacer(Modifier.height(12.dp))
+                    Text(stringResource(R.string.danger_body), style = MaterialTheme.typography.bodyLarge, color = Grey.G200)
+                    Spacer(Modifier.height(18.dp))
+                    CheckRow(stringResource(R.string.danger_protected), protectedDone, onProtected)
+                    CheckRow(stringResource(R.string.danger_sm), smDone, onSm)
+                    Spacer(Modifier.height(16.dp))
+                    PrimaryButton(stringResource(R.string.capture), onContinue, icon = Icons.Outlined.CameraAlt, enabled = protectedDone && smDone)
+                }
+            }
         }
     }
 }
@@ -217,12 +249,12 @@ private fun CheckRow(text: String, done: Boolean, onClick: () -> Unit) {
 // ---------------------------------------------------------------- Classify & locate
 data class ClassifyState(val lang: String, val query: String, val suggested: List<DefectClass>, val results: List<DefectClass>,
                          val selected: DefectClass?, val qualityOk: Boolean?, val km: String, val line: String, val rail: String,
-                         val action: String, val note: String, val gnss: String?)
+                         val action: String, val note: String, val gnss: String?, val domain: String = "all")
 
 @Composable
 fun ClassifyScreen(s: ClassifyState, onQuery: (String) -> Unit, onSelect: (DefectClass) -> Unit, onKm: (String) -> Unit,
                    onLine: (String) -> Unit, onRail: (String) -> Unit, onAction: (String) -> Unit, onNote: (String) -> Unit,
-                   onDictate: () -> Unit, onSave: () -> Unit) = AmbientBackground {
+                   onDictate: () -> Unit, onSave: () -> Unit, onDomain: (String) -> Unit = {}) = AmbientBackground {
     LazyColumn(Pad.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         item { TopBar(stringResource(R.string.classify)) }
         item {
@@ -244,7 +276,15 @@ fun ClassifyScreen(s: ClassifyState, onQuery: (String) -> Unit, onSelect: (Defec
                 items(s.suggested, key = { it.id }) { c -> Chip(c.label.forLang(s.lang), selected = s.selected?.id == c.id) { onSelect(c) } }
             }
         }
-        item { Eyebrow(stringResource(R.string.all_defects)) }
+        item {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Eyebrow(stringResource(R.string.all_defects))
+                Spacer(Modifier.weight(1f))
+                Chip(stringResource(R.string.filter_all), s.domain == "all") { onDomain("all") }
+                Chip(stringResource(R.string.filter_track), s.domain == "track") { onDomain("track") }
+                Chip(stringResource(R.string.filter_ohe), s.domain == "ohe") { onDomain("ohe") }
+            }
+        }
         items(s.results.take(12), key = { it.id }) { c -> DefectRow(c, s.lang, s.selected?.id == c.id) { onSelect(c) } }
         item {
             GlassCard(Modifier.fillMaxWidth()) {
@@ -289,8 +329,9 @@ private fun DefectRow(c: DefectClass, lang: String, selected: Boolean, onClick: 
         Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(c.label.forLang(lang), style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                Text("${c.id} · ${c.focus_unit}", style = MaterialTheme.typography.labelMedium, color = Grey.G400, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text("${if (c.domain == "ohe") "OHE" else "Track"} · ${c.id} · ${c.focus_unit}", style = MaterialTheme.typography.labelMedium, color = Grey.G400, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (c.protect_first) Tag(stringResource(R.string.protect_first), Icons.Outlined.ReportProblem)
+                if (c.danger == "ohe") Tag(stringResource(R.string.tpc_first), Icons.Outlined.ElectricBolt)
                 if (c.needs_measurement) Tag(stringResource(R.string.needs_measurement), Icons.Outlined.Straighten)
             }
             Spacer(Modifier.width(8.dp))
@@ -320,7 +361,7 @@ fun GlassField(value: String, onChange: (String) -> Unit, label: String, leading
 }
 
 // ---------------------------------------------------------------- Summary (keyman book)
-data class BookRow(val km: String, val defect: String, val action: String, val protectedFirst: Boolean)
+data class BookRow(val km: String, val defect: String, val action: String, val protectedFirst: Boolean, val domain: String = "track")
 
 @Composable
 fun SummaryScreen(rows: List<BookRow>, onSubmit: () -> Unit) = AmbientBackground {
@@ -330,13 +371,17 @@ fun SummaryScreen(rows: List<BookRow>, onSubmit: () -> Unit) = AmbientBackground
         Spacer(Modifier.height(10.dp))
         GlassCard(Modifier.fillMaxWidth().weight(1f), padding = 4.dp) {
             LazyColumn {
-                items(rows) { r ->
+                listOf("track" to R.string.section_track, "ohe" to R.string.section_ohe).forEach { (d, label) ->
+                    val part = rows.filter { it.domain == d }
+                    if (part.isNotEmpty()) item(key = d) { Box(Modifier.padding(start = 16.dp, top = 14.dp)) { Eyebrow(stringResource(label)) } }
+                    items(part) { r ->
                     Column(Modifier.padding(16.dp)) {
                         Text("km ${r.km}", style = MaterialTheme.typography.labelMedium, color = Grey.G400)
                         Text(r.defect, style = MaterialTheme.typography.titleMedium, color = Grey.White)
                         if (r.action.isNotBlank()) Text(r.action, style = MaterialTheme.typography.bodyMedium, color = Grey.G300)
                     }
                     HorizontalDivider(color = Grey.GlassStroke)
+                    }
                 }
             }
         }
@@ -347,7 +392,7 @@ fun SummaryScreen(rows: List<BookRow>, onSubmit: () -> Unit) = AmbientBackground
 }
 
 // ---------------------------------------------------------------- Review inbox (JE/SSE)
-data class ReviewItem(val id: String, val km: String, val defect: String, val category: String, val by: String, val note: String)
+data class ReviewItem(val id: String, val km: String, val defect: String, val category: String, val by: String, val note: String, val route: String = "")
 
 @Composable
 fun ReviewScreen(list: List<ReviewItem>, severity: Map<String, String>, onSeverity: (String, String) -> Unit, onConfirm: (String) -> Unit, onReject: (String) -> Unit) = AmbientBackground {
@@ -359,6 +404,7 @@ fun ReviewScreen(list: List<ReviewItem>, severity: Map<String, String>, onSeveri
                 Row { Text("km ${item.km}", style = MaterialTheme.typography.labelMedium, color = Grey.G400, modifier = Modifier.weight(1f)); Text(item.by, style = MaterialTheme.typography.labelMedium, color = Grey.G400) }
                 Spacer(Modifier.height(6.dp))
                 Text(item.defect, style = MaterialTheme.typography.titleMedium, color = Grey.White)
+                if (item.route.isNotBlank()) Text(stringResource(R.string.routed_to, item.route), style = MaterialTheme.typography.labelMedium, color = Grey.G300)
                 if (item.note.isNotBlank()) Text(item.note, style = MaterialTheme.typography.bodyMedium, color = Grey.G300)
                 Spacer(Modifier.height(12.dp))
                 Eyebrow(stringResource(R.string.severity))

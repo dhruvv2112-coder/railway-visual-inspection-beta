@@ -29,7 +29,8 @@ import java.util.concurrent.TimeUnit
 
 private val Context.prefs by preferencesDataStore("settings")
 
-data class UserSettings(val inspectorId: String, val role: String, val voice: Boolean, val tts: Boolean, val largeText: Boolean, val haptics: Boolean)
+data class UserSettings(val inspectorId: String, val role: String, val voice: Boolean, val tts: Boolean, val largeText: Boolean, val haptics: Boolean,
+                        val tpcNumber: String = "")
 
 class Repository(private val context: Context, private val db: RviDatabase) {
 
@@ -42,11 +43,12 @@ class Repository(private val context: Context, private val db: RviDatabase) {
         val tts = booleanPreferencesKey("tts")
         val large = booleanPreferencesKey("large")
         val haptics = booleanPreferencesKey("haptics")
+        val tpc = stringPreferencesKey("tpc_number")
     }
 
     val settings: Flow<UserSettings> = context.prefs.data.map {
-        UserSettings(it[K.inspector] ?: "KM-0412", it[K.role] ?: "Keyman", it[K.voice] ?: true, it[K.tts] ?: true,
-            it[K.large] ?: false, it[K.haptics] ?: true)
+        UserSettings(it[K.inspector] ?: "CP-0412", it[K.role] ?: "Patrol", it[K.voice] ?: true, it[K.tts] ?: true,
+            it[K.large] ?: false, it[K.haptics] ?: true, it[K.tpc] ?: "")
     }
 
     suspend fun setToggle(key: String, value: Boolean) = context.prefs.edit {
@@ -85,7 +87,7 @@ class Repository(private val context: Context, private val db: RviDatabase) {
             }
             val iso = { t: Long? -> t?.let { Instant.ofEpochMilli(it).toString() } }
             val rid = api.createFinding(FindingIn(patrol.remoteId!!, f.classId, f.kmReference, f.line, f.railSide, f.lat, f.lon,
-                f.gnssAccuracyM, f.note, f.noteLanguage, f.actionTaken, iso(f.lineProtectedAt), iso(f.smInformedAt)), s.inspectorId, s.role).id
+                f.gnssAccuracyM, f.note, f.noteLanguage, f.actionTaken, iso(f.lineProtectedAt), iso(f.smInformedAt), iso(f.tpcInformedAt)), s.inspectorId, s.role).id
             f.imagePath?.let { p ->
                 val file = File(p)
                 if (file.exists()) api.addEvidence(rid, MultipartBody.Part.createFormData("image", file.name, file.asRequestBody("image/jpeg".toMediaType())),
