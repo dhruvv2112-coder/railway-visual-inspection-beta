@@ -12,6 +12,7 @@ dependencies = [
   "numpy>=1.26",
   "opencv-python-headless>=4.10",
   "onnxruntime>=1.19",
+  "pyyaml>=6",
 ]
 
 [project.optional-dependencies]
@@ -28,4 +29,4 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["app"]
+packages = ["app", "app.ohe"]

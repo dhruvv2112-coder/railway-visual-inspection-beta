@@ -20,6 +20,7 @@ from . import inference, quality, taxonomy
 from .config import settings
 from .db import audit, get_session, init_db, verify_chain
 from .models import Evidence, Finding, FindingStatus, Patrol, PatrolType, now
+from .ohe import api as ohe_api
 
 SUPERVISOR_ROLES = {"JE", "SSE", "ADEN", "ADEE"}  # P.Way and TRD supervisors
 
@@ -27,10 +28,12 @@ SUPERVISOR_ROLES = {"JE", "SSE", "ADEN", "ADEE"}  # P.Way and TRD supervisors
 async def lifespan(_app: FastAPI):
     init_db()
     settings.evidence_dir.mkdir(parents=True, exist_ok=True)
+    ohe_api.Models.load()
     yield
 
 
 app = FastAPI(title="RVI Beta API", version="0.1.0", lifespan=lifespan)
+app.include_router(ohe_api.router)  # OHE visual patrol (HLD v1.0)
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
