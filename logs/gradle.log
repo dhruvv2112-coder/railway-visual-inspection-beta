@@ -1,13 +1,3 @@
-
-Welcome to Gradle 8.11.1!
-
-Here are the highlights of this release:
- - Parallel load and store for Configuration Cache
- - Java compilation errors at the end of the build output
- - Consolidated report for warnings and deprecations
-
-For more details see https://docs.gradle.org/8.11.1/release-notes.html
-
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
 Daemon will be stopped at the end of the build 
 > Task :app:preBuild UP-TO-DATE
@@ -21,42 +11,42 @@ Daemon will be stopped at the end of the build
 > Task :app:extractDebugSupportedLocales
 > Task :app:generateDebugResources
 > Task :app:createDebugCompatibleScreenManifests
-> Task :app:extractDeepLinksDebug
 > Task :app:generateDebugLocaleConfig
-> Task :app:processDebugMainManifest
+> Task :app:extractDeepLinksDebug
 > Task :app:packageDebugResources
-> Task :app:processDebugManifest
-> Task :app:parseDebugLocalResources
 > Task :app:mergeDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :app:mergeDebugAssets
-> Task :app:processDebugManifestForPackage
-> Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
+> Task :app:compressDebugAssets
+> Task :app:mergeDebugJniLibFolders
 > Task :app:processDebugResources
 > Task :app:checkDebugDuplicateClasses
-> Task :app:kspDebugKotlin
-> Task :app:mergeExtDexDebug
-> Task :app:mergeLibDexDebug
-> Task :app:mergeDebugJniLibFolders
 > Task :app:mergeDebugNativeLibs
+> Task :app:mergeLibDexDebug
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
+
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest
 > Task :app:packageDebugUnitTestForUnitTest
-> Task :app:generateDebugUnitTestConfig
 > Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugUnitTestConfig
 > Task :app:generateDebugAndroidTestResValues
-
-> Task :app:stripDebugDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
-
 > Task :app:extractProguardFiles
+> Task :app:kspDebugKotlin
+> Task :app:mergeExtDexDebug
 > Task :app:compileDebugKotlin
 > Task :app:compileDebugJavaWithJavac
 > Task :app:dexBuilderDebug
@@ -65,18 +55,73 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:mergeProjectDexDebug
-> Task :app:mergeDebugJavaResource
-
-> Task :app:kspDebugUnitTestKotlin FAILED
-e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/test/java/org/rvi/inspect/ScreenshotTest.kt:90:1 Unclosed comment
-
 > Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugLintReportModel
 > Task :app:generateDebugUnitTestLintModel
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:mergeDebugJavaResource
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes
 > Task :app:lintAnalyzeDebugAndroidTest
+
+> Task :app:testDebugUnitTest
+
+EnglishShots > s03_patrol FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s01_home FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s04_danger FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s06_summary FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s02_kit FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s05_classify FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s08_settings FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+EnglishShots > s07_review FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s03_patrol FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s01_home FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s04_danger FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s06_summary FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s02_kit FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s05_classify FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s08_settings FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+HindiShots > s07_review FAILED
+    java.lang.IllegalArgumentException at Qualifiers.java:35
+
+29 tests completed, 16 failed
+
+> Task :app:testDebugUnitTest FAILED
+> Task :app:finalizeTestRoborazziDebug
 > Task :app:lintAnalyzeDebugUnitTest
 > Task :app:lintAnalyzeDebug
 
@@ -84,20 +129,16 @@ e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793328780741.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793329070827.json
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':app:kspDebugUnitTestKotlin'.
-> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
-   > Compilation error. See log for more details
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/tests/testDebugUnitTest/index.html
 
 * Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
 > Run with --scan to get full insights.
-> Get more help at https://help.gradle.org.
 
-BUILD FAILED in 4m 37s
-56 actionable tasks: 56 executed
+BUILD FAILED in 1m 35s
+60 actionable tasks: 60 executed
