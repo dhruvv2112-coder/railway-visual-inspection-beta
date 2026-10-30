@@ -45,10 +45,19 @@ class CommandMatcherTest {
         assertNull(m(""))
     }
 
+    @Test fun oheCommands() {
+        assertEquals(Command.Defect("EL-OH-004"), m("dropper broken"))
+        assertEquals(Command.Defect("EL-OH-004"), m("ड्रॉपर टूटा"))
+        assertEquals(Command.Defect("EL-OH-008"), m("bird nest"))
+        assertEquals(Command.Defect("EL-OH-014"), m("बॉन्ड गायब"))
+        assertEquals(Command.Defect("EL-OH-001"), m("cracked insulator"))
+    }
+
     @Test fun noVoicePathToProtectFirstDefects() {
         val tax = Taxonomy.parse(File("../../shared/taxonomy.json").readText())
-        val protectFirst = tax.classes.filter { it.protect_first }.map { it.id }.toSet()
-        val samples = listOf("rail fracture", "broken rail", "washaway", "weld fracture", "रेल फ्रैक्चर", "टूटी रेल")
+        val protectFirst = tax.classes.filter { it.protect_first || it.danger != null }.map { it.id }.toSet()
+        val samples = listOf("rail fracture", "broken rail", "washaway", "weld fracture", "रेल फ्रैक्चर", "टूटी रेल",
+            "wire broken", "contact wire down", "wire hanging", "तार टूटा", "तार गिरा", "branch on wire")
         samples.forEach { val c = m(it); assertFalse("$it -> $c", c is Command.Defect && c.classId in protectFirst) }
     }
 }
@@ -77,6 +86,13 @@ class TaxonomyTest {
     @Test fun betaExcludesCategoryD() = assertTrue(tax.beta.none { it.category == "D" })
 
     @Test fun everyBetaClassHasHindiLabel() = assertTrue(tax.beta.all { !it.label.hi.isNullOrBlank() })
+
+    @Test fun combinedPatrolCoversTrackAndOhe() {
+        assertTrue(tax.beta.count { it.domain == "ohe" } >= 20)
+        assertTrue(tax.beta.filter { it.danger == "ohe" }.map { it.id }.containsAll(listOf("EL-OH-005", "EL-OH-010")))
+        assertTrue(tax.search("", "en", "ohe").all { it.domain == "ohe" })
+        assertTrue(tax.beta.filter { it.domain == "ohe" }.all { it.route.contains("TRD") })
+    }
 
     @Test fun bilingualSearch() {
         assertTrue(tax.search("ERC", "en").any { it.id == "PW-FS-001" })

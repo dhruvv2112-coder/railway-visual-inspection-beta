@@ -46,6 +46,7 @@ data class FindingEntity(
     val actionTaken: String,
     val lineProtectedAt: Long?,
     val smInformedAt: Long?,
+    val tpcInformedAt: Long? = null,
     val imagePath: String?,
     val qualityPassed: Boolean,
     val qualityReasons: String,
@@ -72,12 +73,20 @@ interface FindingDao {
     @Query("SELECT * FROM finding ORDER BY createdAt DESC LIMIT 200") fun recent(): Flow<List<FindingEntity>>
 }
 
-@Database(entities = [PatrolEntity::class, FindingEntity::class], version = 1, exportSchema = false)
+@Database(entities = [PatrolEntity::class, FindingEntity::class], version = 2, exportSchema = false)
 abstract class RviDatabase : RoomDatabase() {
     abstract fun patrols(): PatrolDao
     abstract fun findings(): FindingDao
 
     companion object {
-        fun build(context: Context) = Room.databaseBuilder(context, RviDatabase::class.java, "rvi.db").build()
+        fun build(context: Context) = Room.databaseBuilder(context, RviDatabase::class.java, "rvi.db")
+            .addMigrations(MIGRATION_1_2).build()
+
+        /** v2: OHE danger record (TPC informed) for the combined track + OHE foot patrol. */
+        val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE finding ADD COLUMN tpcInformedAt INTEGER")
+            }
+        }
     }
 }

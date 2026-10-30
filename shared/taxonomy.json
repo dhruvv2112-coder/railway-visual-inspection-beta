@@ -1,5 +1,5 @@
 {
- "version": "0.1.0",
+ "version": "2.0-combined-patrol",
  "source": "Phase 1 D02 Master Inspection & Defect Matrix (98 rows)",
  "hindi_labels_status": "Draft – requires review against Rajbhasha railway glossary",
  "classes": [
@@ -18,7 +18,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means; emergency repair per S06 (1 m fishplates with screw clamps; first train stop dead then 10 km/h, subsequent 20 km/h)",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-002",
@@ -35,7 +38,10 @@
    "needs_measurement": true,
    "immediate_action": "Record and report; mark location",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-003",
@@ -52,7 +58,10 @@
    "needs_measurement": false,
    "immediate_action": "Record; report to JE/SSE",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-004",
@@ -69,7 +78,10 @@
    "needs_measurement": false,
    "immediate_action": "Record and report",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-005",
@@ -86,7 +98,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-006",
@@ -103,7 +118,10 @@
    "needs_measurement": false,
    "immediate_action": "Report for measurement",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-007",
@@ -120,7 +138,10 @@
    "needs_measurement": false,
    "immediate_action": "Ensure clamped joggled fishplate is provided (S06 B4); report if absent",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-008",
@@ -137,7 +158,10 @@
    "needs_measurement": false,
    "immediate_action": "Keyman to watch during daily patrolling till joggled fishplated (S06)",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-009",
@@ -154,7 +178,10 @@
    "needs_measurement": false,
    "immediate_action": "N/A visually",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-010",
@@ -171,7 +198,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S01 para 613(2)(c)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-011",
@@ -188,7 +218,10 @@
    "needs_measurement": true,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means; examine ≥100 sleepers either side (S10 – unofficial)",
    "reference": "S06 B9; S10; S04 (Ch.3 titles)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-012",
@@ -205,7 +238,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-RL-013",
@@ -222,7 +258,10 @@
    "needs_measurement": true,
    "immediate_action": "Report to JE/SSE",
    "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-WD-001",
@@ -239,7 +278,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means; joggled fishplates with bolted clamps (S06)",
    "reference": "S06 B4,B9; S07 2.2.1.4",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-WD-002",
@@ -256,7 +298,10 @@
    "needs_measurement": false,
    "immediate_action": "Keep joint under observation (S06)",
    "reference": "S06 B4,B9; S07 2.2.1.4",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-WD-003",
@@ -273,7 +318,10 @@
    "needs_measurement": false,
    "immediate_action": "Watch weld; ensure joggled fishplates and two far-end bolts tight (S06)",
    "reference": "S06 B4,B9; S07 2.2.1.4",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-WD-004",
@@ -290,7 +338,10 @@
    "needs_measurement": true,
    "immediate_action": "Record",
    "reference": "S06 B4,B9; S07 2.2.1.4",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-WD-005",
@@ -307,7 +358,10 @@
    "needs_measurement": false,
    "immediate_action": "N/A",
    "reference": "S06 B4,B9; S07 2.2.1.4",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-JT-001",
@@ -324,7 +378,10 @@
    "needs_measurement": false,
    "immediate_action": "Replace from spare fittings (keyman carries spares, S06 A4); report if many (S06 B5)",
    "reference": "S06 B2,B7,B8, Appx B",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-JT-002",
@@ -341,7 +398,10 @@
    "needs_measurement": true,
    "immediate_action": "Tighten (S06 B2)",
    "reference": "S06 B2,B7,B8, Appx B",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-JT-003",
@@ -358,7 +418,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect if unsafe; report",
    "reference": "S06 B2,B7,B8, Appx B",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-JT-004",
@@ -375,7 +438,10 @@
    "needs_measurement": true,
    "immediate_action": "Report",
    "reference": "S06 B2,B7,B8, Appx B",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-JT-005",
@@ -392,7 +458,10 @@
    "needs_measurement": false,
    "immediate_action": "Report; tighten",
    "reference": "S06 B2,B7,B8, Appx B",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-JT-006",
@@ -409,7 +478,10 @@
    "needs_measurement": false,
    "immediate_action": "Report to JE/SSE P.Way and S&T",
    "reference": "S04 Table 1-C item 1 (glued joints in foot inspection); S04 Table 1B item 26 (joint inspection with S&T)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-001",
@@ -426,7 +498,10 @@
    "needs_measurement": false,
    "immediate_action": "Recoup from spares (S06 B7); large-scale theft – protect line (S06 B5)",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-002",
@@ -443,7 +518,10 @@
    "needs_measurement": false,
    "immediate_action": "Replace",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-003",
@@ -460,7 +538,10 @@
    "needs_measurement": false,
    "immediate_action": "Re-drive (S06 B7 'correct driving')",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-004",
@@ -477,7 +558,10 @@
    "needs_measurement": false,
    "immediate_action": "Recoup (S06 B7)",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-005",
@@ -494,7 +578,10 @@
    "needs_measurement": true,
    "immediate_action": "Record",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-006",
@@ -511,7 +598,10 @@
    "needs_measurement": false,
    "immediate_action": "Report",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-007",
@@ -528,7 +618,10 @@
    "needs_measurement": false,
    "immediate_action": "Tighten fully with single coil spring washer; clean dowel hole first (S06 B9)",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-008",
@@ -545,7 +638,10 @@
    "needs_measurement": false,
    "immediate_action": "Correct orientation (S06 B9)",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-FS-009",
@@ -562,7 +658,10 @@
    "needs_measurement": false,
    "immediate_action": "Report JE/SSE (S06 B9(c))",
    "reference": "S06 B2,B7,B9; S14",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-SL-001",
@@ -579,7 +678,10 @@
    "needs_measurement": false,
    "immediate_action": "Report; mark",
    "reference": "S06 B2; S04 para 114(5)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-SL-002",
@@ -596,7 +698,10 @@
    "needs_measurement": false,
    "immediate_action": "Report",
    "reference": "S06 B2; S04 Table 1A item 7 (channel sleepers)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-SL-003",
@@ -613,7 +718,10 @@
    "needs_measurement": true,
    "immediate_action": "Mark for packing (S04 114(5))",
    "reference": "S06 B2; S04 para 114(5)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-SL-004",
@@ -630,7 +738,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B2; S04 para 114(5)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-001",
@@ -647,7 +758,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means (S06 B5)",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-002",
@@ -664,7 +778,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-003",
@@ -681,7 +798,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-004",
@@ -698,7 +818,10 @@
    "needs_measurement": true,
    "immediate_action": "Protect line if unsafe; report",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-005",
@@ -715,7 +838,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
    "reference": "S05 1010; S04 Ch.11 title",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-006",
@@ -732,7 +858,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
    "reference": "S05 1010(1)(b)(iii); S05 vulnerable locations (e)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-007",
@@ -749,7 +878,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-008",
@@ -766,7 +898,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-009",
@@ -783,7 +918,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
    "reference": "S05 1001(b), 1010(a)",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-010",
@@ -800,7 +938,10 @@
    "needs_measurement": false,
    "immediate_action": "Report to Mate/SSE/JE (S06 B11)",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-011",
@@ -817,7 +958,10 @@
    "needs_measurement": false,
    "immediate_action": "Collect; hand to nearest SM (S06 B13)",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-BF-012",
@@ -834,7 +978,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect track; inform nearest SM (S06 B1(e))",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-SE-001",
@@ -851,7 +998,10 @@
    "needs_measurement": true,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means (S10, unofficial)",
    "reference": "S06 B9; S04 Tables 1A item 6, 1B item 6, 1-C item 9; S10",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-SE-002",
@@ -868,7 +1018,10 @@
    "needs_measurement": false,
    "immediate_action": "Retighten; fortnightly oiling/greasing (S06 B9)",
    "reference": "S06 B9; S04 Tables 1A item 6, 1B item 6, 1-C item 9; S10",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-001",
@@ -885,7 +1038,10 @@
    "needs_measurement": false,
    "immediate_action": "Report to JE/SSE",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-002",
@@ -902,7 +1058,10 @@
    "needs_measurement": true,
    "immediate_action": "Report to JE/SSE P.Way and S&T",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-003",
@@ -919,7 +1078,10 @@
    "needs_measurement": false,
    "immediate_action": "Report; joint attention with S&T",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-004",
@@ -936,7 +1098,10 @@
    "needs_measurement": false,
    "immediate_action": "Report",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-005",
@@ -953,7 +1118,10 @@
    "needs_measurement": false,
    "immediate_action": "Attend (S06 B2)",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-006",
@@ -970,7 +1138,10 @@
    "needs_measurement": true,
    "immediate_action": "Report",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-PC-007",
@@ -987,7 +1158,10 @@
    "needs_measurement": false,
    "immediate_action": "Clear",
    "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-LC-001",
@@ -1004,7 +1178,10 @@
    "needs_measurement": true,
    "immediate_action": "Maintain flangeway (S06 B10)",
    "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-LC-002",
@@ -1021,7 +1198,10 @@
    "needs_measurement": false,
    "immediate_action": "Look for girder shift, infringement, OHE damage; report Mate, SM, JE/SSE; protect if needed (S06 B16)",
    "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-LC-003",
@@ -1038,7 +1218,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-LC-004",
@@ -1055,7 +1238,10 @@
    "needs_measurement": false,
    "immediate_action": "Report to SSE/P.Way, S&T (interlocked), SM",
    "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "PW-LC-005",
@@ -1072,7 +1258,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S02 Annex 9/1 item 9(b) board spec",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "BR-SB-001",
@@ -1089,7 +1278,10 @@
    "needs_measurement": false,
    "immediate_action": "Record; report ADEN if active",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-SB-002",
@@ -1106,7 +1298,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-SB-003",
@@ -1123,7 +1318,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-FD-001",
@@ -1140,7 +1338,10 @@
    "needs_measurement": true,
    "immediate_action": "Watch; protect if danger level exceeded (S05 1010)",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-WW-001",
@@ -1157,7 +1358,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
    "reference": "S05 1010(1)(b)(i),(iv); S04 Table 1A item 19",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-PW-001",
@@ -1174,7 +1378,10 @@
    "needs_measurement": false,
    "immediate_action": "Report; watch (S05 1010(1)(b)(ii))",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-BG-001",
@@ -1191,7 +1398,10 @@
    "needs_measurement": true,
    "immediate_action": "Record",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-SS-001",
@@ -1208,7 +1418,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-SS-002",
@@ -1225,7 +1438,10 @@
    "needs_measurement": true,
    "immediate_action": "Record",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-SS-003",
@@ -1242,7 +1458,10 @@
    "needs_measurement": false,
    "immediate_action": "Report ADEN",
    "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "BR-TK-001",
@@ -1259,7 +1478,10 @@
    "needs_measurement": false,
    "immediate_action": "Attend (S06 B2)",
    "reference": "S06 B2; S04 Table 1A item 7, 1B item 7",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/Bridges"
   },
   {
    "id": "EW-CT-001",
@@ -1276,7 +1498,10 @@
    "needs_measurement": false,
    "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means if fouling",
    "reference": "S04 Tables 1A/1B; S05 vulnerable locations",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": "track",
+   "route": "SSE/P.Way"
   },
   {
    "id": "EW-TN-001",
@@ -1293,109 +1518,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "S04 Tables 1A/1B; S05 vulnerable locations",
-   "beta_enabled": false
-  },
-  {
-   "id": "EL-OH-001",
-   "category": "A",
-   "department": "Electrical – Traction Distribution (TRD)",
-   "asset": "OHE insulator",
-   "focus_unit": "Insulator surface",
-   "label": {
-    "en": "Cracked/chipped insulator or flashover marks",
-    "hi": null
-   },
-   "severity": "RF-P2",
-   "protect_first": false,
-   "needs_measurement": false,
-   "immediate_action": "Report TPC",
-   "reference": "S20 (secondary presentation); ACTM not retrieved",
-   "beta_enabled": false
-  },
-  {
-   "id": "EL-OH-002",
-   "category": "A",
-   "department": "Electrical – Traction Distribution (TRD)",
-   "asset": "OHE contact/catenary",
-   "focus_unit": "Dropper",
-   "label": {
-    "en": "Broken/missing/hanging dropper",
-    "hi": null
-   },
-   "severity": "RF-P2",
-   "protect_first": false,
-   "needs_measurement": false,
-   "immediate_action": "Report TPC",
-   "reference": "S20 (secondary presentation); ACTM not retrieved",
-   "beta_enabled": false
-  },
-  {
-   "id": "EL-OH-003",
-   "category": "A",
-   "department": "Electrical – Traction Distribution (TRD)",
-   "asset": "OHE",
-   "focus_unit": "Bird nests/kites/foreign objects on OHE",
-   "label": {
-    "en": "Bird nest or foreign object on OHE",
-    "hi": null
-   },
-   "severity": "RF-P2",
-   "protect_first": false,
-   "needs_measurement": false,
-   "immediate_action": "Report",
-   "reference": "S20 (secondary presentation); ACTM not retrieved",
-   "beta_enabled": false
-  },
-  {
-   "id": "EL-OH-004",
-   "category": "C",
-   "department": "Electrical – Traction Distribution (TRD)",
-   "asset": "OHE contact wire",
-   "focus_unit": "Contact wire height/stagger",
-   "label": {
-    "en": "Contact wire height/stagger out of limits (visual sag)",
-    "hi": null
-   },
-   "severity": "RF-P2",
-   "protect_first": false,
-   "needs_measurement": true,
-   "immediate_action": "Report TPC",
-   "reference": "S20 (secondary presentation); ACTM not retrieved",
-   "beta_enabled": false
-  },
-  {
-   "id": "EL-OH-005",
-   "category": "A",
-   "department": "Electrical – Traction Distribution (TRD)",
-   "asset": "OHE mast/structure",
-   "focus_unit": "Mast & foundation",
-   "label": {
-    "en": "Bent/corroded mast; damaged foundation; missing earth/bond",
-    "hi": null
-   },
-   "severity": "RF-P2",
-   "protect_first": false,
-   "needs_measurement": false,
-   "immediate_action": "Report",
-   "reference": "S20 (secondary presentation); ACTM not retrieved",
-   "beta_enabled": false
-  },
-  {
-   "id": "EL-OH-006",
-   "category": "D",
-   "department": "Electrical – Traction Distribution (TRD)",
-   "asset": "OHE insulator",
-   "focus_unit": "Insulation performance",
-   "label": {
-    "en": "Insulation degradation without visible sign",
-    "hi": null
-   },
-   "severity": "Per TRD",
-   "protect_first": false,
-   "needs_measurement": false,
-   "immediate_action": "N/A",
-   "reference": "S20 (secondary presentation); ACTM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "ST-SG-001",
@@ -1412,7 +1538,10 @@
    "needs_measurement": false,
    "immediate_action": "Report SM/S&T",
    "reference": "S04 Table 1B item 26; IRSEM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Signal & Telecommunication (S&T)"
   },
   {
    "id": "ST-PM-001",
@@ -1429,7 +1558,10 @@
    "needs_measurement": false,
    "immediate_action": "Report S&T",
    "reference": "S04 Table 1B item 26; IRSEM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Signal & Telecommunication (S&T)"
   },
   {
    "id": "ST-TC-001",
@@ -1446,7 +1578,10 @@
    "needs_measurement": false,
    "immediate_action": "Report S&T/SM",
    "reference": "Register item: CAMTECH Track Circuit for P.Way staff (not read)",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Signal & Telecommunication (S&T)"
   },
   {
    "id": "ST-CB-001",
@@ -1463,7 +1598,10 @@
    "needs_measurement": false,
    "immediate_action": "Report",
    "reference": "S04 Table 1B item 26; IRSEM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Signal & Telecommunication (S&T)"
   },
   {
    "id": "ST-EL-001",
@@ -1480,7 +1618,10 @@
    "needs_measurement": false,
    "immediate_action": "N/A",
    "reference": "S04 Table 1B item 26; IRSEM not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Signal & Telecommunication (S&T)"
   },
   {
    "id": "RS-WH-001",
@@ -1497,7 +1638,10 @@
    "needs_measurement": true,
    "immediate_action": "Gauge with tyre defect gauge (S19)",
    "reference": "S19",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Mechanical – Carriage & Wagon (C&W)"
   },
   {
    "id": "RS-BR-001",
@@ -1514,7 +1658,10 @@
    "needs_measurement": false,
    "immediate_action": "Replace (S19)",
    "reference": "S19",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Mechanical – Carriage & Wagon (C&W)"
   },
   {
    "id": "RS-CP-001",
@@ -1531,7 +1678,10 @@
    "needs_measurement": false,
    "immediate_action": "Rectify (S19)",
    "reference": "S19",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Mechanical – Carriage & Wagon (C&W)"
   },
   {
    "id": "RS-AX-001",
@@ -1548,7 +1698,10 @@
    "needs_measurement": false,
    "immediate_action": "Detach as sick",
    "reference": "S19",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Mechanical – Carriage & Wagon (C&W)"
   },
   {
    "id": "RS-UF-001",
@@ -1565,7 +1718,10 @@
    "needs_measurement": false,
    "immediate_action": "Secure (S19)",
    "reference": "S19",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Mechanical – Carriage & Wagon (C&W)"
   },
   {
    "id": "CV-PF-001",
@@ -1582,7 +1738,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "Works Manual not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "CV-FOB-001",
@@ -1599,7 +1758,10 @@
    "needs_measurement": false,
    "immediate_action": "Record",
    "reference": "PIB release on third-party audit of bridges/ROBs/FOBs (search result; not read)",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "CV-SF-001",
@@ -1616,7 +1778,10 @@
    "needs_measurement": false,
    "immediate_action": "Report",
    "reference": "Works Manual not retrieved",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "other",
+   "danger": null,
+   "route": "Safety / station owner department"
   },
   {
    "id": "OP-PT-001",
@@ -1633,7 +1798,10 @@
    "needs_measurement": false,
    "immediate_action": "Do not start patrol without kit; report",
    "reference": "S05 1007, 1012; S06 A4; S08; S07 2.2.1.1",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "OP-PT-002",
@@ -1650,7 +1818,10 @@
    "needs_measurement": false,
    "immediate_action": "Replace",
    "reference": "S05 1007, 1012; S06 A4; S08; S07 2.2.1.1",
-   "beta_enabled": true
+   "beta_enabled": true,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
   },
   {
    "id": "OP-PT-003",
@@ -1667,7 +1838,576 @@
    "needs_measurement": false,
    "immediate_action": "Supervisor action",
    "reference": "S05 1007, 1012; S06 A4; S08; S07 2.2.1.1",
-   "beta_enabled": false
+   "beta_enabled": false,
+   "domain": "track",
+   "danger": null,
+   "route": "SSE/P.Way"
+  },
+  {
+   "id": "EL-OH-001",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Insulator",
+   "focus_unit": "Bracket / stay / 9-tonne / post insulator",
+   "label": {
+    "en": "Chipped, cracked or shed-damaged insulator",
+    "hi": "इंसुलेटर टूटा / चटका / शेड क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(a); R2 7(b); R3 diary 4",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-002",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Insulator",
+   "focus_unit": "Insulator / section-insulator runner",
+   "label": {
+    "en": "Flashover mark on insulator or runner",
+    "hi": "इंसुलेटर पर फ्लैशओवर का निशान"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R2 7(b),(k); R3 diary 5",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-003",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Insulator",
+   "focus_unit": "Insulator surface",
+   "label": {
+    "en": "Heavy dust or dirt on insulators (polluted area)",
+    "hi": "इंसुलेटर पर अधिक धूल / गंदगी"
+   },
+   "severity": "RF-P3 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Enter in foot patrol diary; depot attends (Category B).",
+   "reference": "R2 7(b); R1 weekly check 6",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-004",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – OHE span",
+   "focus_unit": "Dropper",
+   "label": {
+    "en": "Dropper broken, missing, displaced or out of plumb",
+    "hi": "ड्रॉपर टूटा / गायब / खिसका"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(b); R2 7(g); R3 diary 7",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-005",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – OHE conductors",
+   "focus_unit": "Contact wire / catenary",
+   "label": {
+    "en": "Contact wire or catenary broken, hanging or fallen",
+    "hi": "कॉन्टैक्ट वायर / कैटेनरी टूटा या लटका"
+   },
+   "severity": "RF-P1 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Treat as live – do not touch or approach. Report forthwith to TPC (emergency socket / mobile) with location and details so TPC can regulate trains; inform SM; keep watch until relieved (R1 6.1(5)).",
+   "reference": "R1 6.1(5); R2 1, 7(e)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": "ohe",
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-006",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – OHE conductors",
+   "focus_unit": "Catenary / stranded conductor",
+   "label": {
+    "en": "Damaged strands of catenary or other stranded wire",
+    "hi": "कैटेनरी के तार (स्ट्रैंड) क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R2 7(e); R3 diary 7(iv)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-007",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – OHE conductors",
+   "focus_unit": "Contact wire",
+   "label": {
+    "en": "Excessive sag or hog, kink or twist in contact wire",
+    "hi": "कॉन्टैक्ट वायर में अधिक झोल / उभार / ऐंठन"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(c); R2 7(e),(g)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-008",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Foreign object",
+   "focus_unit": "OHE / feeder",
+   "label": {
+    "en": "Bird nest, stray wire or other foreign object on OHE",
+    "hi": "OHE पर चिड़िया का घोंसला / तार / बाहरी वस्तु"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(h); R2 7(p); R3 diary 9(viii)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-009",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Vegetation",
+   "focus_unit": "Tree branches near OHE",
+   "label": {
+    "en": "Tree branches likely to infringe OHE",
+    "hi": "OHE के पास पेड़ की शाखाएँ"
+   },
+   "severity": "RF-P3 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Clear small creepers on the spot with chopper if safe without power block; otherwise diary.",
+   "reference": "R1 6.1(3),(4)(h); R3 diary 9(vii)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-010",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Obstruction",
+   "focus_unit": "Pantograph / train path",
+   "label": {
+    "en": "Branch or obstruction touching OHE or fouling the pantograph path",
+    "hi": "शाखा / अवरोध OHE को छू रहा या पेंटोग्राफ पथ में"
+   },
+   "severity": "RF-P1 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Treat as live – do not touch or approach. Report forthwith to TPC (emergency socket / mobile) with location and details so TPC can regulate trains; inform SM; keep watch until relieved (R1 6.1(5)).",
+   "reference": "R1 6.1(4)(k),(5); R2 7(p)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": "ohe",
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-011",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Mast / portal",
+   "focus_unit": "Mast",
+   "label": {
+    "en": "Mast or portal tilted, deflected or hit-damaged",
+    "hi": "मस्त / पोर्टल झुका या टक्कर से क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(o); R2 7(a); R3 diary 2",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-012",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Foundation",
+   "focus_unit": "Mast foundation",
+   "label": {
+    "en": "Foundation cracked or sinking, water around it or earth filling needed",
+    "hi": "मस्त नींव में दरार / धँसाव / पानी भराव"
+   },
+   "severity": "RF-P3 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Enter in foot patrol diary; depot attends (Category B).",
+   "reference": "R2 7(a); R3 diary 1",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-013",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Mast / portal",
+   "focus_unit": "Location number plate",
+   "label": {
+    "en": "Mast number plate missing or damaged",
+    "hi": "मस्त नंबर प्लेट गायब / क्षतिग्रस्त"
+   },
+   "severity": "RF-P4 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Enter in foot patrol diary; depot attends (Category B).",
+   "reference": "R1 6.1(4)(p); R3 diary 2(iv),(v)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-014",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Bonding & earthing",
+   "focus_unit": "Structure / longitudinal / cross bond, AEC / BEC",
+   "label": {
+    "en": "Bond or earth connection missing, open or loose",
+    "hi": "बॉन्ड / अर्थ कनेक्शन गायब या ढीला"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Tighten / refix on the spot if possible (R1 6.1(6)); else report to depot.",
+   "reference": "R1 6.1(4)(i),(r),(6); R2 7(d)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-015",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Regulating equipment",
+   "focus_unit": "ATD counterweight",
+   "label": {
+    "en": "Counterweight outside marked limits or not moving freely",
+    "hi": "काउंटरवेट सीमा चिह्न से बाहर / अटका"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(e); R2 7(c); R3 diary 10",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-016",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Regulating equipment",
+   "focus_unit": "Equalizing plate / guide tube",
+   "label": {
+    "en": "Equalizing plate tilted or guide tube bent",
+    "hi": "इक्वलाइज़िंग प्लेट झुकी / गाइड ट्यूब मुड़ी"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(d); R3 diary 10(i),(vii)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-017",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Regulating equipment",
+   "focus_unit": "SS wire rope",
+   "label": {
+    "en": "ATD wire rope strands broken, bird-caged or over-riding the drum",
+    "hi": "ATD वायर रोप के तार टूटे / बर्ड-केजिंग"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R2 7(c); R3 diary 10(iv)-(vi)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-018",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Cantilever",
+   "focus_unit": "Bracket tubes / fittings",
+   "label": {
+    "en": "Cantilever fittings rusted or damaged, or cantilever out of plumb",
+    "hi": "कैंटिलीवर फिटिंग जंग लगी / क्षतिग्रस्त / टेढ़ी"
+   },
+   "severity": "RF-P3 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Enter in foot patrol diary; depot attends (Category B).",
+   "reference": "R2 7(f)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-019",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Jumpers",
+   "focus_unit": "Jumper / PG clamp",
+   "label": {
+    "en": "Jumper or PG clamp loose, damaged or poorly looped",
+    "hi": "जंपर / PG क्लैंप ढीला या क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R2 7(e),(g); R3 diary 7(iii)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-020",
+   "category": "B",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Section insulator",
+   "focus_unit": "Runners / assembly",
+   "label": {
+    "en": "Section insulator runner worn, flash-marked or greasy",
+    "hi": "सेक्शन इंसुलेटर रनर घिसा / फ्लैश चिह्न"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R2 7(i); R3 diary 5",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-021",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Isolator",
+   "focus_unit": "Isolator switch",
+   "label": {
+    "en": "Isolator blades not fully in, sparking or overheating marks, lock missing",
+    "hi": "आइसोलेटर ब्लेड पूरा अंदर नहीं / स्पार्किंग / ताला गायब"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(m); R2 7(h); R3 diary 8",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-022",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Safety fittings",
+   "focus_unit": "Boards / screens / anti-climbing",
+   "label": {
+    "en": "Danger or caution board, protective screen or anti-climbing device missing",
+    "hi": "खतरा / सावधानी बोर्ड, सुरक्षा स्क्रीन या एंटी-क्लाइम्बिंग गायब"
+   },
+   "severity": "RF-P3 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Enter in foot patrol diary; depot attends (Category B).",
+   "reference": "R1 6.1(4)(f),(8); R3 diary 9(i),(vi)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-023",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Level crossing",
+   "focus_unit": "Height gauge",
+   "label": {
+    "en": "Height gauge at level crossing damaged or unsound",
+    "hi": "समपार पर हाइट गेज क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(g); R2 7 (level crossing)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-024",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Current collection",
+   "focus_unit": "Pantograph – OHE interface",
+   "label": {
+    "en": "Heavy sparking seen when a train passes",
+    "hi": "ट्रेन गुजरते समय अधिक स्पार्किंग"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary. Record video if safe.",
+   "reference": "R1 6.1(4)(l); R3 diary 9(xii)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-025",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Auxiliary transformer",
+   "focus_unit": "AT / drop-out fuse",
+   "label": {
+    "en": "Auxiliary transformer oil leak or drop-out fuse fallen",
+    "hi": "सहायक ट्रांसफॉर्मर से तेल रिसाव / ड्रॉप-आउट फ्यूज गिरा"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to TPC and OHE depot (Category A, R1 Proforma 03-2); enter in foot patrol diary.",
+   "reference": "R1 6.1(4)(j); R3 diary 6",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-026",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Communication",
+   "focus_unit": "Emergency telephone socket",
+   "label": {
+    "en": "Emergency telephone socket damaged or not working",
+    "hi": "आपातकालीन टेलीफोन सॉकेट खराब"
+   },
+   "severity": "RF-P3 (OHE Cat B)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Test by calling TPC from each socket; report defective sockets to S&T (R1 6.1(7)).",
+   "reference": "R1 6.1(7); R3 diary 9(iii)",
+   "beta_enabled": true,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-027",
+   "category": "C",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – OHE conductors",
+   "focus_unit": "Contact wire",
+   "label": {
+    "en": "Contact wire height or stagger out of limits",
+    "hi": "कॉन्टैक्ट वायर ऊँचाई / स्टैगर सीमा से बाहर"
+   },
+   "severity": "RF-P2 (OHE Cat A)",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Needs measurement (trolley / OHE inspection car); not decidable from a photo.",
+   "reference": "R2 7(f),(n)",
+   "beta_enabled": false,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
+  },
+  {
+   "id": "EL-OH-028",
+   "category": "D",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE – Insulator",
+   "focus_unit": "Insulator",
+   "label": {
+    "en": "Insulation degradation without visible sign",
+    "hi": "बिना दृश्य संकेत के इन्सुलेशन क्षरण"
+   },
+   "severity": "Per TRD",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Not visual – thermo-vision / testing.",
+   "reference": "R3 schedule 9 (thermo vision)",
+   "beta_enabled": false,
+   "domain": "ohe",
+   "danger": null,
+   "route": "SSE/TRD (OHE depot)"
   }
+ ],
+ "scope": "Combined foot patrol: track (P.Way) + OHE (TRD). Danger: 'track' = protect line + inform SM; 'ohe' = treat as live, report TPC.",
+ "ohe_sources": [
+  "RDSO TI/MI/0060 (2022) para 6.1",
+  "CAMTECH/E/17-18/OHE-Inspection/1.0 (draft) section 7",
+  "CAMTECH/E/11-12/OHE-Schedule/1.0 (2011) Foot Patrolling Diary"
  ]
 }

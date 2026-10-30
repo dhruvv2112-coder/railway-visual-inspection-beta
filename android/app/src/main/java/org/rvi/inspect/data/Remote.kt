@@ -43,6 +43,7 @@ data class FindingIn(
     @SerialName("action_taken") val actionTaken: String = "",
     @SerialName("line_protected_at") val lineProtectedAt: String? = null,
     @SerialName("sm_informed_at") val smInformedAt: String? = null,
+    @SerialName("tpc_informed_at") val tpcInformedAt: String? = null,
 )
 
 interface RviApi {

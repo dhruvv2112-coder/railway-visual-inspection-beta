@@ -21,7 +21,7 @@ from .config import settings
 from .db import audit, get_session, init_db, verify_chain
 from .models import Evidence, Finding, FindingStatus, Patrol, PatrolType, now
 
-SUPERVISOR_ROLES = {"JE", "SSE", "ADEN"}
+SUPERVISOR_ROLES = {"JE", "SSE", "ADEN", "ADEE"}  # P.Way and TRD supervisors
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -62,7 +62,8 @@ def get_taxonomy(lang: str = "en", beta_only: bool = True):
             continue
         out.append({"id": c["id"], "label": c["label"].get(lang) or c["label"]["en"], "category": c["category"],
                     "asset": c["asset"], "focus_unit": c["focus_unit"], "protect_first": c["protect_first"],
-                    "needs_measurement": c["needs_measurement"]})
+                    "needs_measurement": c["needs_measurement"], "domain": c.get("domain"), "danger": c.get("danger"),
+                    "route": c.get("route")})
     return {"version": t["version"], "classes": out}
 
 
@@ -98,6 +99,7 @@ class FindingIn(BaseModel):
     action_taken: str = ""
     line_protected_at: datetime | None = None
     sm_informed_at: datetime | None = None
+    tpc_informed_at: datetime | None = None
     submit: bool = True
 
 
@@ -110,6 +112,8 @@ def create_finding(body: FindingIn, s: SessionDep, a: ActorDep):
         raise HTTPException(404, "Patrol not found")
     if c["protect_first"] and (body.line_protected_at is None or body.sm_informed_at is None):
         raise HTTPException(422, "Protect-first class: record line protection and SM notification first")  # R2
+    if c.get("danger") == "ohe" and body.tpc_informed_at is None:
+        raise HTTPException(422, "OHE danger class: record that TPC was informed first")  # R2 (OHE)
     data = body.model_dump(exclude={"submit"})
     f = Finding(**data, status=FindingStatus.reported if body.submit else FindingStatus.draft)
     s.add(f)
@@ -203,7 +207,8 @@ def end_patrol(pid: str, s: SessionDep, a: ActorDep):
 
 @app.get("/patrols/{pid}/report")
 def keyman_book(pid: str, s: SessionDep, lang: str = "en"):
-    """Auto-compiled keyman-book style summary (CAMTECH 2021, B17 fields)."""
+    """Auto-compiled combined foot-patrol diary: track section (keyman-book fields, CAMTECH 2021 B17) and OHE section
+    (foot patrol diary / Proforma 03-2 fields, RDSO TI/MI/0060), each routed to its supervisor."""
     p = s.get(Patrol, pid)
     if not p:
         raise HTTPException(404, "Patrol not found")
@@ -213,9 +218,13 @@ def keyman_book(pid: str, s: SessionDep, lang: str = "en"):
         c = taxonomy.get(f.class_id)
         rows.append({"km": f.km_reference, "line": f.line, "rail": f.rail_side,
                      "defect": c["label"].get(lang) or c["label"]["en"], "class_id": f.class_id,
-                     "action_taken": f.action_taken, "status": f.status, "protected": f.line_protected_at is not None})
-    return {"patrol": p, "findings": rows, "count": len(rows),
-            "protect_first_count": sum(r["protected"] for r in rows)}
+                     "action_taken": f.action_taken, "status": f.status, "protected": f.line_protected_at is not None,
+                     "domain": c.get("domain"), "route": c.get("route"), "tpc_informed": f.tpc_informed_at is not None,
+                     "ohe_category": ("A" if "Cat A" in c["severity"] else "B") if c.get("domain") == "ohe" else None})
+    by = {d: [r for r in rows if r["domain"] == d] for d in ("track", "ohe")}
+    return {"patrol": p, "findings": rows, "count": len(rows), "track": by["track"], "ohe": by["ohe"],
+            "protect_first_count": sum(r["protected"] for r in rows),
+            "tpc_reports": sum(r["tpc_informed"] for r in rows)}
 
 
 @app.get("/audit/verify")

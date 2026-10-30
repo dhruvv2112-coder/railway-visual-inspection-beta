@@ -34,6 +34,8 @@ data class Draft(
     val note: String = "",
     val protectedAt: Long? = null,
     val smInformedAt: Long? = null,
+    val tpcInformedAt: Long? = null,
+    val keptClearAt: Long? = null,
     val lat: Double? = null,
     val lon: Double? = null,
     val accuracy: Float? = null,
@@ -85,11 +87,12 @@ class PatrolViewModel(app: Application) : AndroidViewModel(app) {
         val p = activePatrol.value ?: return false
         val c = d.classId?.let { id -> taxonomy.classes.firstOrNull { it.id == id } } ?: return false
         if (c.protect_first && (d.protectedAt == null || d.smInformedAt == null)) return false
+        if (c.danger == "ohe" && (d.tpcInformedAt == null || d.keptClearAt == null || d.smInformedAt == null)) return false
         if (d.km.isBlank()) return false
         viewModelScope.launch {
             repo.saveFinding(FindingEntity(patrolId = p.id, classId = c.id, kmReference = d.km, line = d.line, railSide = d.rail,
                 lat = d.lat, lon = d.lon, gnssAccuracyM = d.accuracy, note = d.note, noteLanguage = lang, actionTaken = d.action,
-                lineProtectedAt = d.protectedAt, smInformedAt = d.smInformedAt, imagePath = d.imagePath,
+                lineProtectedAt = d.protectedAt, smInformedAt = d.smInformedAt, tpcInformedAt = d.tpcInformedAt, imagePath = d.imagePath,
                 qualityPassed = d.quality?.passed ?: false, qualityReasons = d.quality?.reasons?.joinToString(",").orEmpty()))
             draft.value = Draft(line = d.line)
         }

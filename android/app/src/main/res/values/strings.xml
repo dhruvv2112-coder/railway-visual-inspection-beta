@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">RVI Inspect</string>
     <string name="greeting">Good morning, %1$s</string>
-    <string name="role_keyman">Keyman</string>
+    <string name="role_keyman">Combined foot patrol · Track + OHE</string>
     <string name="today_beat">Today\'s beat</string>
     <string name="beat_range">km %1$s → %2$s · %3$s line</string>
     <string name="patrol_type">Patrol type</string>
@@ -13,12 +13,12 @@
     <string name="sync_done">All findings synced</string>
     <string name="offline">Offline – saving on phone</string>
     <string name="kit_check">Kit check</string>
-    <string name="kit_check_hint">Confirm every item before walking the beat</string>
+    <string name="kit_check_hint">Confirm every item before walking the beat (track + OHE)</string>
     <string name="kit_flags">2 red flags, 1 green flag</string>
     <string name="kit_detonators">10 detonators, within 5-year life</string>
     <string name="kit_tools">Keying hammer, spanners, tapered gauge</string>
     <string name="kit_spares">Spare fittings, 30 mm rail closure</string>
-    <string name="kit_book">Keyman book</string>
+    <string name="kit_book">Foot patrol diary (track + OHE) on this phone</string>
     <string name="kit_gps">Designated GPS device on</string>
     <string name="kit_confirm">Kit complete – continue</string>
     <string name="patrol_live">Patrol in progress</string>
@@ -27,7 +27,7 @@
     <string name="capture">Capture</string>
     <string name="voice">Voice</string>
     <string name="listening">Listening…</string>
-    <string name="say_command">Say “capture”, “missing clip”, “end patrol”</string>
+    <string name="say_command">Say “capture”, “dropper broken”, “missing clip”</string>
     <string name="danger_title">Danger to trains?</string>
     <string name="danger_body">Protect the line first. Use flags and detonators: 1 at 600 m, 3 at 1200 m (BG). Inform the Station Master. Record here only after protection.</string>
     <string name="danger_protected">Line protected</string>
@@ -52,8 +52,8 @@
     <string name="needs_measurement">Measurement required – image alone is not enough</string>
     <string name="protect_first">Protect-first defect</string>
     <string name="summary">Patrol summary</string>
-    <string name="keyman_book">Keyman book (auto-compiled)</string>
-    <string name="submit">Submit to JE/SSE</string>
+    <string name="keyman_book">Foot patrol diary – track and OHE (auto-compiled)</string>
+    <string name="submit">Submit to SSE/P.Way and SSE/TRD</string>
     <string name="review_inbox">Review inbox</string>
     <string name="confirm">Confirm</string>
     <string name="reject">Reject</string>
@@ -65,7 +65,7 @@
     <string name="spoken_feedback">Spoken feedback</string>
     <string name="large_text">Large text</string>
     <string name="haptics">Haptic confirmation</string>
-    <string name="ai_disclaimer">Suggestions are not decisions. Only JE/SSE assign severity.</string>
+    <string name="ai_disclaimer">Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.</string>
     <string name="home">Home</string>
     <string name="findings">Findings</string>
     <string name="cat_a">Visible</string>
@@ -73,4 +73,21 @@
     <string name="cat_c">Needs measurement</string>
     <string name="saved_offline">Saved. Will sync when online.</string>
     <string name="command_not_understood">Command not understood</string>
+    <string name="kit_ohe_tools">OHE spanners, bond bolts and nuts, small chopper, spring balance</string>
+    <string name="kit_tpc">Mobile charged, TPC number saved, emergency telephone instrument</string>
+    <string name="danger_choose">What is the danger?</string>
+    <string name="danger_track">Track – rail fracture, washaway, obstruction</string>
+    <string name="danger_ohe">OHE – wire down, branch or object on the wire</string>
+    <string name="ohe_danger_title">Live OHE danger</string>
+    <string name="ohe_danger_body">Treat every wire as live. Do not touch it or go near it, and keep others away. Report to TPC now with the mast number and what you see, so TPC can regulate trains. Inform the Station Master. Record here only after reporting.</string>
+    <string name="ohe_tpc">TPC informed</string>
+    <string name="ohe_clear">Keeping clear of the wire</string>
+    <string name="call_tpc">Call TPC</string>
+    <string name="tpc_first">TPC first – live OHE danger</string>
+    <string name="filter_all">All</string>
+    <string name="filter_track">Track</string>
+    <string name="filter_ohe">OHE</string>
+    <string name="section_track">Track</string>
+    <string name="section_ohe">OHE</string>
+    <string name="routed_to">To %1$s</string>
 </resources>

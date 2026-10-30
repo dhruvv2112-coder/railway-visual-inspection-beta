@@ -4,7 +4,7 @@ import org.apache.commons.text.similarity.LevenshteinDistance
 
 /** Closed command vocabulary (English + Hindi, incl. common Hinglish). Speech is transcribed by the
  *  platform recogniser; this maps the transcript to an intent with a fuzzy match (Apache Commons Text).
- *  Safety: no command can report a protect-first defect or bypass protection – those always need a tap. */
+ *  Safety: no command can report a protect-first (track) or TPC-first (live OHE) defect or bypass protection – those always need a tap. */
 sealed interface Command {
     data object Capture : Command
     data object StartPatrol : Command
@@ -40,6 +40,15 @@ object CommandMatcher {
         Command.Defect("PW-BF-008") to listOf("vegetation", "grass", "झाड़ियाँ", "घास"),
         Command.Defect("PW-BF-010") to listOf("encroachment", "अतिक्रमण"),
         Command.Defect("PW-RL-008") to listOf("usfd mark", "one red cross", "यूएसएफडी", "लाल क्रॉस"),
+        // OHE (combined patrol). OHE danger classes (wire down, object fouling pantograph) are deliberately absent.
+        Command.Defect("EL-OH-004") to listOf("dropper broken", "broken dropper", "dropper missing", "ड्रॉपर टूटा", "ड्रॉपर गायब"),
+        Command.Defect("EL-OH-001") to listOf("insulator broken", "cracked insulator", "insulator cracked", "इंसुलेटर टूटा", "इंसुलेटर में दरार"),
+        Command.Defect("EL-OH-008") to listOf("bird nest", "nest on wire", "चिड़िया का घोंसला", "घोंसला"),
+        Command.Defect("EL-OH-014") to listOf("bond missing", "loose bond", "earth bond missing", "बॉन्ड गायब", "बॉन्ड ढीला"),
+        Command.Defect("EL-OH-013") to listOf("number plate missing", "mast plate missing", "नंबर प्लेट गायब"),
+        Command.Defect("EL-OH-009") to listOf("tree branch", "branches near wire", "पेड़ की शाखा", "पेड़ की डाली"),
+        Command.Defect("EL-OH-011") to listOf("mast tilted", "mast bent", "मस्त झुका", "खंभा झुका"),
+        Command.Defect("EL-OH-015") to listOf("counterweight stuck", "counter weight", "काउंटर वेट अटका"),
     )
 
     private val notePrefixes = listOf("note", "remark", "टिप्पणी", "नोट")

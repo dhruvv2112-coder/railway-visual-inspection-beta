@@ -17,6 +17,7 @@ def uid() -> str:
 
 
 class PatrolType(str, Enum):
+    combined_foot = "CP-01"  # combined track + OHE foot patrol (Beta focus)
     keyman_daily = "PT-01"
     gang_rain = "PT-02"
     monsoon = "PT-03"
@@ -66,6 +67,8 @@ class Finding(SQLModel, table=True):
     # protection record (mandatory for protect-first classes)
     line_protected_at: datetime | None = None
     sm_informed_at: datetime | None = None
+    # OHE danger record (mandatory for OHE danger classes): TPC informed, staying clear of the live conductor
+    tpc_informed_at: datetime | None = None
     # automated interpretation (never authoritative)
     ai_candidates_json: str = "[]"
     ai_model_version: str | None = None
