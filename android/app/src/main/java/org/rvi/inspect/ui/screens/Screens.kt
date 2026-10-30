@@ -187,8 +187,10 @@ fun PatrolHud(km: String, findings: Int, listening: Boolean, heard: String?, onC
 /** Protect-first guidance. It never replaces protection; it records that it was done. */
 @Composable
 fun DangerSheet(protectedDone: Boolean, smDone: Boolean, onProtected: () -> Unit, onSm: () -> Unit, onContinue: () -> Unit) {
-    Box(Modifier.fillMaxSize().background(Grey.Scrim), contentAlignment = Alignment.BottomCenter) {
-        GlassCard(Pad.fillMaxWidth().padding(bottom = 16.dp), strong = true) {
+    // Safety prompt: deliberately NOT translucent – nothing behind it may compete for attention.
+    Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color(0xE6000000)), contentAlignment = Alignment.BottomCenter) {
+        Column(Pad.fillMaxWidth().padding(bottom = 16.dp).background(Grey.G900, org.rvi.inspect.ui.components.GlassShape)
+            .border(1.dp, Grey.White, org.rvi.inspect.ui.components.GlassShape).padding(20.dp)) {
             Text(stringResource(R.string.danger_title), style = MaterialTheme.typography.headlineSmall, color = Grey.White)
             Spacer(Modifier.height(12.dp))
             Text(stringResource(R.string.danger_body), style = MaterialTheme.typography.bodyLarge, color = Grey.G200)
