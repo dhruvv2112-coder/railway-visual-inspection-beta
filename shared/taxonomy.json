@@ -320,7 +320,7 @@
     "hi": "फिश बोल्ट/नट गायब"
    },
    "severity": "RF-P2 (RF-P1 if several missing)",
-   "protect_first": true,
+   "protect_first": false,
    "needs_measurement": false,
    "immediate_action": "Replace from spare fittings (keyman carries spares, S06 A4); report if many (S06 B5)",
    "reference": "S06 B2,B7,B8, Appx B",
@@ -422,7 +422,7 @@
     "hi": "ERC गायब"
    },
    "severity": "RF-P3 isolated; RF-P2 consecutive; RF-P1 large-scale theft (S06 B5)",
-   "protect_first": true,
+   "protect_first": false,
    "needs_measurement": false,
    "immediate_action": "Recoup from spares (S06 B7); large-scale theft – protect line (S06 B5)",
    "reference": "S06 B2,B7,B9; S14",
@@ -813,7 +813,7 @@
     "hi": "लाइन पर बाहरी सामग्री"
    },
    "severity": "RF-P4 (RF-P1 if fouling)",
-   "protect_first": true,
+   "protect_first": false,
    "needs_measurement": false,
    "immediate_action": "Collect; hand to nearest SM (S06 B13)",
    "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",

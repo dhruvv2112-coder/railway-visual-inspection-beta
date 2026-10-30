@@ -3,6 +3,9 @@ on:
   push: {paths: ["android/**", "shared/**", ".github/workflows/android.yml"]}
   pull_request: {paths: ["android/**"]}
   workflow_dispatch:
+defaults:
+  run:
+    shell: bash
 permissions:
   contents: write
 jobs:

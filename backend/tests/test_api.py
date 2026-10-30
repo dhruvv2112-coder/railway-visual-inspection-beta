@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import cv2
 import numpy as np
@@ -14,7 +14,7 @@ def _jpeg(blur=False):
         cv2.line(img, (x, 0), (x, 960), 255, 2)
     if blur:
         img = cv2.GaussianBlur(img, (41, 41), 15)
-    ok, buf = cv2.imencode(".jpg", cv2.cvtColor(img, cv2.COLOR_GRAY2BGR))
+    _ok, buf = cv2.imencode(".jpg", cv2.cvtColor(img, cv2.COLOR_GRAY2BGR))
     return buf.tobytes()
 
 
@@ -44,7 +44,7 @@ def test_r2_protect_first_requires_protection(client):
     pid = _patrol(client)
     body = {"patrol_id": pid, "class_id": "PW-RL-001", "km_reference": "1205/2", "line": "UP", "rail_side": "L"}
     assert client.post("/findings", json=body, headers=KEYMAN).status_code == 422
-    t = datetime.now(timezone.utc).isoformat()
+    t = datetime.now(UTC).isoformat()
     body |= {"line_protected_at": t, "sm_informed_at": t, "action_taken": "Protected per G&SR 3.62; SM informed"}
     assert client.post("/findings", json=body, headers=KEYMAN).status_code == 201
 

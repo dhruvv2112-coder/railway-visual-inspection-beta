@@ -1,7 +1,7 @@
 """Persistence models (SQLModel). Four record layers are kept separate (Phase 1 report, Table 14.1):
 raw observation (Evidence), automated interpretation (Finding.ai_*), human conclusion
 (Finding.confirmed_*), authorised decision (Finding.severity/closure)."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from uuid import uuid4
 
@@ -9,7 +9,7 @@ from sqlmodel import Field, SQLModel
 
 
 def now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def uid() -> str:

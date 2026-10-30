@@ -8,6 +8,7 @@ R6 Every state change is written to an append-only hash-chained audit log.
 """
 import hashlib
 import json
+from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import Annotated
 
@@ -22,13 +23,14 @@ from .models import Evidence, Finding, FindingStatus, Patrol, PatrolType, now
 
 SUPERVISOR_ROLES = {"JE", "SSE", "ADEN"}
 
-app = FastAPI(title="RVI Beta API", version="0.1.0")
-
-
-@app.on_event("startup")
-def _startup():
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
     init_db()
     settings.evidence_dir.mkdir(parents=True, exist_ok=True)
+    yield
+
+
+app = FastAPI(title="RVI Beta API", version="0.1.0", lifespan=lifespan)
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -118,7 +120,8 @@ def create_finding(body: FindingIn, s: SessionDep, a: ActorDep):
 
 
 @app.post("/findings/{fid}/evidence", status_code=201)
-async def add_evidence(fid: str, s: SessionDep, a: ActorDep, image: UploadFile = File(...), kind: str = Form("defect")):
+async def add_evidence(fid: str, s: SessionDep, a: ActorDep, image: Annotated[UploadFile, File()],
+                       kind: Annotated[str, Form()] = "defect"):
     f = s.get(Finding, fid)
     if not f:
         raise HTTPException(404, "Finding not found")

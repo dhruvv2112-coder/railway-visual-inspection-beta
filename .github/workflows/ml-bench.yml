@@ -15,6 +15,9 @@ env:
   PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
   HF_HUB_DISABLE_PROGRESS_BARS: "1"
 
+defaults:
+  run:
+    shell: bash
 permissions:
   contents: write
 jobs:
