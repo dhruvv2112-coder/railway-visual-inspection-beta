@@ -3,6 +3,8 @@ on:
   push: {paths: ["android/**", "shared/**", ".github/workflows/android.yml"]}
   pull_request: {paths: ["android/**"]}
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +17,7 @@ jobs:
         with: {gradle-version: "8.11.1"}
       - name: Build, unit tests, lint, screenshot capture
         working-directory: android
-        run: gradle --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:recordRoborazziDebug
+        run: mkdir -p ../logs && gradle --no-daemon --continue :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:recordRoborazziDebug 2>&1 | tee ../logs/gradle.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -25,3 +27,12 @@ jobs:
             android/app/build/reports/
             android/app/build/test-results/
             android/app/build/outputs/roborazzi/
+      - name: Publish logs and results to branch ci-android
+        if: always()
+        run: |
+          mkdir -p /tmp/pub && cp -r logs android/app/build/reports android/app/build/test-results android/app/build/outputs/roborazzi /tmp/pub/ 2>/dev/null || true
+          cd /tmp && rm -rf pubrepo && git clone -q --depth 1 --branch ci-android "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" pubrepo 2>/dev/null || (mkdir pubrepo && cd pubrepo && git init -q -b ci-android && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}")
+          cd /tmp/pubrepo && rm -rf ./* && cp -r /tmp/pub/* . 2>/dev/null || true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "results ${{ github.sha }}" && git push -q -f origin HEAD:ci-android

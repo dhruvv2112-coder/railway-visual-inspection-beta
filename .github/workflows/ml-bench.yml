@@ -15,6 +15,8 @@ env:
   PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
   HF_HUB_DISABLE_PROGRESS_BARS: "1"
 
+permissions:
+  contents: write
 jobs:
   bench:
     runs-on: ubuntu-latest
@@ -41,6 +43,8 @@ jobs:
         working-directory: ml/bench
         env: {FT_EPOCHS: "${{ github.event.inputs.ft_epochs || '8' }}"}
         run: |
+          mkdir -p ../../logs
+          exec > >(tee ../../logs/${{ matrix.suite }}.log) 2>&1
           case "${{ matrix.suite }}" in
             vision-basic) python bench_quality_gate.py; python bench_ocr.py; python bench_dedup.py ;;
             asr) python bench_asr.py ;;
@@ -50,6 +54,15 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: "reports-${{ matrix.suite }}", path: reports/, if-no-files-found: warn}
+      - name: Publish logs and results to branch ci-ml-${{ matrix.suite }}
+        if: always()
+        run: |
+          mkdir -p /tmp/pub && cp -r logs reports /tmp/pub/ 2>/dev/null || true
+          cd /tmp && rm -rf pubrepo && git clone -q --depth 1 --branch ci-ml-${{ matrix.suite }} "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" pubrepo 2>/dev/null || (mkdir pubrepo && cd pubrepo && git init -q -b ci-ml-${{ matrix.suite }} && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}")
+          cd /tmp/pubrepo && rm -rf ./* && cp -r /tmp/pub/* . 2>/dev/null || true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "results ${{ github.sha }}" && git push -q -f origin HEAD:ci-ml-${{ matrix.suite }}
 
   aggregate:
     needs: bench
@@ -61,6 +74,15 @@ jobs:
         with: {pattern: "reports-*", path: reports, merge-multiple: true}
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - run: cd ml/bench && python aggregate.py
+      - run: pip install pyyaml && cd ml/bench && python aggregate.py
       - uses: actions/upload-artifact@v4
         with: {name: benchmark-report, path: reports/}
+      - name: Publish logs and results to branch ci-ml-aggregate
+        if: always()
+        run: |
+          mkdir -p /tmp/pub && cp -r reports /tmp/pub/ 2>/dev/null || true
+          cd /tmp && rm -rf pubrepo && git clone -q --depth 1 --branch ci-ml-aggregate "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" pubrepo 2>/dev/null || (mkdir pubrepo && cd pubrepo && git init -q -b ci-ml-aggregate && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}")
+          cd /tmp/pubrepo && rm -rf ./* && cp -r /tmp/pub/* . 2>/dev/null || true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "results ${{ github.sha }}" && git push -q -f origin HEAD:ci-ml-aggregate

@@ -3,6 +3,8 @@ on:
   push: {paths: ["backend/**", "shared/**", ".github/workflows/backend.yml"]}
   pull_request: {paths: ["backend/**", "shared/**"]}
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,8 +14,18 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.11", cache: pip, cache-dependency-path: backend/pyproject.toml}
       - run: pip install -e ".[dev]"
-      - run: ruff check app tests
-      - run: pytest -q --junitxml=../reports/backend-tests.xml
+      - run: mkdir -p ../logs ../reports
+      - run: ruff check app tests --output-format=full 2>&1 | tee ../logs/ruff.log
+      - run: pytest -q -rA --junitxml=../reports/backend-tests.xml 2>&1 | tee ../logs/pytest.log
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: backend-test-report, path: reports/backend-tests.xml}
+      - name: Publish logs and results to branch ci-backend
+        if: always()
+        run: |
+          mkdir -p /tmp/pub && cp -r ../logs ../reports /tmp/pub/ 2>/dev/null || true
+          cd /tmp && rm -rf pubrepo && git clone -q --depth 1 --branch ci-backend "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" pubrepo 2>/dev/null || (mkdir pubrepo && cd pubrepo && git init -q -b ci-backend && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}")
+          cd /tmp/pubrepo && rm -rf ./* && cp -r /tmp/pub/* . 2>/dev/null || true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "results ${{ github.sha }}" && git push -q -f origin HEAD:ci-backend
