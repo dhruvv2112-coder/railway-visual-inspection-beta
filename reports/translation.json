@@ -1,0 +1,55 @@
+{
+ "name": "translation",
+ "title": "Note translation Hindi <-> English",
+ "summary": "150 FLEURS/FLoRes parallel sentences (general domain).",
+ "environment": {
+  "python": "3.11.17",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "runner": "GitHub Actions 1000000041",
+  "timestamp_utc": "2026-10-30T03:08:31.990002+00:00",
+  "torch": "2.15.0+cpu",
+  "cuda": false
+ },
+ "results": [
+  {
+   "direction": "hi->en",
+   "model": "Helsinki-NLP/opus-mt-hi-en",
+   "n": 150,
+   "chrF++": 43.4157487955382,
+   "BLEU": 18.91043949859953,
+   "sec_per_sentence": 0.2582175239733333
+  },
+  {
+   "direction": "hi->en",
+   "model": "facebook/nllb-200-distilled-600M",
+   "n": 150,
+   "chrF++": 62.289394752760394,
+   "BLEU": 38.685661008251415,
+   "sec_per_sentence": 2.0035589480333336
+  },
+  {
+   "direction": "en->hi",
+   "model": "Helsinki-NLP/opus-mt-en-hi",
+   "n": 150,
+   "chrF++": 32.498767118534936,
+   "BLEU": 12.894400059663017,
+   "sec_per_sentence": 0.25005352362000016
+  },
+  {
+   "direction": "en->hi",
+   "model": "facebook/nllb-200-distilled-600M",
+   "n": 150,
+   "chrF++": 52.35387901502919,
+   "BLEU": 29.187374475152456,
+   "sec_per_sentence": 2.410926504073333
+  }
+ ],
+ "extra": {},
+ "notes": [
+  "IndicTrans2 (MIT) is gated on Hugging Face – run on the laptop with an accepted HF token: ml/train/README.md.",
+  "NLLB-200 is CC-BY-NC: comparison only, not deployable commercially.",
+  "Railway terminology needs a glossary-constrained evaluation set (gap)."
+ ]
+}

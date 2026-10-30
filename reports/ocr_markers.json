@@ -7,8 +7,8 @@
   "machine": "x86_64",
   "processor": "x86_64",
   "cpu_count": 4,
-  "runner": "GitHub Actions 1000000051",
-  "timestamp_utc": "2026-10-30T04:53:20.831960+00:00",
+  "runner": "GitHub Actions 1000000042",
+  "timestamp_utc": "2026-10-30T03:13:14.147810+00:00",
   "torch": "2.15.0+cpu",
   "cuda": false
  },
@@ -19,9 +19,8 @@
    "lang": "en",
    "n": 80,
    "exact_match": 1.0,
-   "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.07567836950001094
+   "median_latency_s": 0.13366840400001934
   },
   {
    "engine": "tesseract-5",
@@ -29,29 +28,26 @@
    "lang": "hi",
    "n": 40,
    "exact_match": 0.0,
-   "number_match": 0.125,
    "cer": 0.4608695652173913,
-   "median_latency_s": 0.08591836199998681
+   "median_latency_s": 0.15342182000000548
   },
   {
    "engine": "tesseract-5",
    "condition": "perspective+blur",
    "lang": "en",
    "n": 80,
-   "exact_match": 0.8,
-   "number_match": 0.825,
-   "cer": 0.1509433962264151,
-   "median_latency_s": 0.0784928070000035
+   "exact_match": 0.65,
+   "cer": 0.25943396226415094,
+   "median_latency_s": 0.13645955500000184
   },
   {
    "engine": "tesseract-5",
    "condition": "perspective+blur",
    "lang": "hi",
    "n": 40,
-   "exact_match": 0.1,
-   "number_match": 0.125,
-   "cer": 0.34492753623188405,
-   "median_latency_s": 0.09210881850000874
+   "exact_match": 0.175,
+   "cer": 0.2753623188405797,
+   "median_latency_s": 0.16218681600000195
   },
   {
    "engine": "tesseract-5",
@@ -59,9 +55,8 @@
    "lang": "en",
    "n": 80,
    "exact_match": 0.9875,
-   "number_match": 0.9875,
    "cer": 0.007861635220125786,
-   "median_latency_s": 0.0747034460000009
+   "median_latency_s": 0.13096317349996411
   },
   {
    "engine": "tesseract-5",
@@ -69,19 +64,17 @@
    "lang": "hi",
    "n": 40,
    "exact_match": 0.025,
-   "number_match": 0.175,
    "cer": 0.6086956521739131,
-   "median_latency_s": 0.08439610749999815
+   "median_latency_s": 0.15186628699996163
   },
   {
    "engine": "tesseract-5",
    "condition": "weathered(noise+fade)",
    "lang": "en",
    "n": 80,
-   "exact_match": 1.0,
-   "number_match": 1.0,
-   "cer": 0.0,
-   "median_latency_s": 0.1713315169999845
+   "exact_match": 0.0,
+   "cer": 0.9827044025157232,
+   "median_latency_s": 0.18864884699999607
   },
   {
    "engine": "tesseract-5",
@@ -89,9 +82,8 @@
    "lang": "hi",
    "n": 40,
    "exact_match": 0.0,
-   "number_match": 0.125,
-   "cer": 0.45217391304347826,
-   "median_latency_s": 0.19706293350000692
+   "cer": 0.9942028985507246,
+   "median_latency_s": 0.2335345459999587
   },
   {
    "engine": "easyocr",
@@ -99,9 +91,8 @@
    "lang": "en",
    "n": 80,
    "exact_match": 1.0,
-   "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.7985751820000075
+   "median_latency_s": 1.792983001500005
   },
   {
    "engine": "easyocr",
@@ -109,180 +100,74 @@
    "lang": "hi",
    "n": 40,
    "exact_match": 0.0,
-   "number_match": 1.0,
    "cer": 0.4144927536231884,
-   "median_latency_s": 0.690656577999988
+   "median_latency_s": 1.6910959594999895
   },
   {
    "engine": "easyocr",
    "condition": "perspective+blur",
-   "lang": "en",
-   "n": 80,
-   "exact_match": 1.0,
-   "number_match": 1.0,
-   "cer": 0.0,
-   "median_latency_s": 0.6227652174999889
-  },
-  {
-   "engine": "easyocr",
-   "condition": "perspective+blur",
-   "lang": "hi",
-   "n": 40,
-   "exact_match": 0.0,
-   "number_match": 1.0,
-   "cer": 0.4144927536231884,
-   "median_latency_s": 0.6987290780000137
-  },
-  {
-   "engine": "easyocr",
-   "condition": "low_light",
-   "lang": "en",
-   "n": 80,
-   "exact_match": 1.0,
-   "number_match": 1.0,
-   "cer": 0.0,
-   "median_latency_s": 0.6515367359999971
-  },
-  {
-   "engine": "easyocr",
-   "condition": "low_light",
-   "lang": "hi",
-   "n": 40,
-   "exact_match": 0.0,
-   "number_match": 1.0,
-   "cer": 0.391304347826087,
-   "median_latency_s": 0.6979555974999982
-  },
-  {
-   "engine": "easyocr",
-   "condition": "weathered(noise+fade)",
-   "lang": "en",
-   "n": 80,
-   "exact_match": 1.0,
-   "number_match": 1.0,
-   "cer": 0.0,
-   "median_latency_s": 0.6661400239999864
-  },
-  {
-   "engine": "easyocr",
-   "condition": "weathered(noise+fade)",
-   "lang": "hi",
-   "n": 40,
-   "exact_match": 0.0,
-   "number_match": 1.0,
-   "cer": 0.4144927536231884,
-   "median_latency_s": 0.682660454000029
-  },
-  {
-   "engine": "paddleocr",
-   "condition": "clean",
    "lang": "en",
    "n": 80,
    "exact_match": 0.9875,
-   "number_match": 1.0,
    "cer": 0.0015723270440251573,
-   "median_latency_s": 0.04041742150002392
+   "median_latency_s": 1.4864862669999184
   },
   {
-   "engine": "paddleocr",
-   "condition": "clean",
-   "lang": "hi",
-   "n": 40,
-   "exact_match": 0.0,
-   "number_match": 0.8,
-   "cer": 0.34492753623188405,
-   "median_latency_s": 0.03131334599999036
-  },
-  {
-   "engine": "paddleocr",
-   "condition": "perspective+blur",
-   "lang": "en",
-   "n": 80,
-   "exact_match": 0.9625,
-   "number_match": 1.0,
-   "cer": 0.03773584905660377,
-   "median_latency_s": 0.03753742449998754
-  },
-  {
-   "engine": "paddleocr",
+   "engine": "easyocr",
    "condition": "perspective+blur",
    "lang": "hi",
    "n": 40,
    "exact_match": 0.0,
-   "number_match": 0.725,
-   "cer": 0.34202898550724636,
-   "median_latency_s": 0.031630489500059866
+   "cer": 0.4144927536231884,
+   "median_latency_s": 1.6776853150000193
   },
   {
-   "engine": "paddleocr",
+   "engine": "easyocr",
    "condition": "low_light",
    "lang": "en",
    "n": 80,
-   "exact_match": 0.8875,
-   "number_match": 0.9875,
-   "cer": 0.020440251572327043,
-   "median_latency_s": 0.03698192350003637
+   "exact_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 1.5195391479999785
   },
   {
-   "engine": "paddleocr",
+   "engine": "easyocr",
    "condition": "low_light",
    "lang": "hi",
    "n": 40,
    "exact_match": 0.0,
-   "number_match": 0.725,
-   "cer": 0.3681159420289855,
-   "median_latency_s": 0.033109457500017925
+   "cer": 0.391304347826087,
+   "median_latency_s": 1.67109135350006
   },
   {
-   "engine": "paddleocr",
+   "engine": "easyocr",
    "condition": "weathered(noise+fade)",
    "lang": "en",
    "n": 80,
    "exact_match": 1.0,
-   "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.03768452549996937
+   "median_latency_s": 1.5627131699999381
   },
   {
-   "engine": "paddleocr",
+   "engine": "easyocr",
    "condition": "weathered(noise+fade)",
    "lang": "hi",
    "n": 40,
    "exact_match": 0.0,
-   "number_match": 0.825,
-   "cer": 0.3391304347826087,
-   "median_latency_s": 0.03290672500003211
+   "cer": 0.41739130434782606,
+   "median_latency_s": 1.6998682189999954
   }
  ],
- "extra": {
-  "samples": [
-   "tesseract-5/clean/en: ref='1829/6' hyp='1829/6'",
-   "tesseract-5/clean/hi: ref='किमी 1095' hyp='[किमी 095'",
-   "tesseract-5/perspective+blur/en: ref='1829/6' hyp='1829/6'",
-   "tesseract-5/perspective+blur/hi: ref='किमी 1095' hyp='किमी 4095'",
-   "tesseract-5/low_light/en: ref='1829/6' hyp='1829/6'",
-   "tesseract-5/low_light/hi: ref='किमी 1095' hyp='/ किमी 2085 /'",
-   "tesseract-5/weathered(noise+fade)/en: ref='1829/6' hyp='1829/6'",
-   "tesseract-5/weathered(noise+fade)/hi: ref='किमी 1095' hyp='[किमी ॥095'",
-   "easyocr/clean/en: ref='1829/6' hyp='1829/6'",
-   "easyocr/clean/hi: ref='किमी 1095' hyp='किमी १०९५'",
-   "easyocr/perspective+blur/en: ref='1829/6' hyp='1829/6'",
-   "easyocr/perspective+blur/hi: ref='किमी 1095' hyp='किमी १०९५'",
-   "easyocr/low_light/en: ref='1829/6' hyp='1829/6'",
-   "easyocr/low_light/hi: ref='किमी 1095' hyp='किमी १०९५'",
-   "easyocr/weathered(noise+fade)/en: ref='1829/6' hyp='1829/6'",
-   "easyocr/weathered(noise+fade)/hi: ref='किमी 1095' hyp='किमी १०९५'",
-   "paddleocr/clean/en: ref='1829/6' hyp='1829/6'",
-   "paddleocr/clean/hi: ref='किमी 1095' hyp='िकमी 1095'",
-   "paddleocr/perspective+blur/en: ref='1829/6' hyp='1829/6'",
-   "paddleocr/perspective+blur/hi: ref='किमी 1095' hyp='िकमी 1095'",
-   "paddleocr/low_light/en: ref='1829/6' hyp='1829/6'",
-   "paddleocr/low_light/hi: ref='किमी 1095' hyp='िकमी 1095'",
-   "paddleocr/weathered(noise+fade)/en: ref='1829/6' hyp='1829/6'",
-   "paddleocr/weathered(noise+fade)/hi: ref='किमी 1095' hyp='िकमी 1095'"
-  ]
- },
+ "extra": {},
  "notes": [
+  "paddleocr/clean/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/clean/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/perspective+blur/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/perspective+blur/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/low_light/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/low_light/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/weathered(noise+fade)/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
+  "paddleocr/weathered(noise+fade)/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in",
   "Synthetic plates: real Indian km-post photos must be collected in pilot (gap).",
   "On-device app uses ML Kit Text Recognition v2 (Latin + Devanagari); not runnable in CI – evaluate on device."
  ]
