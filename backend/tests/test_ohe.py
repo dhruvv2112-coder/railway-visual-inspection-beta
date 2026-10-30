@@ -107,8 +107,10 @@ def test_v06_notes_never_change_visual_output(client, models):
     a1 = _upload(client, s1, _jpeg(6), **NEAR_12).json()["analysis"]
     a2 = _upload(client, s2, _jpeg(6), **NEAR_12).json()["analysis"]
     assert a1["assessments"] == a2["assessments"] and a1["identity"] == a2["identity"]
+    from pathlib import Path
+
     import app.ohe.pipeline as p
-    assert "Note" not in open(p.__file__).read()                          # no code path from notes to inference
+    assert "Note" not in Path(p.__file__).read_text()                          # no code path from notes to inference
 
 
 def test_v07_checksum_and_idempotent_ingest(client, models):

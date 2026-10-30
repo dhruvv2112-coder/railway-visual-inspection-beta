@@ -6,6 +6,7 @@ import hashlib
 import json
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
@@ -163,7 +164,7 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, image: Annotated[UploadFi
 def process(m: OheMedia, s: Session) -> None:
     """Run the cascade for one media item and link results to findings (repeat evidence never duplicates)."""
     reg = pipeline.load_registry()
-    img = quality.decode(open(m.path, "rb").read())
+    img = quality.decode(Path(m.path).read_bytes())
     res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m)
     if res["identity"]["selected_asset_id"] and m.lat is None:
         m.location_source = "registry_inherited"
@@ -226,7 +227,7 @@ def _reconcile(sess: OheSession, s: Session) -> dict:
     findings = [{"id": f.id, "asset_id": f.asset_id, "candidates": json.loads(f.candidates_json),
                  "observations": f.observations, "alert": f.alert, "media_ids": json.loads(f.media_ids_json),
                  **json.loads(f.payload_json)} for f in fs]
-    count = lambda st: sum(r["state"] == st for r in register)  # noqa: E731
+    count = lambda st: sum(r["state"] == st for r in register)
     return {
         "RPT-01_document_control": {"session": sess.id, "territory": sess.territory, "capture_start": sess.started_at,
                                     "capture_end": sess.ended_at, "timezone": "UTC"},
@@ -332,7 +333,7 @@ def report_html(rid: str, s: SessionDep):
     if not r:
         raise HTTPException(404, "Report not found")
     c = json.loads(r.content_json)
-    row = lambda *v: "<tr>" + "".join(f"<td>{x}</td>" for x in v) + "</tr>"  # noqa: E731
+    row = lambda *v: "<tr>" + "".join(f"<td>{x}</td>" for x in v) + "</tr>"
     reg = "".join(row(x["asset_id"], x["state"].replace("_", " "), len(x["findings"])) for x in c["RPT-05_asset_register"])
     fnd = "".join(row(f["id"], f["asset_id"] or "unresolved: " + ", ".join(x["asset_id"] for x in f["candidates"][:3]),
                       f.get("observed_feature", f["state"]), f.get("priority", "review"), f.get("routing", {}).get("primary", ""))
