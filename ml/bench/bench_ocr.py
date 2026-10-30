@@ -80,21 +80,36 @@ def eng_paddle(img, lang):
     from paddleocr import PaddleOCR
     key = "hi" if lang == "hi" else "en"
     if key not in _paddle:
-        _paddle[key] = PaddleOCR(lang="hi" if key == "hi" else "en", use_textline_orientation=False)
-    res = _paddle[key].predict(img)
-    return " ".join(res[0]["rec_texts"]).strip() if res else ""
+        try:
+            _paddle[key] = PaddleOCR(lang="hi" if key == "hi" else "en", use_angle_cls=False, show_log=False)
+        except TypeError:
+            _paddle[key] = PaddleOCR(lang="hi" if key == "hi" else "en", use_textline_orientation=False)
+    o = _paddle[key]
+    if hasattr(o, "predict"):  # PaddleOCR 3.x
+        res = o.predict(img)
+        return " ".join(res[0]["rec_texts"]).strip() if res else ""
+    res = o.ocr(img, cls=False)  # PaddleOCR 2.x
+    return " ".join(line[1][0] for line in (res[0] or [])).strip()
 
 
 ENGINES = {"tesseract-5": eng_tesseract, "easyocr": eng_easyocr, "paddleocr": eng_paddle}
+
+
+DEVA_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
 
 
 def norm(s):
     return " ".join(s.replace("|", "/").split())
 
 
+def km_digits(s):
+    """The operationally critical part: the km / mast number, with Devanagari digits mapped to ASCII."""
+    return "".join(ch for ch in s.translate(DEVA_DIGITS) if ch.isdigit())
+
+
 def main():
     data = plates()
-    rows, notes = [], []
+    rows, notes, samples = [], [], []
     for ename, fn in ENGINES.items():
         for cname, aug in CONDS.items():
             for lang in ("en", "hi"):
@@ -113,13 +128,15 @@ def main():
                         hyps.append(norm(hyp) or "∅")
                     rows.append({"engine": ename, "condition": cname, "lang": lang, "n": len(refs),
                                  "exact_match": float(np.mean([a == b for a, b in zip(refs, hyps)])),
+                                 "number_match": float(np.mean([km_digits(a) == km_digits(b) for a, b in zip(refs, hyps)])),
                                  "cer": float(jiwer.cer(refs, hyps)), "median_latency_s": float(np.median(lat))})
+                    samples.append(f"{ename}/{cname}/{lang}: ref={refs[0]!r} hyp={hyps[0]!r}")
                 except Exception as e:
                     notes.append(f"{ename}/{cname}/{lang} failed: {type(e).__name__}: {str(e)[:160]}")
     best = max((r for r in rows if r["condition"] == "clean"), key=lambda r: r["exact_match"], default=None)
     write_report("ocr_markers", "OCR of km/OHE-mast markers (English & Hindi, synthetic plates)",
                  f"Best clean-condition exact match: {best['engine']} {best['lang']} {best['exact_match']:.1%}." if best else "No engine ran.",
-                 rows, notes=notes + ["Synthetic plates: real Indian km-post photos must be collected in pilot (gap).",
+                 rows, extra={"samples": samples}, notes=notes + ["Synthetic plates: real Indian km-post photos must be collected in pilot (gap).",
                                       "On-device app uses ML Kit Text Recognition v2 (Latin + Devanagari); not runnable in CI – evaluate on device."])
 
 

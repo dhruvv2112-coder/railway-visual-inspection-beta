@@ -41,7 +41,7 @@ jobs:
       - name: Optional PaddleOCR
         if: matrix.suite == 'vision-basic'
         continue-on-error: true
-        run: pip install paddlepaddle paddleocr
+        run: pip install "paddlepaddle==2.6.2" "paddleocr==2.9.1"
       - name: Run
         working-directory: ml/bench
         env: {FT_EPOCHS: "${{ github.event.inputs.ft_epochs || '8' }}"}
