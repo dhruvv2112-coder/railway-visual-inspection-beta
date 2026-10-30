@@ -35,7 +35,7 @@ import java.io.File
  *  and as visual-regression baselines. Output: app/build/outputs/roborazzi (PNG files) */
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34], qualifiers = "w393dp-h852dp-xxhdpi-night")
+@Config(sdk = [34], qualifiers = "w393dp-h852dp-night-xxhdpi")
 abstract class Shots(private val lang: String) {
     private val tax = Taxonomy.parse(File("../../shared/taxonomy.json").readText())
 
@@ -82,8 +82,8 @@ abstract class Shots(private val lang: String) {
     @Test fun s08_settings() = shot("08_settings") { SettingsScreen(SettingsState(lang, true, true, false, true), {}, { _, _ -> }) }
 }
 
-@Config(qualifiers = "en-rIN-w393dp-h852dp-xxhdpi-night")
+@Config(qualifiers = "en-rIN-w393dp-h852dp-night-xxhdpi")
 class EnglishShots : Shots("en")
 
-@Config(qualifiers = "hi-rIN-w393dp-h852dp-xxhdpi-night")
+@Config(qualifiers = "hi-rIN-w393dp-h852dp-night-xxhdpi")
 class HindiShots : Shots("hi")
