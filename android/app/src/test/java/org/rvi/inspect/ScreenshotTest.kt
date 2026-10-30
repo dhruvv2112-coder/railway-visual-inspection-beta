@@ -32,7 +32,7 @@ import org.rvi.inspect.ui.theme.RviTheme
 import java.io.File
 
 /** Renders real Compose screens on the JVM (Robolectric native graphics) – used for design review
- *  and as visual-regression baselines. Output: app/build/outputs/roborazzi/*.png */
+ *  and as visual-regression baselines. Output: app/build/outputs/roborazzi (PNG files) */
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [34], qualifiers = "w393dp-h852dp-xxhdpi-night")
