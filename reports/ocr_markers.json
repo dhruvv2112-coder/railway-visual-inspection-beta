@@ -1,0 +1,289 @@
+{
+ "name": "ocr_markers",
+ "title": "OCR of km/OHE-mast markers (English & Hindi, synthetic plates)",
+ "summary": "Best clean-condition exact match: tesseract-5 en 100.0%.",
+ "environment": {
+  "python": "3.11.17",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "runner": "GitHub Actions 1000000051",
+  "timestamp_utc": "2026-10-30T04:53:20.831960+00:00",
+  "torch": "2.15.0+cpu",
+  "cuda": false
+ },
+ "results": [
+  {
+   "engine": "tesseract-5",
+   "condition": "clean",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.07567836950001094
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "clean",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 0.125,
+   "cer": 0.4608695652173913,
+   "median_latency_s": 0.08591836199998681
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "perspective+blur",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 0.8,
+   "number_match": 0.825,
+   "cer": 0.1509433962264151,
+   "median_latency_s": 0.0784928070000035
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "perspective+blur",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.1,
+   "number_match": 0.125,
+   "cer": 0.34492753623188405,
+   "median_latency_s": 0.09210881850000874
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "low_light",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 0.9875,
+   "number_match": 0.9875,
+   "cer": 0.007861635220125786,
+   "median_latency_s": 0.0747034460000009
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "low_light",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.025,
+   "number_match": 0.175,
+   "cer": 0.6086956521739131,
+   "median_latency_s": 0.08439610749999815
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "weathered(noise+fade)",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.1713315169999845
+  },
+  {
+   "engine": "tesseract-5",
+   "condition": "weathered(noise+fade)",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 0.125,
+   "cer": 0.45217391304347826,
+   "median_latency_s": 0.19706293350000692
+  },
+  {
+   "engine": "easyocr",
+   "condition": "clean",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.7985751820000075
+  },
+  {
+   "engine": "easyocr",
+   "condition": "clean",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 1.0,
+   "cer": 0.4144927536231884,
+   "median_latency_s": 0.690656577999988
+  },
+  {
+   "engine": "easyocr",
+   "condition": "perspective+blur",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.6227652174999889
+  },
+  {
+   "engine": "easyocr",
+   "condition": "perspective+blur",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 1.0,
+   "cer": 0.4144927536231884,
+   "median_latency_s": 0.6987290780000137
+  },
+  {
+   "engine": "easyocr",
+   "condition": "low_light",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.6515367359999971
+  },
+  {
+   "engine": "easyocr",
+   "condition": "low_light",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 1.0,
+   "cer": 0.391304347826087,
+   "median_latency_s": 0.6979555974999982
+  },
+  {
+   "engine": "easyocr",
+   "condition": "weathered(noise+fade)",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.6661400239999864
+  },
+  {
+   "engine": "easyocr",
+   "condition": "weathered(noise+fade)",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 1.0,
+   "cer": 0.4144927536231884,
+   "median_latency_s": 0.682660454000029
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "clean",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 0.9875,
+   "number_match": 1.0,
+   "cer": 0.0015723270440251573,
+   "median_latency_s": 0.04041742150002392
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "clean",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 0.8,
+   "cer": 0.34492753623188405,
+   "median_latency_s": 0.03131334599999036
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "perspective+blur",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 0.9625,
+   "number_match": 1.0,
+   "cer": 0.03773584905660377,
+   "median_latency_s": 0.03753742449998754
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "perspective+blur",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 0.725,
+   "cer": 0.34202898550724636,
+   "median_latency_s": 0.031630489500059866
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "low_light",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 0.8875,
+   "number_match": 0.9875,
+   "cer": 0.020440251572327043,
+   "median_latency_s": 0.03698192350003637
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "low_light",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 0.725,
+   "cer": 0.3681159420289855,
+   "median_latency_s": 0.033109457500017925
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "weathered(noise+fade)",
+   "lang": "en",
+   "n": 80,
+   "exact_match": 1.0,
+   "number_match": 1.0,
+   "cer": 0.0,
+   "median_latency_s": 0.03768452549996937
+  },
+  {
+   "engine": "paddleocr",
+   "condition": "weathered(noise+fade)",
+   "lang": "hi",
+   "n": 40,
+   "exact_match": 0.0,
+   "number_match": 0.825,
+   "cer": 0.3391304347826087,
+   "median_latency_s": 0.03290672500003211
+  }
+ ],
+ "extra": {
+  "samples": [
+   "tesseract-5/clean/en: ref='1829/6' hyp='1829/6'",
+   "tesseract-5/clean/hi: ref='किमी 1095' hyp='[किमी 095'",
+   "tesseract-5/perspective+blur/en: ref='1829/6' hyp='1829/6'",
+   "tesseract-5/perspective+blur/hi: ref='किमी 1095' hyp='किमी 4095'",
+   "tesseract-5/low_light/en: ref='1829/6' hyp='1829/6'",
+   "tesseract-5/low_light/hi: ref='किमी 1095' hyp='/ किमी 2085 /'",
+   "tesseract-5/weathered(noise+fade)/en: ref='1829/6' hyp='1829/6'",
+   "tesseract-5/weathered(noise+fade)/hi: ref='किमी 1095' hyp='[किमी ॥095'",
+   "easyocr/clean/en: ref='1829/6' hyp='1829/6'",
+   "easyocr/clean/hi: ref='किमी 1095' hyp='किमी १०९५'",
+   "easyocr/perspective+blur/en: ref='1829/6' hyp='1829/6'",
+   "easyocr/perspective+blur/hi: ref='किमी 1095' hyp='किमी १०९५'",
+   "easyocr/low_light/en: ref='1829/6' hyp='1829/6'",
+   "easyocr/low_light/hi: ref='किमी 1095' hyp='किमी १०९५'",
+   "easyocr/weathered(noise+fade)/en: ref='1829/6' hyp='1829/6'",
+   "easyocr/weathered(noise+fade)/hi: ref='किमी 1095' hyp='किमी १०९५'",
+   "paddleocr/clean/en: ref='1829/6' hyp='1829/6'",
+   "paddleocr/clean/hi: ref='किमी 1095' hyp='िकमी 1095'",
+   "paddleocr/perspective+blur/en: ref='1829/6' hyp='1829/6'",
+   "paddleocr/perspective+blur/hi: ref='किमी 1095' hyp='िकमी 1095'",
+   "paddleocr/low_light/en: ref='1829/6' hyp='1829/6'",
+   "paddleocr/low_light/hi: ref='किमी 1095' hyp='िकमी 1095'",
+   "paddleocr/weathered(noise+fade)/en: ref='1829/6' hyp='1829/6'",
+   "paddleocr/weathered(noise+fade)/hi: ref='किमी 1095' hyp='िकमी 1095'"
+  ]
+ },
+ "notes": [
+  "Synthetic plates: real Indian km-post photos must be collected in pilot (gap).",
+  "On-device app uses ML Kit Text Recognition v2 (Latin + Devanagari); not runnable in CI – evaluate on device."
+ ]
+}
