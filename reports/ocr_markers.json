@@ -7,8 +7,8 @@
   "machine": "x86_64",
   "processor": "x86_64",
   "cpu_count": 4,
-  "runner": "GitHub Actions 1000000051",
-  "timestamp_utc": "2026-10-30T04:53:20.831960+00:00",
+  "runner": "GitHub Actions 1000000055",
+  "timestamp_utc": "2026-10-30T07:01:51.063210+00:00",
   "torch": "2.15.0+cpu",
   "cuda": false
  },
@@ -21,7 +21,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.07567836950001094
+   "median_latency_s": 0.13242588200000682
   },
   {
    "engine": "tesseract-5",
@@ -31,7 +31,7 @@
    "exact_match": 0.0,
    "number_match": 0.125,
    "cer": 0.4608695652173913,
-   "median_latency_s": 0.08591836199998681
+   "median_latency_s": 0.1525517265000076
   },
   {
    "engine": "tesseract-5",
@@ -41,7 +41,7 @@
    "exact_match": 0.8,
    "number_match": 0.825,
    "cer": 0.1509433962264151,
-   "median_latency_s": 0.0784928070000035
+   "median_latency_s": 0.13514124800002492
   },
   {
    "engine": "tesseract-5",
@@ -51,7 +51,7 @@
    "exact_match": 0.1,
    "number_match": 0.125,
    "cer": 0.34492753623188405,
-   "median_latency_s": 0.09210881850000874
+   "median_latency_s": 0.16006036649997668
   },
   {
    "engine": "tesseract-5",
@@ -61,7 +61,7 @@
    "exact_match": 0.9875,
    "number_match": 0.9875,
    "cer": 0.007861635220125786,
-   "median_latency_s": 0.0747034460000009
+   "median_latency_s": 0.12877589099997522
   },
   {
    "engine": "tesseract-5",
@@ -71,7 +71,7 @@
    "exact_match": 0.025,
    "number_match": 0.175,
    "cer": 0.6086956521739131,
-   "median_latency_s": 0.08439610749999815
+   "median_latency_s": 0.1498348275000012
   },
   {
    "engine": "tesseract-5",
@@ -81,7 +81,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.1713315169999845
+   "median_latency_s": 0.2512257184999953
   },
   {
    "engine": "tesseract-5",
@@ -91,7 +91,7 @@
    "exact_match": 0.0,
    "number_match": 0.125,
    "cer": 0.45217391304347826,
-   "median_latency_s": 0.19706293350000692
+   "median_latency_s": 0.2943437665000488
   },
   {
    "engine": "easyocr",
@@ -101,7 +101,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.7985751820000075
+   "median_latency_s": 1.8926171100000033
   },
   {
    "engine": "easyocr",
@@ -111,7 +111,7 @@
    "exact_match": 0.0,
    "number_match": 1.0,
    "cer": 0.4144927536231884,
-   "median_latency_s": 0.690656577999988
+   "median_latency_s": 1.6919823304999682
   },
   {
    "engine": "easyocr",
@@ -121,7 +121,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.6227652174999889
+   "median_latency_s": 1.4753710509999678
   },
   {
    "engine": "easyocr",
@@ -131,7 +131,7 @@
    "exact_match": 0.0,
    "number_match": 1.0,
    "cer": 0.4144927536231884,
-   "median_latency_s": 0.6987290780000137
+   "median_latency_s": 1.6545547249999117
   },
   {
    "engine": "easyocr",
@@ -141,7 +141,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.6515367359999971
+   "median_latency_s": 1.5054563379999308
   },
   {
    "engine": "easyocr",
@@ -151,7 +151,7 @@
    "exact_match": 0.0,
    "number_match": 1.0,
    "cer": 0.391304347826087,
-   "median_latency_s": 0.6979555974999982
+   "median_latency_s": 1.6950620704999437
   },
   {
    "engine": "easyocr",
@@ -161,7 +161,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.6661400239999864
+   "median_latency_s": 1.5376437719999103
   },
   {
    "engine": "easyocr",
@@ -171,7 +171,7 @@
    "exact_match": 0.0,
    "number_match": 1.0,
    "cer": 0.4144927536231884,
-   "median_latency_s": 0.682660454000029
+   "median_latency_s": 1.723439624999969
   },
   {
    "engine": "paddleocr",
@@ -181,7 +181,7 @@
    "exact_match": 0.9875,
    "number_match": 1.0,
    "cer": 0.0015723270440251573,
-   "median_latency_s": 0.04041742150002392
+   "median_latency_s": 0.07557746400004817
   },
   {
    "engine": "paddleocr",
@@ -191,7 +191,7 @@
    "exact_match": 0.0,
    "number_match": 0.8,
    "cer": 0.34492753623188405,
-   "median_latency_s": 0.03131334599999036
+   "median_latency_s": 0.06599572150003041
   },
   {
    "engine": "paddleocr",
@@ -201,7 +201,7 @@
    "exact_match": 0.9625,
    "number_match": 1.0,
    "cer": 0.03773584905660377,
-   "median_latency_s": 0.03753742449998754
+   "median_latency_s": 0.07195059900004708
   },
   {
    "engine": "paddleocr",
@@ -211,7 +211,7 @@
    "exact_match": 0.0,
    "number_match": 0.725,
    "cer": 0.34202898550724636,
-   "median_latency_s": 0.031630489500059866
+   "median_latency_s": 0.06956018150003729
   },
   {
    "engine": "paddleocr",
@@ -221,7 +221,7 @@
    "exact_match": 0.8875,
    "number_match": 0.9875,
    "cer": 0.020440251572327043,
-   "median_latency_s": 0.03698192350003637
+   "median_latency_s": 0.07290740049995748
   },
   {
    "engine": "paddleocr",
@@ -231,7 +231,7 @@
    "exact_match": 0.0,
    "number_match": 0.725,
    "cer": 0.3681159420289855,
-   "median_latency_s": 0.033109457500017925
+   "median_latency_s": 0.06787858349991893
   },
   {
    "engine": "paddleocr",
@@ -241,7 +241,7 @@
    "exact_match": 1.0,
    "number_match": 1.0,
    "cer": 0.0,
-   "median_latency_s": 0.03768452549996937
+   "median_latency_s": 0.06962982800007467
   },
   {
    "engine": "paddleocr",
@@ -251,7 +251,7 @@
    "exact_match": 0.0,
    "number_match": 0.825,
    "cer": 0.3391304347826087,
-   "median_latency_s": 0.03290672500003211
+   "median_latency_s": 0.06726647049993062
   }
  ],
  "extra": {

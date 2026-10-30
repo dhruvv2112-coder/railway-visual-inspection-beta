@@ -1,0 +1,35 @@
+{
+ "name": "dedup",
+ "title": "Same-asset re-identification for duplicate suppression",
+ "summary": "Synthetic re-captures of Indian railway images.",
+ "environment": {
+  "python": "3.11.17",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "runner": "GitHub Actions 1000000055",
+  "timestamp_utc": "2026-10-30T06:44:22.270194+00:00",
+  "torch": "2.15.0+cpu",
+  "cuda": false
+ },
+ "results": [
+  {
+   "model": "facebook/dinov2-small",
+   "gallery": 300,
+   "recall@1": 0.7366666793823242,
+   "recall@5": 0.903333306312561,
+   "sec_per_image_cpu": 0.08798635978833327
+  },
+  {
+   "model": "google/siglip-base-patch16-224",
+   "gallery": 300,
+   "recall@1": 0.3799999952316284,
+   "recall@5": 0.6700000166893005,
+   "sec_per_image_cpu": 0.22970418643999996
+  }
+ ],
+ "extra": {},
+ "notes": [
+  "Gallery images of the same defect class look alike; GNSS distance gating is applied first in production."
+ ]
+}
