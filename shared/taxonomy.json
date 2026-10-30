@@ -1,0 +1,1673 @@
+{
+ "version": "0.1.0",
+ "source": "Phase 1 D02 Master Inspection & Defect Matrix (98 rows)",
+ "hindi_labels_status": "Draft – requires review against Rajbhasha railway glossary",
+ "classes": [
+  {
+   "id": "PW-RL-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail continuity (full section)",
+   "label": {
+    "en": "Rail fracture – complete transverse break",
+    "hi": "रेल फ्रैक्चर – पूर्ण दरार"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means; emergency repair per S06 (1 m fishplates with screw clamps; first train stop dead then 10 km/h, subsequent 20 km/h)",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-002",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail head – running surface",
+   "label": {
+    "en": "Squat (surface-initiated head defect)",
+    "hi": "स्क्वैट (रेल सतह दोष)"
+   },
+   "severity": "RF-P3 (pending USFD/engineer classification)",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Record and report; mark location",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-003",
+   "category": "B",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail head – gauge corner",
+   "label": {
+    "en": "Head checking (gauge-corner RCF cracks)",
+    "hi": "हेड चेकिंग (गेज कोने पर दरारें)"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record; report to JE/SSE",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-004",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail head – running surface",
+   "label": {
+    "en": "Wheel burn",
+    "hi": "व्हील बर्न"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record and report",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-005",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail head – running band",
+   "label": {
+    "en": "Corrugation (short-pitch wave pattern)",
+    "hi": "कोरुगेशन (लहरदार घिसाव)"
+   },
+   "severity": "RF-P4",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-006",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail head – gauge face (curves)",
+   "label": {
+    "en": "Excessive side wear / lipping (visual indication)",
+    "hi": "अत्यधिक साइड वियर / लिपिंग"
+   },
+   "severity": "RF-P3 (actual limit per IRPWM – not retrieved)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report for measurement",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-007",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "USFD paint marks on rail/weld",
+   "label": {
+    "en": "Rail/weld marked IMR/IMRW (three red crosses)",
+    "hi": "IMR/IMRW चिह्नित रेल/वेल्ड (तीन लाल क्रॉस)"
+   },
+   "severity": "USFD class IMR/IMRW (official marking, S06 B4)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Ensure clamped joggled fishplate is provided (S06 B4); report if absent",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-008",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "USFD paint marks on rail/weld",
+   "label": {
+    "en": "Rail/weld marked OBS/OBSW (one red cross) without joggled fishplate",
+    "hi": "OBS/OBSW चिह्नित (एक लाल क्रॉस), जोगल्ड फिशप्लेट नहीं"
+   },
+   "severity": "USFD class OBS/OBSW (official marking, S06 B4)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Keyman to watch during daily patrolling till joggled fishplated (S06)",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-009",
+   "category": "D",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail head/web interior",
+   "label": {
+    "en": "Internal transverse defect (e.g. tache ovale/kidney) without surface expression",
+    "hi": "आंतरिक दोष (दृश्य नहीं)"
+   },
+   "severity": "Per USFD classification",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "N/A visually",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": false
+  },
+  {
+   "id": "PW-RL-010",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail foot & web",
+   "label": {
+    "en": "Corrosion of rail foot/web (corrosion-prone areas)",
+    "hi": "रेल फुट/वेब में जंग"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S01 para 613(2)(c)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-011",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Track alignment in LWR/CWR",
+   "label": {
+    "en": "Sun kink / incipient buckle",
+    "hi": "सन किंक / बकलिंग की प्रवृत्ति"
+   },
+   "severity": "RF-P1 where buckled; RF-P2 incipient",
+   "protect_first": true,
+   "needs_measurement": true,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means; examine ≥100 sleepers either side (S10 – unofficial)",
+   "reference": "S06 B9; S10; S04 (Ch.3 titles)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-012",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail end at joint",
+   "label": {
+    "en": "Battered/hogged rail end",
+    "hi": "रेल एंड बैटर्ड/हॉग्ड"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-RL-013",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Running rail",
+   "focus_unit": "Rail end bolt holes (under fishplate)",
+   "label": {
+    "en": "Bolt-hole crack / star crack",
+    "hi": "बोल्ट-होल क्रैक"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Report to JE/SSE",
+   "reference": "S06 B2,B4,B5,B9; S04 (Ch.3, 6 – text not retrieved); S21",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-WD-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Rail weld (AT/flash-butt)",
+   "focus_unit": "Weld – continuity",
+   "label": {
+    "en": "Weld fracture",
+    "hi": "वेल्ड फ्रैक्चर"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means; joggled fishplates with bolted clamps (S06)",
+   "reference": "S06 B4,B9; S07 2.2.1.4",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-WD-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Rail weld (AT/flash-butt)",
+   "focus_unit": "DFWO-marked weld",
+   "label": {
+    "en": "Weld marked DFWO (one red circle)",
+    "hi": "DFWO चिह्नित वेल्ड (एक लाल गोला)"
+   },
+   "severity": "USFD class DFWO (official marking, S06)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Keep joint under observation (S06)",
+   "reference": "S06 B4,B9; S07 2.2.1.4",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-WD-003",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Rail weld (AT/flash-butt)",
+   "focus_unit": "DFWR-marked weld",
+   "label": {
+    "en": "Weld marked DFWR (two red crosses) without joggled fishplates or with loose far-end bolts",
+    "hi": "DFWR चिह्नित वेल्ड (दो लाल क्रॉस)"
+   },
+   "severity": "USFD class DFWR (official marking, S06)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Watch weld; ensure joggled fishplates and two far-end bolts tight (S06)",
+   "reference": "S06 B4,B9; S07 2.2.1.4",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-WD-004",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Rail weld (AT/flash-butt)",
+   "focus_unit": "Weld geometry",
+   "label": {
+    "en": "Weld step / dip / proud collar (visual indication)",
+    "hi": "वेल्ड स्टेप/डिप"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Record",
+   "reference": "S06 B4,B9; S07 2.2.1.4",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-WD-005",
+   "category": "D",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Rail weld (AT/flash-butt)",
+   "focus_unit": "Weld interior",
+   "label": {
+    "en": "Porosity, lack of fusion, internal crack",
+    "hi": "वेल्ड आंतरिक दोष (दृश्य नहीं)"
+   },
+   "severity": "Per USFD",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "N/A",
+   "reference": "S06 B4,B9; S07 2.2.1.4",
+   "beta_enabled": false
+  },
+  {
+   "id": "PW-JT-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Fish-plated rail joint",
+   "focus_unit": "Fish bolt presence",
+   "label": {
+    "en": "Missing fish bolt/nut",
+    "hi": "फिश बोल्ट/नट गायब"
+   },
+   "severity": "RF-P2 (RF-P1 if several missing)",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Replace from spare fittings (keyman carries spares, S06 A4); report if many (S06 B5)",
+   "reference": "S06 B2,B7,B8, Appx B",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-JT-002",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Fish-plated rail joint",
+   "focus_unit": "Fish bolt tightness",
+   "label": {
+    "en": "Loose fish bolt",
+    "hi": "फिश बोल्ट ढीला"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Tighten (S06 B2)",
+   "reference": "S06 B2,B7,B8, Appx B",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-JT-003",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Fish-plated rail joint",
+   "focus_unit": "Fishplate body",
+   "label": {
+    "en": "Cracked or broken fishplate",
+    "hi": "फिशप्लेट टूटी/दरार"
+   },
+   "severity": "RF-P1 if broken through; RF-P2 cracked",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect if unsafe; report",
+   "reference": "S06 B2,B7,B8, Appx B",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-JT-004",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Fish-plated rail joint",
+   "focus_unit": "Joint gap",
+   "label": {
+    "en": "Excessive or nil joint gap (visual indication)",
+    "hi": "जोड़ गैप असामान्य"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Report",
+   "reference": "S06 B2,B7,B8, Appx B",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-JT-005",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Fish-plated rail joint",
+   "focus_unit": "Emergency joggled fishplate/clamp",
+   "label": {
+    "en": "Joggled fishplate missing, loose or clamp displaced at fracture/USFD location",
+    "hi": "जोगल्ड फिशप्लेट/क्लैंप गायब या ढीला"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report; tighten",
+   "reference": "S06 B2,B7,B8, Appx B",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-JT-006",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Fish-plated rail joint",
+   "focus_unit": "Glued insulated rail joint (GIRJ) end post",
+   "label": {
+    "en": "Damaged/missing end post insulation, metal flow bridging gap",
+    "hi": "GIRJ एंड-पोस्ट क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 (track-circuit failure risk)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to JE/SSE P.Way and S&T",
+   "reference": "S04 Table 1-C item 1 (glued joints in foot inspection); S04 Table 1B item 26 (joint inspection with S&T)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "ERC presence",
+   "label": {
+    "en": "Missing ERC",
+    "hi": "ERC गायब"
+   },
+   "severity": "RF-P3 isolated; RF-P2 consecutive; RF-P1 large-scale theft (S06 B5)",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Recoup from spares (S06 B7); large-scale theft – protect line (S06 B5)",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "ERC condition",
+   "label": {
+    "en": "Broken ERC",
+    "hi": "ERC टूटा"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Replace",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-003",
+   "category": "B",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "ERC seating",
+   "label": {
+    "en": "ERC improperly driven (under/over-driven)",
+    "hi": "ERC गलत तरीके से लगा"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Re-drive (S06 B7 'correct driving')",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-004",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "GFN/metal liner",
+   "label": {
+    "en": "Missing or broken liner",
+    "hi": "लाइनर गायब/टूटा"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Recoup (S06 B7)",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-005",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "Rail pad",
+   "label": {
+    "en": "Missing/displaced/worn rail pad",
+    "hi": "रबर पैड गायब/खिसका"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Record",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-006",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "Cast-iron insert",
+   "label": {
+    "en": "Broken insert/shoulder",
+    "hi": "इन्सर्ट/शोल्डर टूटा"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-007",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "Plate screw",
+   "label": {
+    "en": "Plate screw loose/half-tight or without single coil spring washer",
+    "hi": "प्लेट स्क्रू ढीला / स्प्रिंग वॉशर नहीं"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Tighten fully with single coil spring washer; clean dowel hole first (S06 B9)",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-008",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "T-head bolt orientation",
+   "label": {
+    "en": "T-head bolt mark not perpendicular to track",
+    "hi": "T-हेड बोल्ट का निशान गलत"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Correct orientation (S06 B9)",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-FS-009",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Elastic fastening assembly (PSC sleeper)",
+   "focus_unit": "Fastenings in LWR stretch",
+   "label": {
+    "en": "Fastenings missing on consecutive sleepers in LWR",
+    "hi": "LWR में लगातार स्लीपरों पर फिटिंग गायब"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report JE/SSE (S06 B9(c))",
+   "reference": "S06 B2,B7,B9; S14",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-SL-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Sleeper",
+   "focus_unit": "PSC sleeper concrete",
+   "label": {
+    "en": "Cracked/broken PSC sleeper (rail seat or centre crack)",
+    "hi": "PSC स्लीपर टूटा/दरार"
+   },
+   "severity": "RF-P3 (RF-P2 if consecutive)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report; mark",
+   "reference": "S06 B2; S04 para 114(5)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-SL-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Sleeper",
+   "focus_unit": "Wooden/steel sleeper",
+   "label": {
+    "en": "Notched, burnt, split or rotten wooden sleeper; corroded/cracked steel channel sleeper",
+    "hi": "लकड़ी/स्टील स्लीपर क्षतिग्रस्त"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "S06 B2; S04 Table 1A item 7 (channel sleepers)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-SL-003",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Sleeper",
+   "focus_unit": "Sleeper packing/voids",
+   "label": {
+    "en": "Loose/hanging sleeper (voids)",
+    "hi": "ढीला/लटकता स्लीपर"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Mark for packing (S04 114(5))",
+   "reference": "S06 B2; S04 para 114(5)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-SL-004",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Sleeper",
+   "focus_unit": "Sleeper squareness/spacing",
+   "label": {
+    "en": "Skewed or bunched sleepers",
+    "hi": "स्लीपर तिरछे/गुच्छित"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B2; S04 para 114(5)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Ballast shoulder/crib",
+   "label": {
+    "en": "Washaway of ballast",
+    "hi": "गिट्टी बह जाना (वॉशअवे)"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means (S06 B5)",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Ballast shoulder",
+   "label": {
+    "en": "Deficient ballast (shoulder/crib)",
+    "hi": "गिट्टी की कमी"
+   },
+   "severity": "RF-P3 (RF-P2 in LWR in hot weather)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-003",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Ballast cleanliness",
+   "label": {
+    "en": "Fouled/mud-pumping ballast",
+    "hi": "गंदी गिट्टी / मड पंपिंग"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-004",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Embankment",
+   "label": {
+    "en": "Settlement/subsidence of track or bank",
+    "hi": "ट्रैक/बैंक धँसना"
+   },
+   "severity": "RF-P1 if track settled (S05 1010(1)(b)(v)); else RF-P2",
+   "protect_first": true,
+   "needs_measurement": true,
+   "immediate_action": "Protect line if unsafe; report",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-005",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Embankment slope",
+   "label": {
+    "en": "Slip/breach/erosion of embankment",
+    "hi": "तटबंध फिसलन/दरार/कटाव"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
+   "reference": "S05 1010; S04 Ch.11 title",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-006",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Water level across embankment",
+   "label": {
+    "en": "Water much higher on one side of embankment / water overflowing track",
+    "hi": "तटबंध के एक ओर अधिक पानी / ट्रैक पर पानी"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
+   "reference": "S05 1010(1)(b)(iii); S05 vulnerable locations (e)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-007",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Side drain / catch-water drain",
+   "label": {
+    "en": "Blocked or silted drain",
+    "hi": "नाली अवरुद्ध"
+   },
+   "severity": "RF-P3 (RF-P2 pre-monsoon)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-008",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Vegetation",
+   "label": {
+    "en": "Vegetation growth on cess/track obstructing view or drainage",
+    "hi": "वनस्पति अवरोध"
+   },
+   "severity": "RF-P4",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-009",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Fallen tree/obstruction on track",
+   "label": {
+    "en": "Tree, boulder or object fouling track",
+    "hi": "पेड़/पत्थर/वस्तु ट्रैक पर"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
+   "reference": "S05 1001(b), 1010(a)",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-010",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Railway land boundary",
+   "label": {
+    "en": "Encroachment / unauthorised structure",
+    "hi": "अतिक्रमण"
+   },
+   "severity": "RF-P4",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to Mate/SSE/JE (S06 B11)",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-011",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Foreign material on line",
+   "label": {
+    "en": "Material (dynamo belts, engine parts, passenger articles) found on line",
+    "hi": "लाइन पर बाहरी सामग्री"
+   },
+   "severity": "RF-P4 (RF-P1 if fouling)",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Collect; hand to nearest SM (S06 B13)",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-BF-012",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Ballast & formation",
+   "focus_unit": "Sabotage indications",
+   "label": {
+    "en": "Suspected sabotage / tampering (removed fittings, objects, explosive damage)",
+    "hi": "तोड़फोड़ की आशंका"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect track; inform nearest SM (S06 B1(e))",
+   "reference": "S06 B5; S04 Table 1A/1B items 16,19; S05 1010",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-SE-001",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Switch Expansion Joint (SEJ) / LWR",
+   "focus_unit": "SEJ gap",
+   "label": {
+    "en": "SEJ gap beyond designed maximum (cold) or closed (hot)",
+    "hi": "SEJ गैप सीमा से बाहर"
+   },
+   "severity": "RF-P1 when beyond maximum (S10 – suspend traffic)",
+   "protect_first": true,
+   "needs_measurement": true,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means (S10, unofficial)",
+   "reference": "S06 B9; S04 Tables 1A item 6, 1B item 6, 1-C item 9; S10",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-SE-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Switch Expansion Joint (SEJ) / LWR",
+   "focus_unit": "SEJ fastenings & lubrication",
+   "label": {
+    "en": "Loose/missing fastenings or dry sliding surfaces at SEJ",
+    "hi": "SEJ फिटिंग ढीली / स्नेहन नहीं"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Retighten; fortnightly oiling/greasing (S06 B9)",
+   "reference": "S06 B9; S04 Tables 1A item 6, 1B item 6, 1-C item 9; S10",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Tongue rail tip",
+   "label": {
+    "en": "Chipped/damaged tongue rail tip",
+    "hi": "टंग रेल टिप क्षतिग्रस्त"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to JE/SSE",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-002",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Tongue rail housing",
+   "label": {
+    "en": "Gap between tongue and stock rail (improper housing) – visual indication",
+    "hi": "टंग और स्टॉक रेल में गैप"
+   },
+   "severity": "RF-P1/P2 (engineer)",
+   "protect_first": true,
+   "needs_measurement": true,
+   "immediate_action": "Report to JE/SSE P.Way and S&T",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-003",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Stretcher bar / slide chairs",
+   "label": {
+    "en": "Missing/broken stretcher-bar bolts; dry/dirty slide chairs",
+    "hi": "स्ट्रेचर बार बोल्ट गायब / स्लाइड चेयर सूखी"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report; joint attention with S&T",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-004",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Crossing nose & wing rails",
+   "label": {
+    "en": "Cracked/battered crossing nose or wing rail",
+    "hi": "क्रॉसिंग नोज़/विंग रेल में दरार"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-005",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Fittings in switches and crossings",
+   "label": {
+    "en": "Loose/missing fittings in switches & crossings",
+    "hi": "पॉइंट्स एवं क्रॉसिंग में फिटिंग ढीली/गायब"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Attend (S06 B2)",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-006",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Gauge in crossing portion",
+   "label": {
+    "en": "Gauge in crossing portion outside −3 mm/+1 mm of 1676 mm (BG)",
+    "hi": "क्रॉसिंग भाग में गेज सीमा से बाहर"
+   },
+   "severity": "Limit per IRPWM 2024 para 429(8)(b) (S03)",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Report",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-PC-007",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Turnout (points & crossings)",
+   "focus_unit": "Check rail & flangeway",
+   "label": {
+    "en": "Obstructed flangeway (ballast/debris) or loose check rail",
+    "hi": "फ्लैंजवे अवरुद्ध / चेक रेल ढीली"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Clear",
+   "reference": "S03 (429(5)(a), 429(8)(b)); S04 Tables 1A item 5, 1B item 5, 1B item 26; S06 B2",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-LC-001",
+   "category": "C",
+   "department": "Engineering (Civil) – P.Way (with S&T for interlocked gates)",
+   "asset": "Level crossing",
+   "focus_unit": "Flangeway clearance",
+   "label": {
+    "en": "Flangeway clearance outside 51–57 mm",
+    "hi": "फ्लैंजवे क्लीयरेंस 51–57 मिमी से बाहर"
+   },
+   "severity": "Limit per keyman guidance (S06 B10: min 51 mm, max 57 mm)",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Maintain flangeway (S06 B10)",
+   "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-LC-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way (with S&T for interlocked gates)",
+   "asset": "Level crossing",
+   "focus_unit": "Height gauge (electrified sections)",
+   "label": {
+    "en": "Damaged/hit height gauge",
+    "hi": "हाइट गेज क्षतिग्रस्त"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Look for girder shift, infringement, OHE damage; report Mate, SM, JE/SSE; protect if needed (S06 B16)",
+   "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-LC-003",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way (with S&T for interlocked gates)",
+   "asset": "Level crossing",
+   "focus_unit": "Road surface between/near rails",
+   "label": {
+    "en": "Broken road surface/potholes at LC",
+    "hi": "समपार पर सड़क क्षतिग्रस्त"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-LC-004",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way (with S&T for interlocked gates)",
+   "asset": "Level crossing",
+   "focus_unit": "Lifting barrier/gate",
+   "label": {
+    "en": "Damaged/non-functional gate or boom; boom clearance abnormal",
+    "hi": "गेट/बूम क्षतिग्रस्त"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report to SSE/P.Way, S&T (interlocked), SM",
+   "reference": "S02 (902(1), Annex 9/1); S01 (Annex 9/1 item 7.1); S06 B10, B16; S04 Tables",
+   "beta_enabled": true
+  },
+  {
+   "id": "PW-LC-005",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way (with S&T for interlocked gates)",
+   "asset": "Level crossing",
+   "focus_unit": "Road warning boards / whistle boards",
+   "label": {
+    "en": "Missing/damaged/obscured warning boards",
+    "hi": "चेतावनी बोर्ड गायब/क्षतिग्रस्त"
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S02 Annex 9/1 item 9(b) board spec",
+   "beta_enabled": true
+  },
+  {
+   "id": "BR-SB-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bridge substructure",
+   "focus_unit": "Masonry/concrete surface",
+   "label": {
+    "en": "Cracks in masonry/concrete (pattern, orientation)",
+    "hi": null
+   },
+   "severity": "Official CRN 1–5 (S18, secondary source)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record; report ADEN if active",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-SB-002",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bridge substructure",
+   "focus_unit": "Concrete cover",
+   "label": {
+    "en": "Spalling with exposed/corroded reinforcement",
+    "hi": null
+   },
+   "severity": "CRN per IRBM (S18)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-SB-003",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bridge substructure",
+   "focus_unit": "Surface deposits",
+   "label": {
+    "en": "Efflorescence/leaching/rust staining",
+    "hi": null
+   },
+   "severity": "CRN per IRBM",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-FD-001",
+   "category": "C",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bridge foundation & waterway",
+   "focus_unit": "Scour around foundation",
+   "label": {
+    "en": "Scour/undermining of foundation or flooring damage",
+    "hi": null
+   },
+   "severity": "CRN; vulnerable location (S05)",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Watch; protect if danger level exceeded (S05 1010)",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-WW-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bridge foundation & waterway",
+   "focus_unit": "Waterway & flood level",
+   "label": {
+    "en": "Waterway obstructed (tree/debris) or flood above danger level",
+    "hi": "जलमार्ग अवरुद्ध / खतरे के स्तर से ऊपर बाढ़"
+   },
+   "severity": "RF-P1",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means",
+   "reference": "S05 1010(1)(b)(i),(iv); S04 Table 1A item 19",
+   "beta_enabled": true
+  },
+  {
+   "id": "BR-PW-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bridge protection works",
+   "focus_unit": "Pitching/guide bunds",
+   "label": {
+    "en": "Damaged pitching/approach protection",
+    "hi": "पिचिंग/सुरक्षा कार्य क्षतिग्रस्त"
+   },
+   "severity": "RF-P2 in monsoon",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report; watch (S05 1010(1)(b)(ii))",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": true
+  },
+  {
+   "id": "BR-BG-001",
+   "category": "C",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Bearing",
+   "focus_unit": "Bearing condition",
+   "label": {
+    "en": "Seized/displaced/corroded bearing",
+    "hi": null
+   },
+   "severity": "CRN per IRBM",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Record",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-SS-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Steel girder",
+   "focus_unit": "Steel surface/paint",
+   "label": {
+    "en": "Paint failure and corrosion",
+    "hi": null
+   },
+   "severity": "CRN per IRBM",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-SS-002",
+   "category": "C",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Steel girder",
+   "focus_unit": "Rivets/bolts",
+   "label": {
+    "en": "Loose/missing rivets or bolts",
+    "hi": null
+   },
+   "severity": "CRN per IRBM",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Record",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-SS-003",
+   "category": "B",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Steel girder",
+   "focus_unit": "Fatigue-prone details",
+   "label": {
+    "en": "Fatigue crack in steel member",
+    "hi": null
+   },
+   "severity": "CRN per IRBM",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report ADEN",
+   "reference": "S04 Tables 1A/1B; S18 (secondary); IRBM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "BR-TK-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Bridges",
+   "asset": "Track on bridge",
+   "focus_unit": "Guard rails, sleepers and fittings on bridge",
+   "label": {
+    "en": "Loose/missing fittings on girder bridge; damaged guard rail",
+    "hi": "पुल पर फिटिंग गायब / गार्ड रेल क्षतिग्रस्त"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Attend (S06 B2)",
+   "reference": "S06 B2; S04 Table 1A item 7, 1B item 7",
+   "beta_enabled": true
+  },
+  {
+   "id": "EW-CT-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Cutting/hill slope",
+   "focus_unit": "Slope stability",
+   "label": {
+    "en": "Loose boulders/landslide/boulder fall",
+    "hi": "ढीले पत्थर / भूस्खलन"
+   },
+   "severity": "RF-P1 if fouling; RF-P2 otherwise",
+   "protect_first": true,
+   "needs_measurement": false,
+   "immediate_action": "Protect line per G&SR 3.62 / IRPWM (BG: 1 detonator at 600 m, 3 detonators ~10 m apart at 1200 m), show stop hand signal, inform nearest Station Master and Gang Mate/JE/SSE/P.Way by quickest means if fouling",
+   "reference": "S04 Tables 1A/1B; S05 vulnerable locations",
+   "beta_enabled": true
+  },
+  {
+   "id": "EW-TN-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Tunnel",
+   "focus_unit": "Tunnel lining",
+   "label": {
+    "en": "Lining cracks, seepage, spalling",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "S04 Tables 1A/1B; S05 vulnerable locations",
+   "beta_enabled": false
+  },
+  {
+   "id": "EL-OH-001",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE insulator",
+   "focus_unit": "Insulator surface",
+   "label": {
+    "en": "Cracked/chipped insulator or flashover marks",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report TPC",
+   "reference": "S20 (secondary presentation); ACTM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "EL-OH-002",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE contact/catenary",
+   "focus_unit": "Dropper",
+   "label": {
+    "en": "Broken/missing/hanging dropper",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report TPC",
+   "reference": "S20 (secondary presentation); ACTM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "EL-OH-003",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE",
+   "focus_unit": "Bird nests/kites/foreign objects on OHE",
+   "label": {
+    "en": "Bird nest or foreign object on OHE",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "S20 (secondary presentation); ACTM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "EL-OH-004",
+   "category": "C",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE contact wire",
+   "focus_unit": "Contact wire height/stagger",
+   "label": {
+    "en": "Contact wire height/stagger out of limits (visual sag)",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Report TPC",
+   "reference": "S20 (secondary presentation); ACTM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "EL-OH-005",
+   "category": "A",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE mast/structure",
+   "focus_unit": "Mast & foundation",
+   "label": {
+    "en": "Bent/corroded mast; damaged foundation; missing earth/bond",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "S20 (secondary presentation); ACTM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "EL-OH-006",
+   "category": "D",
+   "department": "Electrical – Traction Distribution (TRD)",
+   "asset": "OHE insulator",
+   "focus_unit": "Insulation performance",
+   "label": {
+    "en": "Insulation degradation without visible sign",
+    "hi": null
+   },
+   "severity": "Per TRD",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "N/A",
+   "reference": "S20 (secondary presentation); ACTM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "ST-SG-001",
+   "category": "A",
+   "department": "Signal & Telecommunication (S&T)",
+   "asset": "Signal",
+   "focus_unit": "Signal aspect & hood/background",
+   "label": {
+    "en": "Damaged/misaligned signal head or obscured visibility (vegetation)",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report SM/S&T",
+   "reference": "S04 Table 1B item 26; IRSEM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "ST-PM-001",
+   "category": "A",
+   "department": "Signal & Telecommunication (S&T)",
+   "asset": "Point machine",
+   "focus_unit": "Point machine cover, rodding, detection",
+   "label": {
+    "en": "Damaged cover, broken/obstructed rodding, missing split pins",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report S&T",
+   "reference": "S04 Table 1B item 26; IRSEM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "ST-TC-001",
+   "category": "A",
+   "department": "Signal & Telecommunication (S&T)",
+   "asset": "Track circuit",
+   "focus_unit": "Rail bonds/track leads",
+   "label": {
+    "en": "Missing/broken bond wire or track lead",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report S&T/SM",
+   "reference": "Register item: CAMTECH Track Circuit for P.Way staff (not read)",
+   "beta_enabled": false
+  },
+  {
+   "id": "ST-CB-001",
+   "category": "A",
+   "department": "Signal & Telecommunication (S&T)",
+   "asset": "Location box/cable",
+   "focus_unit": "Location box, cable route",
+   "label": {
+    "en": "Open/damaged location box; exposed/cut cable",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "S04 Table 1B item 26; IRSEM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "ST-EL-001",
+   "category": "D",
+   "department": "Signal & Telecommunication (S&T)",
+   "asset": "Signalling logic",
+   "focus_unit": "Electrical function",
+   "label": {
+    "en": "Internal relay/interlocking fault",
+    "hi": null
+   },
+   "severity": "Per S&T",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "N/A",
+   "reference": "S04 Table 1B item 26; IRSEM not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "RS-WH-001",
+   "category": "C",
+   "department": "Mechanical – Carriage & Wagon (C&W)",
+   "asset": "Wheelset",
+   "focus_unit": "Wheel tread",
+   "label": {
+    "en": "Flat spot/skidded wheel",
+    "hi": null
+   },
+   "severity": "Per C&W rules (not retrieved)",
+   "protect_first": false,
+   "needs_measurement": true,
+   "immediate_action": "Gauge with tyre defect gauge (S19)",
+   "reference": "S19",
+   "beta_enabled": false
+  },
+  {
+   "id": "RS-BR-001",
+   "category": "A",
+   "department": "Mechanical – Carriage & Wagon (C&W)",
+   "asset": "Brake gear",
+   "focus_unit": "Brake block",
+   "label": {
+    "en": "Brake block worn to condemning thickness/missing",
+    "hi": null
+   },
+   "severity": "Rejectable (S19)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Replace (S19)",
+   "reference": "S19",
+   "beta_enabled": false
+  },
+  {
+   "id": "RS-CP-001",
+   "category": "A",
+   "department": "Mechanical – Carriage & Wagon (C&W)",
+   "asset": "Coupler",
+   "focus_unit": "CBC & air hose",
+   "label": {
+    "en": "Uncoupled/damaged hose or CBC not locked; angle cock wrong",
+    "hi": null
+   },
+   "severity": "Rejectable (S19)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Rectify (S19)",
+   "reference": "S19",
+   "beta_enabled": false
+  },
+  {
+   "id": "RS-AX-001",
+   "category": "D",
+   "department": "Mechanical – Carriage & Wagon (C&W)",
+   "asset": "Axle box",
+   "focus_unit": "Axle box bearing condition",
+   "label": {
+    "en": "Hot box / internal bearing defect",
+    "hi": null
+   },
+   "severity": "Sick marking >90°C (S19)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Detach as sick",
+   "reference": "S19",
+   "beta_enabled": false
+  },
+  {
+   "id": "RS-UF-001",
+   "category": "A",
+   "department": "Mechanical – Carriage & Wagon (C&W)",
+   "asset": "Wagon body/underframe",
+   "focus_unit": "Underframe parts",
+   "label": {
+    "en": "Loose/hanging parts; door not secured",
+    "hi": null
+   },
+   "severity": "Rejectable (S19)",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Secure (S19)",
+   "reference": "S19",
+   "beta_enabled": false
+  },
+  {
+   "id": "CV-PF-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Works; Electrical (General); Commercial",
+   "asset": "Platform",
+   "focus_unit": "Platform edge coping",
+   "label": {
+    "en": "Broken/displaced coping; trip hazards",
+    "hi": null
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "Works Manual not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "CV-FOB-001",
+   "category": "A",
+   "department": "Engineering (Civil) – Works; Electrical (General); Commercial",
+   "asset": "Foot over bridge/ROB",
+   "focus_unit": "FOB members & stairs",
+   "label": {
+    "en": "Corrosion, damaged treads/railings",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Record",
+   "reference": "PIB release on third-party audit of bridges/ROBs/FOBs (search result; not read)",
+   "beta_enabled": false
+  },
+  {
+   "id": "CV-SF-001",
+   "category": "A",
+   "department": "Safety / station owner department",
+   "asset": "Fire & emergency equipment",
+   "focus_unit": "Extinguisher presence & gauge",
+   "label": {
+    "en": "Missing extinguisher, gauge out of green, overdue tag",
+    "hi": null
+   },
+   "severity": "RF-P3",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Report",
+   "reference": "Works Manual not retrieved",
+   "beta_enabled": false
+  },
+  {
+   "id": "OP-PT-001",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Patrol operations",
+   "focus_unit": "Protection equipment carried",
+   "label": {
+    "en": "Required equipment missing (flags, detonators, lamps, torch, patrol book, GPS device)",
+    "hi": "सुरक्षा उपकरण अधूरा"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Do not start patrol without kit; report",
+   "reference": "S05 1007, 1012; S06 A4; S08; S07 2.2.1.1",
+   "beta_enabled": true
+  },
+  {
+   "id": "OP-PT-002",
+   "category": "A",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Patrol operations",
+   "focus_unit": "Detonator validity",
+   "label": {
+    "en": "Detonators beyond life (5 years) or damaged",
+    "hi": "डेटोनेटर अवधि समाप्त"
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Replace",
+   "reference": "S05 1007, 1012; S06 A4; S08; S07 2.2.1.1",
+   "beta_enabled": true
+  },
+  {
+   "id": "OP-PT-003",
+   "category": "D",
+   "department": "Engineering (Civil) – P.Way",
+   "asset": "Patrol operations",
+   "focus_unit": "Beat actually walked",
+   "label": {
+    "en": "Patrol skipped/incomplete (beat not covered)",
+    "hi": null
+   },
+   "severity": "RF-P2",
+   "protect_first": false,
+   "needs_measurement": false,
+   "immediate_action": "Supervisor action",
+   "reference": "S05 1007, 1012; S06 A4; S08; S07 2.2.1.1",
+   "beta_enabled": false
+  }
+ ]
+}

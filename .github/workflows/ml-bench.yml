@@ -1,0 +1,66 @@
+name: ml-bench
+on:
+  workflow_dispatch:
+    inputs:
+      ft_epochs: {description: "YOLO11n CI fine-tune epochs", default: "8"}
+  push:
+    branches: [main]
+    paths: ["ml/bench/**", "backend/app/quality.py", ".github/workflows/ml-bench.yml"]
+
+concurrency: {group: ml-bench, cancel-in-progress: true}
+
+env:
+  RVI_REPORTS: ${{ github.workspace }}/reports
+  RVI_DATA: ${{ github.workspace }}/.cache/rvi
+  PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
+  HF_HUB_DISABLE_PROGRESS_BARS: "1"
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [vision-basic, asr, translation, detector]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/requirements-bench.txt}
+      - uses: actions/cache@v4
+        with: {path: .cache/rvi, key: "rvi-data-${{ matrix.suite }}-v1"}
+      - name: System packages (OCR engine, fonts, audio)
+        run: sudo apt-get update -q && sudo apt-get install -yq tesseract-ocr tesseract-ocr-hin fonts-noto-core fonts-dejavu-core libsndfile1
+      - name: Python packages
+        run: pip install -r ml/requirements-bench.txt
+      - name: Optional PaddleOCR
+        if: matrix.suite == 'vision-basic'
+        continue-on-error: true
+        run: pip install paddlepaddle paddleocr
+      - name: Run
+        working-directory: ml/bench
+        env: {FT_EPOCHS: "${{ github.event.inputs.ft_epochs || '8' }}"}
+        run: |
+          case "${{ matrix.suite }}" in
+            vision-basic) python bench_quality_gate.py; python bench_ocr.py; python bench_dedup.py ;;
+            asr) python bench_asr.py ;;
+            translation) python bench_translation.py ;;
+            detector) python bench_detector.py ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: "reports-${{ matrix.suite }}", path: reports/, if-no-files-found: warn}
+
+  aggregate:
+    needs: bench
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {pattern: "reports-*", path: reports, merge-multiple: true}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: cd ml/bench && python aggregate.py
+      - uses: actions/upload-artifact@v4
+        with: {name: benchmark-report, path: reports/}

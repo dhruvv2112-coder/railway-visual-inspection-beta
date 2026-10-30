@@ -1,0 +1,79 @@
+# Model registry: one entry per Beta feature. 'decision' = what the Beta ships with.
+# Licence is the model-weights licence as published; verify before production procurement.
+features:
+  F01_evidence_capture: {decision: "CameraX ImageCapture (no model)", models: []}
+  F02_image_quality_gate:
+    decision: "OpenCV Laplacian variance + luma statistics (server) mirrored on device (no model)"
+    models:
+      - {name: "OpenCV quality (BRISQUE, contrib)", licence: Apache-2.0, role: research comparison, runs: server}
+      - {name: "MobileNetV3-small accept/reject classifier", licence: BSD-3 (torchvision), role: "train only if gate fails pilot (T06)", runs: device}
+  F03_defect_detection:
+    decision: "Server-side, AI-assisted only, behind quality gate; zero-shot NOT deployed (benchmark); fine-tuned detector after pilot data"
+    models:
+      - {name: RF-DETR (nano/small/medium), licence: Apache-2.0, role: "primary fine-tune candidate (T01)", source: "github.com/roboflow/rf-detr", coco_map50_95: {nano: 48.4, small: 53.0, medium: 54.7}}
+      - {name: YOLO11n/s, licence: AGPL-3.0, role: "benchmark reference; production needs Enterprise licence", source: "github.com/ultralytics/ultralytics"}
+      - {name: D-FINE, licence: Apache-2.0, role: alternative, source: "github.com/Peterande/D-FINE"}
+      - {name: RT-DETRv2, licence: Apache-2.0, role: alternative, source: "github.com/lyuwenyu/RT-DETR"}
+      - {name: RFD-DETR (fastener), licence: "MIT (code)", role: "domain reference: mAP50 98.27 on RFD fasteners", source: "github.com/sinclair2577/RFD-DETR"}
+      - {name: OWLv2 base, licence: Apache-2.0, role: "zero-shot baseline + annotation pre-labelling", source: "hf: google/owlv2-base-patch16-ensemble"}
+      - {name: Grounding DINO tiny, licence: Apache-2.0, role: "zero-shot baseline + pre-labelling", source: "hf: IDEA-Research/grounding-dino-tiny"}
+      - {name: YOLO-World, licence: GPL-3.0, role: "not used (licence)"}
+      - {name: Florence-2, licence: MIT, role: "not used for detection (zero-shot mAP 3.11 on industrial cracks, Wallace et al.)"}
+  F04_scene_segmentation:
+    decision: "Post-Beta. SAM 2 used only as annotation assistant."
+    models:
+      - {name: SAM 2, licence: Apache-2.0, role: "click-to-mask annotation in CVAT"}
+      - {name: DeepLabV3-MobileNetV3, licence: BSD-3 (torchvision), role: "rail/ballast/water/vegetation segmentation (T04)"}
+      - {name: SegFormer, licence: "NVIDIA Source Code Licence (non-commercial)", role: "research only"}
+  F05_crack_segmentation:
+    decision: "Post-Beta (bridges/sleepers)"
+    models:
+      - {name: "U-Net / DeepLabV3+ (segmentation-models-pytorch)", licence: MIT, role: "T05"}
+  F06_usfd_paint_marks:
+    decision: "Class inside T01 detector + HSV red-mark prior; requires new labelled data (no public dataset)"
+    models: []
+  F07_ocr_location_markers:
+    decision: "On device: ML Kit Text Recognition v2 (Latin + Devanagari). Server fallback per CI benchmark."
+    models:
+      - {name: ML Kit Text Recognition v2, licence: "Google ML Kit Terms", role: primary on-device}
+      - {name: PaddleOCR PP-OCR, licence: Apache-2.0, role: server candidate}
+      - {name: EasyOCR, licence: Apache-2.0, role: server candidate}
+      - {name: Tesseract 5 (eng, hin), licence: Apache-2.0, role: fallback}
+  F08_speech_commands_and_dictation:
+    decision: "Android SpeechRecognizer (on-device where available, API 31+) + closed command vocabulary; Vosk small as offline fallback"
+    models:
+      - {name: Android SpeechRecognizer, licence: platform, role: primary}
+      - {name: vosk-model-small-hi-0.22, licence: Apache-2.0, size_mb: 42, published_wer: "20.89 IITM / 24.72 MUCS"}
+      - {name: vosk-model-small-en-in-0.4, licence: Apache-2.0, size_mb: 36, published_wer: "49.05 NPTEL"}
+      - {name: vosk-model-hi-0.22, licence: Apache-2.0, size_mb: 1500, role: server}
+      - {name: Whisper (tiny/small/large-v3-turbo) via faster-whisper, licence: MIT, role: "server dictation; T07 fine-tune"}
+      - {name: IndicConformer (AI4Bharat), licence: "MIT (gated on HF)", role: "server Hindi candidate – run on laptop"}
+  F09_spoken_feedback: {decision: "Android TextToSpeech (hi-IN, en-IN)", models: [{name: "AI4Bharat Indic TTS", licence: "check per model", role: alternative}]}
+  F10_note_translation:
+    decision: "Supervisor-side translation of free-text notes; IndicTrans2 distilled on server after laptop evaluation"
+    models:
+      - {name: IndicTrans2 dist-200M, licence: "MIT (gated)", role: primary candidate}
+      - {name: Opus-MT en-hi / hi-en, licence: CC-BY-4.0, role: "CI baseline"}
+      - {name: NLLB-200 distilled 600M, licence: CC-BY-NC-4.0, role: "comparison only"}
+      - {name: ML Kit on-device translation, licence: "Google ML Kit Terms", role: "on-device option"}
+  F11_duplicate_same_asset:
+    decision: "GNSS radius gating (≤25 m) + DINOv2-small embedding similarity"
+    models:
+      - {name: DINOv2-small, licence: Apache-2.0}
+      - {name: SigLIP base, licence: Apache-2.0}
+  F12_location: {decision: "Fused Location Provider + inspector confirmation + km-post OCR", models: []}
+  F13_anomaly_unknown_defects: {decision: "Research", models: [{name: "PatchCore (anomalib)", licence: Apache-2.0}]}
+  F14_severity: {decision: "Rule-based from taxonomy; supervisor assigns. No ML by design.", models: []}
+
+train_on_laptop:   # ProArt P16 – RTX 5070 Laptop (8 GB VRAM), 32 GB RAM. Blackwell needs PyTorch >= 2.7 with CUDA 12.8 wheels.
+  - {id: T01, model: RF-DETR-S, task: track-defect detection, data: "Mendeley (CC BY) + RFD Roboflow (CC BY) + pilot captures", config: "imgsz 560, batch 4, grad_accum 4, AMP, 50 ep", est_hours: "6-10"}
+  - {id: T02, model: YOLO11s, task: "same as T01 (benchmark parity)", config: "imgsz 640, batch 16, AMP, 100 ep", est_hours: "4-6"}
+  - {id: T03, model: "T01 + USFD paint-mark classes", task: "IMR/OBS/DFWO/DFWR marks + joggled fishplate presence", data: "pilot only (no public data)"}
+  - {id: T04, model: DeepLabV3-MobileNetV3, task: "rail scene segmentation (water, ballast, vegetation)", data: "RailSem19 (research-only) → own data for production"}
+  - {id: T05, model: "U-Net ResNet34", task: "crack segmentation (sleeper/bridge)", data: "CrackSeg9k, SDNET2018"}
+  - {id: T06, model: MobileNetV3-small, task: "learned quality gate (only if rule gate fails pilot)"}
+  - {id: T07, model: "Whisper-small + LoRA", task: "Hindi/English dictation with railway vocabulary", data: "IndicVoices (CC BY 4.0) + recorded command set", config: "fp16, batch 8, LoRA r=32"}
+  - {id: T08, model: "Vosk grammar biasing", task: "command recognition", data: "command list – no training"}
+  - {id: T09, model: PaddleOCR rec fine-tune, task: "km-post / mast plate OCR", data: "pilot crops + synthetic"}
+  - {id: T10, model: DINOv2-small + metric head, task: same-asset re-identification, data: "pilot re-captures"}
+  - {id: T11, model: "RF-DETR-N INT8 (LiteRT)", task: "on-device suggestions (post-Beta)"}

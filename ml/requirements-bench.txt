@@ -1,0 +1,23 @@
+# Benchmark dependencies (CPU). Standard, maintained libraries only.
+numpy
+opencv-python-headless
+albumentations>=2.0
+pillow
+pyyaml
+jiwer
+soundfile
+scipy
+sacrebleu
+huggingface_hub
+transformers>=4.46,<5
+sentencepiece
+torch
+torchvision
+torchmetrics[detection]
+pycocotools
+ultralytics
+pytesseract
+easyocr
+vosk
+faster-whisper
+pydantic-settings

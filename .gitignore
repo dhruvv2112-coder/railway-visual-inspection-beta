@@ -1,0 +1,19 @@
+# build
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk
+# python
+__pycache__/
+*.egg-info/
+.venv/
+backend/rvi.db
+backend/evidence/
+# data & runs
+ml/data/cache/
+.cache/
+runs/
+*.pt
+*.onnx
+!reports/*.onnx

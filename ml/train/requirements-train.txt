@@ -1,0 +1,12 @@
+# Laptop training (ProArt P16: RTX 5070 Laptop GPU, Blackwell). Install PyTorch first:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+rfdetr
+supervision
+ultralytics
+transformers>=4.46,<5
+peft
+datasets
+accelerate
+segmentation-models-pytorch
+albumentations>=2.0
+jiwer
