@@ -13,7 +13,7 @@
 param(
   [string]$Suites = "asr,detector",
   [string]$Workdir = "$HOME\rvi-bench",
-  [string]$Branch = "fix/quality-gate-ocr"
+  [string]$Branch = "main"
 )
 $ErrorActionPreference = "Continue"   # native tools write progress to stderr; we check exit codes instead
 function Check($what) { if ($LASTEXITCODE -ne 0) { Write-Host "FAILED: $what" -ForegroundColor Red; exit 1 } }
