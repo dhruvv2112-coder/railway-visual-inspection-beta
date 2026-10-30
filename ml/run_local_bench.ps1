@@ -6,14 +6,15 @@
   Requirements: Git, Python 3.11 or 3.12 (python.org installer, "py" launcher), NVIDIA driver 570+.
   Usage (PowerShell, from any folder):
     Set-ExecutionPolicy -Scope Process Bypass
-    .\run_local_bench.ps1                     # asr + detector
+    .\run_local_bench.ps1                     # detector, then asr (skips suites already done)
     .\run_local_bench.ps1 -Suites detector    # one suite
   Disk: ~12 GB (PyTorch CUDA, models, datasets). Time: ~45-90 min, most of it downloads.
 #>
 param(
-  [string]$Suites = "asr,detector",
+  [string]$Suites = "detector,asr",
   [string]$Workdir = "$HOME\rvi-bench",
-  [string]$Branch = "main"
+  [string]$Branch = "main",
+  [switch]$Force
 )
 $ErrorActionPreference = "Continue"   # native tools write progress to stderr; we check exit codes instead
 function Check($what) { if ($LASTEXITCODE -ne 0) { Write-Host "FAILED: $what" -ForegroundColor Red; exit 1 } }
@@ -37,29 +38,39 @@ python -c "import torch;assert torch.cuda.is_available(),'CUDA not available';pr
 $torchLib = python -c "import torch,os;print(os.path.join(os.path.dirname(torch.__file__),'lib'))"
 $env:PATH = "$torchLib;$env:PATH"
 
-# 3. Run
+# 3. Run (detector first: it matters most). A suite whose report already exists is skipped, and results are
+#    pushed after every suite, so closing the window loses at most the suite in progress. -Force re-runs all.
 $env:RVI_DEVICE = "cuda"
 $env:RVI_REPORTS = "$Workdir\reports"; $env:RVI_DATA = "$Workdir\.cache\rvi"
 $env:FT_EPOCHS = "30"; $env:FT_FRACTION = "1.0"; $env:FT_IMGSZ = "640"; $env:ZS_N = "400"; $env:ASR_N = "100"
-$env:PYTHONUTF8 = "1"
+$env:PYTHONUTF8 = "1"; $env:PYTHONWARNINGS = "ignore"; $env:HF_HUB_DISABLE_SYMLINKS_WARNING = "1"
 New-Item -ItemType Directory -Force -Path reports, logs | Out-Null
+$gpuName = python -c "import torch;print(torch.cuda.get_device_name(0))"
+
+function Publish {
+  $pub = Join-Path $env:TEMP "rvi-pub"; if (Test-Path $pub) { Remove-Item -Recurse -Force $pub }
+  New-Item -ItemType Directory -Path $pub | Out-Null
+  Copy-Item -Recurse "$Workdir\reports", "$Workdir\logs" $pub
+  Get-ChildItem "$pub\reports" -Include *.onnx, *.pt -Recurse | Remove-Item
+  Push-Location $pub
+  git init -q -b local-bench-results
+  "$(git -C $Workdir rev-parse HEAD) local-gpu $gpuName" | Out-File STATUS -Encoding utf8
+  git add -A; git -c user.name=dhruvv2112-coder -c user.email=315002824+dhruvv2112-coder@users.noreply.github.com commit -qm "Local GPU benchmark results"
+  git push -q -f $Repo HEAD:local-bench-results; Check "git push (sign in to GitHub when prompted)"
+  Pop-Location
+  Write-Host "Results so far pushed to branch local-bench-results." -ForegroundColor Green
+}
+
 Push-Location ml\bench
 foreach ($s in $Suites.Split(",")) {
-  $script = @{ asr = "bench_asr.py"; detector = "bench_detector.py" }[$s.Trim()]
-  Write-Host "=== $s ===" -ForegroundColor Cyan
-  python $script 2>&1 | Tee-Object -FilePath "..\..\logs\$($s.Trim()).log"
+  $s = $s.Trim()
+  if ((Test-Path "$Workdir\reports\$s.json") -and -not $Force) { Write-Host "=== $($s): already done, skipping ===" -ForegroundColor DarkGray; continue }
+  $script = @{ asr = "bench_asr.py"; detector = "bench_detector.py" }[$s]
+  Write-Host "=== $s === (started $(Get-Date -Format HH:mm))" -ForegroundColor Cyan
+  # ForEach-Object turns Python's stderr lines into plain text, so warnings are not shown as red PowerShell errors
+  python $script 2>&1 | ForEach-Object { "$_" } | Tee-Object -FilePath "..\..\logs\$s.log"
+  if (Test-Path "$Workdir\reports\$s.json") { Pop-Location; Publish; Push-Location ml\bench }
+  else { Write-Host "Suite $s produced no report - see logs\$s.log" -ForegroundColor Red }
 }
-Pop-Location
-
-# 4. Publish results (reports + logs only; no models or data)
-$pub = Join-Path $env:TEMP "rvi-pub"; if (Test-Path $pub) { Remove-Item -Recurse -Force $pub }
-New-Item -ItemType Directory -Path $pub | Out-Null
-Copy-Item -Recurse reports, logs $pub
-Get-ChildItem "$pub\reports" -Include *.onnx -Recurse | Remove-Item
-Push-Location $pub
-git init -q -b local-bench-results
-"$(git -C $Workdir rev-parse HEAD) local-gpu $(python -c "import torch;print(torch.cuda.get_device_name(0))")" | Out-File STATUS -Encoding utf8
-git add -A; git -c user.name=dhruvv2112-coder -c user.email=315002824+dhruvv2112-coder@users.noreply.github.com commit -qm "Local GPU benchmark results"
-git push -q -f $Repo HEAD:local-bench-results; Check "git push (sign in to GitHub when prompted)"
 Pop-Location
 Write-Host "Done. Results pushed to branch local-bench-results." -ForegroundColor Green
