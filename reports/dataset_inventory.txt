@@ -1,0 +1,23 @@
+ROOT /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/rvi/mendeley_rail
+DIR raw {'.zip': 1}
+DIR x {}
+DIR x/rail defects detection.v18i.yolov8/test/images {'.jpg': 310}
+DIR x/rail defects detection.v18i.yolov8/test/labels {'.txt': 310}
+DIR x/rail defects detection.v18i.yolov8/train/images {'.jpg': 6781}
+DIR x/rail defects detection.v18i.yolov8/train/labels {'.txt': 6691}
+DIR x/rail defects detection.v18i.yolov8/valid/images {'.jpg': 606}
+DIR x/rail defects detection.v18i.yolov8/valid/labels {'.txt': 616}
+--- LABEL x/rail defects detection.v18i.yolov8/valid/labels/VID-20231018-WA0018_mp4-0106_jpg.rf.e7f7e518da160ae5dcaa5f708d2d8237.txt: 7 0.615625 0.86015625 0.03515625 0.03359375
+--- LABEL x/rail defects detection.v18i.yolov8/valid/labels/VID-20231018-WA0012_mp4-0108_jpg.rf.f802e7479916c6ea46502bb2fa83a1d9.txt: 9 0.6265625 0.18203125 0.084375 0.33359375
+6 0.66953125 0.07578125 0.059375 0.13125
+6 0.6734375 0.2125 0.059375 0.1140625
+6 0.68046875 0.4984375 0.04765625 0.15
+--- LABEL x/rail defects detection.v18i.yolov8/valid/labels/20231018_114843_mp4-0128_jpg.rf.d9c46487d0502e8b193ab806066889a0.txt: 8 0.2109375 0.79453125 0.096875 0.10234375
+--- LABEL x/rail defects detection.v18i.yolov8/valid/labels/VID-20231018-WA0015_mp4-0041_jpg.rf.1764abb0287538c50a1fbdc16eddc485.txt: 6 0.61015625 0.45546875 0.0375 0.07265625
+6 0.590625 0.58984375 0.03984375 0.06328125
+6 0.625 0.365625 0.04140625 0.075
+6 0.6375 0.26875 0.04140625 0.0828125
+6 0.66640625 0.11953125 0.0375 0.07578125
+--- LABEL x/rail defects detection.v18i.yolov8/valid/labels/20231018_114952_mp4-0484_jpg.rf.0d64defa9249265f0a067a2ffa37ac88.txt: 9 0.50625 0.83828125 0.09296875 0.19453125
+3 0.50390625 0.6859375 0.07578125 0.0625
+3 0.52734375 0.5953125 0.096875 0.08671875
