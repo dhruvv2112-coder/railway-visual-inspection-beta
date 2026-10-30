@@ -179,7 +179,7 @@ document.getElementById(id).style.display = 'none';
     <div class="mdl-layout__header-row">
       <span class="mdl-layout-title">Lint Report: 72 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Fri Oct 30 03:25:19 UTC 2026 by AGP (8.7.3)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Fri Oct 30 20:46:28 UTC 2026 by AGP (8.7.3)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -269,13 +269,13 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/org/rvi/inspect/ui/AppNav.kt">../../src/main/java/org/rvi/inspect/ui/AppNav.kt</a>:70</span>: <span class="message">Field requires API level 30 (current min is 26): <code>android.view.HapticFeedbackConstants#CONFIRM</code></span><br /><pre class="errorlines">
-<span class="lineno">  67 </span>  DisposableEffect(Unit) { onDispose { voice.release() } }
-<span class="lineno">  68 </span>
-<span class="lineno">  69 </span>  <span class="keyword">fun</span> confirm(msg: Int) {
-<span class="caretline"><span class="lineno">  70 </span>      <span class="keyword">if</span> (settings?.haptics != <span class="keyword">false</span>) view.performHapticFeedback(<span class="warning">HapticFeedbackConstants.CONFIRM</span>)&nbsp;</span>
-<span class="lineno">  71 </span>      <span class="keyword">if</span> (settings?.tts != <span class="keyword">false</span>) voice.speak(context.getString(msg), voiceTag)
-<span class="lineno">  72 </span>  }
+<span class="location"><a href="../../src/main/java/org/rvi/inspect/ui/AppNav.kt">../../src/main/java/org/rvi/inspect/ui/AppNav.kt</a>:71</span>: <span class="message">Field requires API level 30 (current min is 26): <code>android.view.HapticFeedbackConstants#CONFIRM</code></span><br /><pre class="errorlines">
+<span class="lineno">  68 </span>  DisposableEffect(Unit) { onDispose { voice.release() } }
+<span class="lineno">  69 </span>
+<span class="lineno">  70 </span>  <span class="keyword">fun</span> confirm(msg: Int) {
+<span class="caretline"><span class="lineno">  71 </span>      <span class="keyword">if</span> (settings?.haptics != <span class="keyword">false</span>) view.performHapticFeedback(<span class="warning">HapticFeedbackConstants.CONFIRM</span>)&nbsp;</span>
+<span class="lineno">  72 </span>      <span class="keyword">if</span> (settings?.tts != <span class="keyword">false</span>) voice.speak(context.getString(msg), voiceTag)
+<span class="lineno">  73 </span>  }
 </pre>
 
 </div>
@@ -1200,7 +1200,7 @@ Dismiss</button>            </div>
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:69</span>: <span class="message">The resource <code>R.string.home</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno"> 66 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"large_text"</span>>Large text<span class="tag">&lt;/string></span>
 <span class="lineno"> 67 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"haptics"</span>>Haptic confirmation<span class="tag">&lt;/string></span>
-<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only JE/SSE assign severity.<span class="tag">&lt;/string></span>
+<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
 <span class="caretline"><span class="lineno"> 69 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"home"</span></span>>Home<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
 <span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
@@ -1208,7 +1208,7 @@ Dismiss</button>            </div>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:70</span>: <span class="message">The resource <code>R.string.findings</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno"> 67 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"haptics"</span>>Haptic confirmation<span class="tag">&lt;/string></span>
-<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only JE/SSE assign severity.<span class="tag">&lt;/string></span>
+<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
 <span class="lineno"> 69 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
 <span class="caretline"><span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"findings"</span></span>>Findings<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
@@ -1216,7 +1216,7 @@ Dismiss</button>            </div>
 <span class="lineno"> 73 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:71</span>: <span class="message">The resource <code>R.string.cat_a</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only JE/SSE assign severity.<span class="tag">&lt;/string></span>
+<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
 <span class="lineno"> 69 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
 <span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
 <span class="caretline"><span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_a"</span></span>>Visible<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -1234,13 +1234,13 @@ Dismiss</button>            </div>
 <span class="lineno"> 75 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:73</span>: <span class="message">The resource <code>R.string.cat_c</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 70 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
-<span class="lineno"> 71 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
-<span class="lineno"> 72 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 73 </span>    <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_c"</span></span>>Needs measurement<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 74 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span>
-<span class="lineno"> 75 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span>
-<span class="lineno"> 76 </span><span class="tag">&lt;/resources></span></pre>
+<span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
+<span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
+<span class="lineno"> 72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno"> 73 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_c"</span></span>>Needs measurement<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 74 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span>
+<span class="lineno"> 75 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span>
+<span class="lineno"> 76 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_ohe_tools"</span>>OHE spanners, bond bolts and nuts, small chopper, spring balance<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/themes.xml">../../src/main/res/values/themes.xml</a>:9</span>: <span class="message">The resource <code>R.color.ink</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno">  6 </span>        <span class="tag">&lt;item</span><span class="attribute"> name</span>=<span class="value">"android:navigationBarColor"</span>>@android:color/transparent<span class="tag">&lt;/item></span>

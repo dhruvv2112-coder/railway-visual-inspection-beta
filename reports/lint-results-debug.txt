@@ -1,4 +1,4 @@
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/AppNav.kt:70: Warning: Field requires API level 30 (current min is 26): android.view.HapticFeedbackConstants#CONFIRM [InlinedApi]
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/AppNav.kt:71: Warning: Field requires API level 30 (current min is 26): android.view.HapticFeedbackConstants#CONFIRM [InlinedApi]
         if (settings?.haptics != false) view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
