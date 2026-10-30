@@ -28,14 +28,14 @@ Daemon will be stopped at the end of the build
 > Task :app:processDebugManifest
 > Task :app:parseDebugLocalResources
 > Task :app:mergeDebugResources
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :app:mergeDebugAssets
-> Task :app:desugarDebugFileDependencies
+> Task :app:processDebugManifestForPackage
 > Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
 > Task :app:processDebugResources
 > Task :app:checkDebugDuplicateClasses
 > Task :app:kspDebugKotlin
@@ -62,16 +62,16 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
+> Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:mergeProjectDexDebug
-> Task :app:bundleDebugClassesToCompileJar
 > Task :app:mergeDebugJavaResource
-> Task :app:generateDebugLintReportModel
 
 > Task :app:kspDebugUnitTestKotlin FAILED
 e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/test/java/org/rvi/inspect/ScreenshotTest.kt:90:1 Unclosed comment
 
 > Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
 > Task :app:generateDebugUnitTestLintModel
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
@@ -84,7 +84,7 @@ e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793328849723.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793328780741.json
 
 FAILURE: Build failed with an exception.
 
@@ -99,5 +99,5 @@ Execution failed for task ':app:kspDebugUnitTestKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 2m 53s
+BUILD FAILED in 4m 37s
 56 actionable tasks: 56 executed
