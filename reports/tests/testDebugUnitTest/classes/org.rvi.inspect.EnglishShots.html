@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">8</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">9.122s</div>
+<div class="counter">29.034s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures" id="successRate">
-<div class="percent">0%</div>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
@@ -61,168 +61,10 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Failed tests</a>
-</li>
-<li>
-<a href="#tab1">Tests</a>
+<a href="#tab0">Tests</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
-<h2>Failed tests</h2>
-<div class="test">
-<a name="s01_home"></a>
-<h3 class="failures">s01_home</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s02_kit"></a>
-<h3 class="failures">s02_kit</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s03_patrol"></a>
-<h3 class="failures">s03_patrol</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s04_danger"></a>
-<h3 class="failures">s04_danger</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s05_classify"></a>
-<h3 class="failures">s05_classify</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s06_summary"></a>
-<h3 class="failures">s06_summary</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s07_review"></a>
-<h3 class="failures">s07_review</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="s08_settings"></a>
-<h3 class="failures">s08_settings</h3>
-<span class="code">
-<pre>java.lang.IllegalArgumentException: failed to parse qualifiers 'en-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</pre>
-</span>
-</div>
-</div>
-<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -233,44 +75,44 @@
 </tr>
 </thead>
 <tr>
-<td class="failures">s01_home</td>
-<td class="failures">0.084s</td>
-<td class="failures">failed</td>
+<td class="success">s01_home</td>
+<td class="success">1.371s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s02_kit</td>
-<td class="failures">0.036s</td>
-<td class="failures">failed</td>
+<td class="success">s02_kit</td>
+<td class="success">0.744s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s03_patrol</td>
-<td class="failures">8.818s</td>
-<td class="failures">failed</td>
+<td class="success">s03_patrol</td>
+<td class="success">21.827s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s04_danger</td>
-<td class="failures">0.057s</td>
-<td class="failures">failed</td>
+<td class="success">s04_danger</td>
+<td class="success">0.922s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s05_classify</td>
-<td class="failures">0.028s</td>
-<td class="failures">failed</td>
+<td class="success">s05_classify</td>
+<td class="success">1.522s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s06_summary</td>
-<td class="failures">0.049s</td>
-<td class="failures">failed</td>
+<td class="success">s06_summary</td>
+<td class="success">1.063s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s07_review</td>
-<td class="failures">0.022s</td>
-<td class="failures">failed</td>
+<td class="success">s07_review</td>
+<td class="success">0.705s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">s08_settings</td>
-<td class="failures">0.028s</td>
-<td class="failures">failed</td>
+<td class="success">s08_settings</td>
+<td class="success">0.880s</td>
+<td class="success">passed</td>
 </tr>
 </table>
 </div>
@@ -282,7 +124,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.11.1</a> at Oct 30, 2026, 2:59:04 AM</p>
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at Oct 30, 2026, 3:01:56 AM</p>
 </div>
 </div>
 </body>

@@ -1,126 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.HindiShots" tests="8" skipped="0" failures="8" errors="0" timestamp="2026-10-30T02:59:03" hostname="runnervm48cm3" time="0.291">
+<testsuite name="org.rvi.inspect.HindiShots" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-30T03:01:49" hostname="runnervm48cm3" time="5.607">
   <properties/>
-  <testcase name="s03_patrol" classname="org.rvi.inspect.HindiShots" time="0.041">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s01_home" classname="org.rvi.inspect.HindiShots" time="0.03">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s04_danger" classname="org.rvi.inspect.HindiShots" time="0.032">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s06_summary" classname="org.rvi.inspect.HindiShots" time="0.038">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s02_kit" classname="org.rvi.inspect.HindiShots" time="0.029">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s05_classify" classname="org.rvi.inspect.HindiShots" time="0.027">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s08_settings" classname="org.rvi.inspect.HindiShots" time="0.042">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
-  <testcase name="s07_review" classname="org.rvi.inspect.HindiShots" time="0.051">
-    <failure message="java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: failed to parse qualifiers 'hi-rIN-w393dp-h852dp-xxhdpi-night'. See https://developer.android.com/guide/topics/resources/providing-resources.html#QualifierRules for expected format.
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:35)
-	at org.robolectric.res.Qualifiers.parse(Qualifiers.java:28)
-	at org.robolectric.android.Bootstrap.applyQualifiers(Bootstrap.java:99)
-	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:192)
-	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
-	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
-	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-</failure>
-  </testcase>
+  <testcase name="s03_patrol" classname="org.rvi.inspect.HindiShots" time="0.697"/>
+  <testcase name="s01_home" classname="org.rvi.inspect.HindiShots" time="0.586"/>
+  <testcase name="s04_danger" classname="org.rvi.inspect.HindiShots" time="0.631"/>
+  <testcase name="s06_summary" classname="org.rvi.inspect.HindiShots" time="0.794"/>
+  <testcase name="s02_kit" classname="org.rvi.inspect.HindiShots" time="0.632"/>
+  <testcase name="s05_classify" classname="org.rvi.inspect.HindiShots" time="0.71"/>
+  <testcase name="s08_settings" classname="org.rvi.inspect.HindiShots" time="0.799"/>
+  <testcase name="s07_review" classname="org.rvi.inspect.HindiShots" time="0.755"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

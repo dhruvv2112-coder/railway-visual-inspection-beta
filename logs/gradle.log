@@ -14,8 +14,8 @@ Daemon will be stopped at the end of the build
 > Task :app:generateDebugLocaleConfig
 > Task :app:extractDeepLinksDebug
 > Task :app:packageDebugResources
-> Task :app:mergeDebugResources
 > Task :app:parseDebugLocalResources
+> Task :app:mergeDebugResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
 > Task :app:processDebugManifestForPackage
@@ -27,9 +27,9 @@ Daemon will be stopped at the end of the build
 > Task :app:desugarDebugFileDependencies
 > Task :app:compressDebugAssets
 > Task :app:mergeDebugJniLibFolders
-> Task :app:processDebugResources
 > Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugNativeLibs
+> Task :app:processDebugResources
 > Task :app:mergeLibDexDebug
 
 > Task :app:stripDebugDebugSymbols
@@ -42,8 +42,8 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:javaPreCompileDebugUnitTest
 > Task :app:packageDebugUnitTestForUnitTest
 > Task :app:preDebugAndroidTestBuild SKIPPED
-> Task :app:generateDebugUnitTestConfig
 > Task :app:generateDebugAndroidTestResValues
+> Task :app:generateDebugUnitTestConfig
 > Task :app:extractProguardFiles
 > Task :app:kspDebugKotlin
 > Task :app:mergeExtDexDebug
@@ -52,11 +52,11 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
-> Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
 > Task :app:mergeProjectDexDebug
-> Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugLintReportModel
+> Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugUnitTestLintModel
 > Task :app:kspDebugUnitTestKotlin
 > Task :app:mergeDebugJavaResource
@@ -67,78 +67,17 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:lintAnalyzeDebugAndroidTest
-
-> Task :app:testDebugUnitTest
-
-EnglishShots > s03_patrol FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s01_home FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s04_danger FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s06_summary FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s02_kit FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s05_classify FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s08_settings FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-EnglishShots > s07_review FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s03_patrol FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s01_home FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s04_danger FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s06_summary FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s02_kit FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s05_classify FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s08_settings FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-HindiShots > s07_review FAILED
-    java.lang.IllegalArgumentException at Qualifiers.java:35
-
-29 tests completed, 16 failed
-
-> Task :app:testDebugUnitTest FAILED
-> Task :app:finalizeTestRoborazziDebug
-> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:testDebugUnitTest
+> Task :app:finalizeTestRoborazziDebug
+> Task :app:recordRoborazziDebug
 
 > Task :app:lintReportDebug
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793329070827.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793329217754.json
 
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:testDebugUnitTest'.
-> There were failing tests. See the report at: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/tests/testDebugUnitTest/index.html
-
-* Try:
-> Run with --scan to get full insights.
-
-BUILD FAILED in 1m 35s
+BUILD SUCCESSFUL in 1m 52s
 60 actionable tasks: 60 executed
