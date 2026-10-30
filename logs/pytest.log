@@ -1,0 +1,33 @@
+.......................                                                  [100%]
+=============================== warnings summary ===============================
+tests/test_api.py::test_health_and_taxonomy_hindi
+  /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_api.py::test_health_and_taxonomy_hindi
+PASSED tests/test_api.py::test_r1_disabled_class_rejected
+PASSED tests/test_api.py::test_r2_protect_first_requires_protection
+PASSED tests/test_api.py::test_full_lifecycle_with_quality_gate_and_closure
+PASSED tests/test_api.py::test_r6_audit_chain_valid
+PASSED tests/test_api.py::test_r2_ohe_danger_requires_tpc
+PASSED tests/test_api.py::test_combined_diary_splits_track_and_ohe
+PASSED tests/test_ohe.py::test_v01_known_defect_assessed_and_routed_without_confirmation
+PASSED tests/test_ohe.py::test_v02_no_visible_defect_is_scoped
+PASSED tests/test_ohe.py::test_v03_blurred_detail_readable_plate
+PASSED tests/test_ohe.py::test_v04_defect_with_unreadable_plate_is_kept_unlocated
+PASSED tests/test_ohe.py::test_v05_plate_outside_corridor_is_not_forced
+PASSED tests/test_ohe.py::test_v06_notes_never_change_visual_output
+PASSED tests/test_ohe.py::test_v07_checksum_and_idempotent_ingest
+PASSED tests/test_ohe.py::test_v09_repeated_evidence_links_one_finding
+PASSED tests/test_ohe.py::test_v11_signed_revision_is_immutable
+PASSED tests/test_quality.py::test_sharp_image_passes
+PASSED tests/test_quality.py::test_blurred_image_rejected
+PASSED tests/test_quality.py::test_dark_image_rejected
+PASSED tests/test_quality.py::test_overexposed_image_rejected
+PASSED tests/test_quality.py::test_low_resolution_rejected
+PASSED tests/test_quality.py::test_unreadable
+PASSED tests/test_quality.py::test_mildly_dark_but_usable_image_passes
+23 passed, 1 warning in 2.01s
