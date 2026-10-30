@@ -22,6 +22,8 @@ ZS_N = int(os.environ.get("ZS_N", 200))
 EPOCHS = int(os.environ.get("FT_EPOCHS", 8))
 FRACTION = float(os.environ.get("FT_FRACTION", 0.4))
 IMGSZ = int(os.environ.get("FT_IMGSZ", 416))
+DEVICE = os.environ.get("RVI_DEVICE", "cpu")  # "cuda" on the RTX 5070 laptop
+TORCH_DEV = "cuda" if DEVICE in ("cuda", "0") else "cpu"
 
 
 def load_split(yaml_path, split, limit=None):
@@ -46,7 +48,7 @@ def prompt(name):
 def zero_shot(model_id, data, names):
     from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
     proc = AutoProcessor.from_pretrained(model_id)
-    model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).eval()
+    model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).eval().to(TORCH_DEV)
     labels = [prompt(n) for n in names]
     metric = MeanAveragePrecision(iou_type="bbox", class_metrics=True)
     lat = []
@@ -55,18 +57,19 @@ def zero_shot(model_id, data, names):
         t = time.perf_counter()
         with torch.no_grad():
             if "grounding" in model_id:
-                inputs = proc(images=im, text=". ".join(labels) + ".", return_tensors="pt")
+                inputs = proc(images=im, text=". ".join(labels) + ".", return_tensors="pt").to(TORCH_DEV)
                 out = model(**inputs)
                 r = proc.post_process_grounded_object_detection(out, inputs.input_ids, threshold=0.2, text_threshold=0.2,
                                                                 target_sizes=[im.size[::-1]])[0]
                 txt = r.get("text_labels", r.get("labels"))
                 cl = [labels.index(t) if t in labels else -1 for t in txt]
             else:
-                inputs = proc(text=[labels], images=im, return_tensors="pt")
+                inputs = proc(text=[labels], images=im, return_tensors="pt").to(TORCH_DEV)
                 out = model(**inputs)
                 r = proc.post_process_object_detection(out, threshold=0.1, target_sizes=torch.tensor([im.size[::-1]]))[0]
                 cl = r["labels"].tolist()
         lat.append(time.perf_counter() - t)
+        r = {k: (v.cpu() if hasattr(v, "cpu") else v) for k, v in r.items()}
         keep = [i for i, c in enumerate(cl) if c >= 0]
         metric.update([{"boxes": r["boxes"][keep], "scores": r["scores"][keep], "labels": torch.tensor([cl[i] for i in keep], dtype=torch.long)}],
                       [{"boxes": gt_b, "labels": gt_c}])
@@ -106,7 +109,7 @@ def main():
         try:
             m, lat = zero_shot(mid, test, names)
             rows.append({"approach": "zero-shot", "model": mid, "test_set": "clean", "n_images": len(test),
-                         "mAP50": float(m["map_50"]), "mAP50_95": float(m["map"]), "median_latency_s_cpu": lat})
+                         "mAP50": float(m["map_50"]), "mAP50_95": float(m["map"]), "median_latency_s": lat})
             per_class[mid] = {names[int(c)]: float(a) for c, a in zip(m["classes"].flatten(), m["map_per_class"].flatten())}
         except Exception as e:
             notes.append(f"{mid} failed: {type(e).__name__}: {str(e)[:200]}")
@@ -114,21 +117,21 @@ def main():
         from ultralytics import YOLO
         model = YOLO("yolo11n.pt")
         t = time.perf_counter()
-        model.train(data=str(yaml_path), epochs=EPOCHS, imgsz=IMGSZ, fraction=FRACTION, device="cpu", batch=16,
+        model.train(data=str(yaml_path), epochs=EPOCHS, imgsz=IMGSZ, fraction=FRACTION, device=0 if TORCH_DEV == "cuda" else "cpu", batch=16 if TORCH_DEV == "cpu" else 32,
                     workers=2, seed=0, deterministic=True, plots=False, verbose=False, project=str(DATA / "runs"), name="ft", exist_ok=True)
         train_s = time.perf_counter() - t
         best = YOLO(str(DATA / "runs" / "ft" / "weights" / "best.pt"))
         sets = {"clean": yaml_path} | degraded_copies(yaml_path)
         for cond, yp in sets.items():
-            r = best.val(data=str(yp), split="test", imgsz=IMGSZ, device="cpu", plots=False, verbose=False)
-            rows.append({"approach": f"fine-tuned ({EPOCHS} ep, {int(FRACTION*100)}% train, CPU)", "model": "yolo11n",
+            r = best.val(data=str(yp), split="test", imgsz=IMGSZ, device=0 if TORCH_DEV == "cuda" else "cpu", plots=False, verbose=False)
+            rows.append({"approach": f"fine-tuned ({EPOCHS} ep, {int(FRACTION*100)}% train, {TORCH_DEV.upper()})", "model": "yolo11n",
                          "test_set": cond, "n_images": int(r.seen) if hasattr(r, "seen") else stats["per_split"]["test"],
                          "mAP50": float(r.box.map50), "mAP50_95": float(r.box.map),
-                         "median_latency_s_cpu": float(r.speed["inference"]) / 1000})
+                         "median_latency_s": float(r.speed["inference"]) / 1000})
             if cond == "clean":
                 per_class["yolo11n-ft"] = {names[i]: float(v) for i, v in zip(r.box.ap_class_index, r.box.ap50)}
         onnx = best.export(format="onnx", imgsz=IMGSZ, simplify=True)
-        notes.append(f"YOLO11n fine-tune wall time {train_s/60:.1f} min on CI CPU; ONNX export: {Path(onnx).name} ({Path(onnx).stat().st_size/1e6:.1f} MB)")
+        notes.append(f"YOLO11n fine-tune wall time {train_s/60:.1f} min on {TORCH_DEV.upper()}; ONNX export: {Path(onnx).name} ({Path(onnx).stat().st_size/1e6:.1f} MB)")
         shutil.copy(onnx, Path(os.environ.get("RVI_REPORTS", "reports")) / "yolo11n_rail_ci.onnx")
     except Exception as e:
         notes.append(f"fine-tune failed: {type(e).__name__}: {str(e)[:300]}")

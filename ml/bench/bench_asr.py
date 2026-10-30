@@ -68,7 +68,13 @@ def vosk_engine(name):
 
 def whisper_engine(size):
     from faster_whisper import WhisperModel
-    m = WhisperModel(size, device="cpu", compute_type="int8")
+    if os.environ.get("RVI_DEVICE") == "cuda":
+        try:
+            m = WhisperModel(size, device="cuda", compute_type="float16")
+        except Exception:
+            m = WhisperModel(size, device="cpu", compute_type="int8")
+    else:
+        m = WhisperModel(size, device="cpu", compute_type="int8")
 
     def run(audio, lang):
         segs, _ = m.transcribe(audio, language=lang, beam_size=1, vad_filter=False)
