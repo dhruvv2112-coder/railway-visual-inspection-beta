@@ -14,8 +14,14 @@ from PIL import Image, ImageDraw, ImageFont
 from common import write_report
 
 random.seed(0)
-FONT_EN = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-FONT_HI = "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf"
+def _first(*paths):
+    import os
+    return next((p for p in paths if os.path.exists(p)), paths[0])
+
+
+# Linux (CI) paths first, then Windows system fonts (Arial Bold; Nirmala UI ships with Windows 10/11 and covers Devanagari)
+FONT_EN = _first("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", r"C:\Windows\Fonts\arialbd.ttf")
+FONT_HI = _first("/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf", r"C:\Windows\Fonts\NirmalaB.ttf", r"C:\Windows\Fonts\Nirmala.ttf")
 N = 120
 
 
@@ -57,7 +63,11 @@ CONDS = {
 
 
 def eng_tesseract(img, lang):
+    import os
     import pytesseract
+    win = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    if os.name == "nt" and os.path.exists(win):
+        pytesseract.pytesseract.tesseract_cmd = win
     code = "hin+eng" if lang == "hi" else "eng"
     return pytesseract.image_to_string(img, lang=code, config="--psm 7").strip()
 

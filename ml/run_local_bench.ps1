@@ -51,6 +51,7 @@ function Publish {
   $pub = Join-Path $env:TEMP "rvi-pub"; if (Test-Path $pub) { Remove-Item -Recurse -Force $pub }
   New-Item -ItemType Directory -Path $pub | Out-Null
   Copy-Item -Recurse "$Workdir\reports", "$Workdir\logs" $pub
+  if (Test-Path "$Workdir\local-build") { Copy-Item -Recurse "$Workdir\local-build" $pub; Remove-Item -Recurse -Force "$pub\local-build\*.apk" -ErrorAction SilentlyContinue }
   Get-ChildItem "$pub\reports" -Include *.onnx, *.pt -Recurse | Remove-Item
   Push-Location $pub
   git init -q -b local-bench-results
@@ -64,12 +65,14 @@ function Publish {
 Push-Location ml\bench
 foreach ($s in $Suites.Split(",")) {
   $s = $s.Trim()
-  if ((Test-Path "$Workdir\reports\$s.json") -and -not $Force) { Write-Host "=== $($s): already done, skipping ===" -ForegroundColor DarkGray; continue }
-  $script = @{ asr = "bench_asr.py"; detector = "bench_detector.py" }[$s]
+  $script = @{ asr = "bench_asr.py"; detector = "bench_detector.py"; quality = "bench_quality_gate.py"; dedup = "bench_dedup.py"; translation = "bench_translation.py"; ocr = "bench_ocr.py" }[$s]
+  $rep = @{ asr = "asr"; detector = "detector"; quality = "quality_gate"; dedup = "dedup"; translation = "translation"; ocr = "ocr_markers" }[$s]
+  if (-not $script) { Write-Host "Unknown suite '$s' (use detector, asr, quality, dedup, translation, ocr)" -ForegroundColor Red; continue }
+  if ((Test-Path "$Workdir\reports\$rep.json") -and -not $Force) { Write-Host "=== $($s): already done, skipping ===" -ForegroundColor DarkGray; continue }
   Write-Host "=== $s === (started $(Get-Date -Format HH:mm))" -ForegroundColor Cyan
   # ForEach-Object turns Python's stderr lines into plain text, so warnings are not shown as red PowerShell errors
   python $script 2>&1 | ForEach-Object { "$_" } | Tee-Object -FilePath "..\..\logs\$s.log"
-  if (Test-Path "$Workdir\reports\$s.json") { Pop-Location; Publish; Push-Location ml\bench }
+  if (Test-Path "$Workdir\reports\$rep.json") { Pop-Location; Publish; Push-Location ml\bench }
   else { Write-Host "Suite $s produced no report - see logs\$s.log" -ForegroundColor Red }
 }
 Pop-Location
