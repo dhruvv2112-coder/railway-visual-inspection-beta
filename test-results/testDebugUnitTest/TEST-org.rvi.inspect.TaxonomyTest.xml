@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.TaxonomyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-30T20:52:12" hostname="runnervm48cm3" time="0.019">
+<testsuite name="org.rvi.inspect.TaxonomyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-30T23:51:49" hostname="runnervm48cm3" time="0.04">
   <properties/>
-  <testcase name="everyBetaClassHasHindiLabel" classname="org.rvi.inspect.TaxonomyTest" time="0.004"/>
-  <testcase name="betaExcludesCategoryD" classname="org.rvi.inspect.TaxonomyTest" time="0.004"/>
-  <testcase name="combinedPatrolCoversTrackAndOhe" classname="org.rvi.inspect.TaxonomyTest" time="0.005"/>
-  <testcase name="bilingualSearch" classname="org.rvi.inspect.TaxonomyTest" time="0.006"/>
+  <testcase name="everyBetaClassHasHindiLabel" classname="org.rvi.inspect.TaxonomyTest" time="0.017"/>
+  <testcase name="betaExcludesCategoryD" classname="org.rvi.inspect.TaxonomyTest" time="0.007"/>
+  <testcase name="combinedPatrolCoversTrackAndOhe" classname="org.rvi.inspect.TaxonomyTest" time="0.006"/>
+  <testcase name="bilingualSearch" classname="org.rvi.inspect.TaxonomyTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

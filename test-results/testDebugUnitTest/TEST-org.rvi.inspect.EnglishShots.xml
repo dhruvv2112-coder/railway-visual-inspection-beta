@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.EnglishShots" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-30T20:51:53" hostname="runnervm48cm3" time="15.485">
+<testsuite name="org.rvi.inspect.EnglishShots" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-30T23:51:11" hostname="runnervm48cm3" time="30.898">
   <properties/>
-  <testcase name="s03_patrol" classname="org.rvi.inspect.EnglishShots" time="11.126"/>
-  <testcase name="s04b_ohe_danger" classname="org.rvi.inspect.EnglishShots" time="0.483"/>
-  <testcase name="s01_home" classname="org.rvi.inspect.EnglishShots" time="0.559"/>
-  <testcase name="s04_danger" classname="org.rvi.inspect.EnglishShots" time="0.402"/>
-  <testcase name="s06_summary" classname="org.rvi.inspect.EnglishShots" time="0.611"/>
-  <testcase name="s02_kit" classname="org.rvi.inspect.EnglishShots" time="0.459"/>
-  <testcase name="s05_classify" classname="org.rvi.inspect.EnglishShots" time="0.712"/>
-  <testcase name="s08_settings" classname="org.rvi.inspect.EnglishShots" time="0.393"/>
-  <testcase name="s04c_danger_choice" classname="org.rvi.inspect.EnglishShots" time="0.321"/>
-  <testcase name="s07_review" classname="org.rvi.inspect.EnglishShots" time="0.418"/>
+  <testcase name="s03_patrol" classname="org.rvi.inspect.EnglishShots" time="23.06"/>
+  <testcase name="s04b_ohe_danger" classname="org.rvi.inspect.EnglishShots" time="0.911"/>
+  <testcase name="s01_home" classname="org.rvi.inspect.EnglishShots" time="0.983"/>
+  <testcase name="s04_danger" classname="org.rvi.inspect.EnglishShots" time="0.803"/>
+  <testcase name="s06_summary" classname="org.rvi.inspect.EnglishShots" time="0.926"/>
+  <testcase name="s02_kit" classname="org.rvi.inspect.EnglishShots" time="1.012"/>
+  <testcase name="s05_classify" classname="org.rvi.inspect.EnglishShots" time="1.091"/>
+  <testcase name="s08_settings" classname="org.rvi.inspect.EnglishShots" time="0.744"/>
+  <testcase name="s04c_danger_choice" classname="org.rvi.inspect.EnglishShots" time="0.543"/>
+  <testcase name="s07_review" classname="org.rvi.inspect.EnglishShots" time="0.822"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
