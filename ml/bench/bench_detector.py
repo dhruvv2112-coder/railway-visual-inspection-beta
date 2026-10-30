@@ -41,8 +41,13 @@ def load_split(yaml_path, split, limit=None):
     return out
 
 
+PROMPTS = {"Broken-rail": "broken rail", "Corrosion": "corroded rail", "Cracks": "crack on rail", "Flakings": "flaking on rail head",
+           "Joints": "rail joint", "Missing-fastener": "missing rail fastener clip", "Shelling": "shelling on rail head",
+           "Spalling": "spalling on rail", "Squats": "squat defect on rail head", "Wheel-burn": "wheel burn on rail"}
+
+
 def prompt(name):
-    return name.replace("_", " ").replace("-", " ").lower()
+    return PROMPTS.get(name, name.replace("_", " ").replace("-", " ").lower())
 
 
 def zero_shot(model_id, data, names):

@@ -3,11 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       ft_epochs: {description: "YOLO11n CI fine-tune epochs", default: "8"}
+      suites: {description: "JSON list of suites", default: '["vision-basic","asr","translation","detector"]'}
   push:
     branches: [main]
     paths: ["ml/bench/**", "backend/app/quality.py", ".github/workflows/ml-bench.yml"]
 
-concurrency: {group: ml-bench, cancel-in-progress: true}
+concurrency: {group: "ml-bench-${{ github.ref }}", cancel-in-progress: true}
 
 env:
   RVI_REPORTS: ${{ github.workspace }}/reports
@@ -27,13 +28,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [vision-basic, asr, translation, detector]
+        suite: ${{ fromJSON(github.event.inputs.suites || '["vision-basic","asr","translation","detector"]') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/requirements-bench.txt}
       - uses: actions/cache@v4
-        with: {path: .cache/rvi, key: "rvi-data-${{ matrix.suite }}-v1"}
+        with: {path: .cache/rvi, key: "rvi-data-${{ matrix.suite }}-v2"}
       - name: System packages (OCR engine, fonts, audio)
         run: sudo apt-get update -q && sudo apt-get install -yq tesseract-ocr tesseract-ocr-hin fonts-noto-core fonts-dejavu-core libsndfile1
       - name: Python packages
