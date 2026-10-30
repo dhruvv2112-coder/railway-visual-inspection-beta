@@ -1,14 +1,14 @@
 {
  "name": "quality_gate",
  "title": "Image-quality gate under field conditions",
- "summary": "Source: Mendeley 88sh5y3tmj v2 (Indian railway track images, CC BY 4.0). False-rejection on usable images: 24.4%. Unusable images wrongly passed: 2.7%.",
+ "summary": "Source: Mendeley 88sh5y3tmj v2 (Indian railway track images, CC BY 4.0). False-rejection on usable images: 5.0%. Unusable images wrongly passed: 1.7%.",
  "environment": {
   "python": "3.11.17",
   "machine": "x86_64",
   "processor": "x86_64",
   "cpu_count": 4,
-  "runner": "GitHub Actions 1000000042",
-  "timestamp_utc": "2026-10-30T02:57:48.378067+00:00",
+  "runner": "GitHub Actions 1000000055",
+  "timestamp_utc": "2026-10-30T06:40:58.533608+00:00",
   "torch": "2.15.0+cpu",
   "cuda": false
  },
@@ -26,8 +26,8 @@
    "condition": "dark_mild",
    "expected": "pass",
    "n": 200,
-   "pass_rate": 0.185,
-   "correct_rate": 0.185,
+   "pass_rate": 0.95,
+   "correct_rate": 0.95,
    "median_sharpness": 668.0371631454677,
    "median_brightness": 67.46305908203125
   },
@@ -44,19 +44,19 @@
    "condition": "motion_blur_mild",
    "expected": "pass",
    "n": 200,
-   "pass_rate": 0.91,
-   "correct_rate": 0.91,
-   "median_sharpness": 211.96643205469846,
-   "median_brightness": 141.66881958007812
+   "pass_rate": 0.92,
+   "correct_rate": 0.92,
+   "median_sharpness": 212.75566575101612,
+   "median_brightness": 141.6724951171875
   },
   {
    "condition": "motion_blur_severe(walking)",
    "expected": "reject",
    "n": 200,
-   "pass_rate": 0.135,
-   "correct_rate": 0.865,
-   "median_sharpness": 24.154785046041013,
-   "median_brightness": 141.64309936523438
+   "pass_rate": 0.085,
+   "correct_rate": 0.915,
+   "median_sharpness": 25.039974523195625,
+   "median_brightness": 142.4538427734375
   },
   {
    "condition": "defocus_severe",
@@ -64,8 +64,8 @@
    "n": 200,
    "pass_rate": 0.0,
    "correct_rate": 1.0,
-   "median_sharpness": 2.1457183077275754,
-   "median_brightness": 142.0483251953125
+   "median_sharpness": 2.1432409184664487,
+   "median_brightness": 141.91780517578124
   },
   {
    "condition": "rain_drops",
@@ -73,8 +73,8 @@
    "n": 200,
    "pass_rate": 1.0,
    "correct_rate": 1.0,
-   "median_sharpness": 543.7115622592419,
-   "median_brightness": 126.57600708007813
+   "median_sharpness": 546.4612577776909,
+   "median_brightness": 126.60980712890625
   },
   {
    "condition": "fog_dust_dense",
@@ -82,8 +82,8 @@
    "n": 200,
    "pass_rate": 0.0,
    "correct_rate": 1.0,
-   "median_sharpness": 2.0539809667676687,
-   "median_brightness": 211.7872155761719
+   "median_sharpness": 2.074242230579257,
+   "median_brightness": 211.04029174804685
   },
   {
    "condition": "glare_overexposed",
@@ -96,8 +96,8 @@
   }
  ],
  "extra": {
-  "false_rejection_rate": 0.24375000000000002,
-  "miss_rate": 0.027000000000000003
+  "false_rejection_rate": 0.050000000000000044,
+  "miss_rate": 0.017
  },
  "notes": [
   "Degradations are synthetic (albumentations) – field captures needed to confirm.",

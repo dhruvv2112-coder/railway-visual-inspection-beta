@@ -1,0 +1,79 @@
+{
+ "name": "detector_zs",
+ "title": "Zero-shot defect detection (re-run with box-scaling and label-matching fixes)",
+ "summary": "Dataset stats: {'classes': 10, 'images': 7587, 'instances_per_class': {'Broken-rail': 138, 'Corrosion': 6028, 'Cracks': 4855, 'Flakings': 4737, 'Joints': 396, 'Missing-fastener': 510, 'Shelling': 6245, 'Spalling': 4945, 'Squats': 3654, 'Wheel-burn': 4041}, 'per_split': {'test': 300, 'train': 6681, 'val': 606}, 'split': 'provided (Roboflow train/valid/test)'}.",
+ "environment": {
+  "python": "3.11.17",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "runner": "GitHub Actions 1000000054",
+  "timestamp_utc": "2026-10-30T07:06:58.593977+00:00",
+  "torch": "2.15.0+cpu",
+  "cuda": false
+ },
+ "results": [
+  {
+   "approach": "zero-shot",
+   "model": "google/owlv2-base-patch16-ensemble",
+   "test_set": "clean",
+   "n_images": 100,
+   "mAP50": 0.0,
+   "mAP50_95": 0.0,
+   "median_latency_s": 10.539904060000026,
+   "agnostic_mAP50": 1.6501649952260777e-05,
+   "preds_per_image": 13.51
+  },
+  {
+   "approach": "zero-shot",
+   "model": "IDEA-Research/grounding-dino-tiny",
+   "test_set": "clean",
+   "n_images": 100,
+   "mAP50": 4.3858206481672823e-05,
+   "mAP50_95": 1.662957038206514e-05,
+   "median_latency_s": 5.944222498500039,
+   "agnostic_mAP50": 0.00027591182151809335,
+   "preds_per_image": 10.08
+  }
+ ],
+ "extra": {
+  "per_class_ap50": {
+   "google/owlv2-base-patch16-ensemble": {
+    "Broken-rail": -1.0,
+    "Corrosion": 0.0,
+    "Cracks": 0.0,
+    "Flakings": 0.0,
+    "Joints": -1.0,
+    "Missing-fastener": -1.0,
+    "Shelling": 0.0,
+    "Spalling": 0.0,
+    "Squats": 0.0,
+    "Wheel-burn": 0.0
+   },
+   "IDEA-Research/grounding-dino-tiny": {
+    "Broken-rail": -1.0,
+    "Corrosion": 0.0,
+    "Cracks": 0.00011640699085546657,
+    "Flakings": 0.0,
+    "Missing-fastener": -1.0,
+    "Shelling": 0.0,
+    "Spalling": 0.0,
+    "Squats": 0.0,
+    "Wheel-burn": 0.0
+   }
+  },
+  "class_names": [
+   "Broken-rail",
+   "Corrosion",
+   "Cracks",
+   "Flakings",
+   "Joints",
+   "Missing-fastener",
+   "Shelling",
+   "Spalling",
+   "Squats",
+   "Wheel-burn"
+  ]
+ },
+ "notes": []
+}

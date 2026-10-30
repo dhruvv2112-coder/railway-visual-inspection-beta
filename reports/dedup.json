@@ -7,8 +7,8 @@
   "machine": "x86_64",
   "processor": "x86_64",
   "cpu_count": 4,
-  "runner": "GitHub Actions 1000000042",
-  "timestamp_utc": "2026-10-30T03:16:36.530924+00:00",
+  "runner": "GitHub Actions 1000000055",
+  "timestamp_utc": "2026-10-30T06:44:22.270194+00:00",
   "torch": "2.15.0+cpu",
   "cuda": false
  },
@@ -16,16 +16,16 @@
   {
    "model": "facebook/dinov2-small",
    "gallery": 300,
-   "recall@1": 0.746666669845581,
-   "recall@5": 0.9066666960716248,
-   "sec_per_image_cpu": 0.08865130155666671
+   "recall@1": 0.7366666793823242,
+   "recall@5": 0.903333306312561,
+   "sec_per_image_cpu": 0.08798635978833327
   },
   {
    "model": "google/siglip-base-patch16-224",
    "gallery": 300,
-   "recall@1": 0.3866666555404663,
-   "recall@5": 0.6733333468437195,
-   "sec_per_image_cpu": 0.22462603894833327
+   "recall@1": 0.3799999952316284,
+   "recall@5": 0.6700000166893005,
+   "sec_per_image_cpu": 0.22970418643999996
   }
  ],
  "extra": {},
