@@ -22,6 +22,8 @@ ZS_N = int(os.environ.get("ZS_N", 200))
 EPOCHS = int(os.environ.get("FT_EPOCHS", 8))
 FRACTION = float(os.environ.get("FT_FRACTION", 0.4))
 IMGSZ = int(os.environ.get("FT_IMGSZ", 416))
+DEVICE = os.environ.get("RVI_DEVICE", "cpu")  # "cuda" on the RTX 5070 laptop
+TORCH_DEV = "cuda" if DEVICE in ("cuda", "0") else "cpu"
 
 
 def load_split(yaml_path, split, limit=None):
@@ -39,38 +41,61 @@ def load_split(yaml_path, split, limit=None):
     return out
 
 
+PROMPTS = {"Broken-rail": "broken rail", "Corrosion": "corroded rail", "Cracks": "crack on rail", "Flakings": "flaking on rail head",
+           "Joints": "rail joint", "Missing-fastener": "missing rail fastener clip", "Shelling": "shelling on rail head",
+           "Spalling": "spalling on rail", "Squats": "squat defect on rail head", "Wheel-burn": "wheel burn on rail"}
+
+
 def prompt(name):
-    return name.replace("_", " ").replace("-", " ").lower()
+    return PROMPTS.get(name, name.replace("_", " ").replace("-", " ").lower())
+
+
+def match_label(text, labels):
+    """Grounding DINO returns the matched sub-phrase (e.g. 'crack' or 'rail'); map it to the prompt with most shared words."""
+    if text in labels:
+        return labels.index(text)
+    w = set(str(text).split()) - {"on", "rail", "head", "of", "the"}
+    best = max(range(len(labels)), key=lambda i: len(w & set(labels[i].split())))
+    return best if w & set(labels[best].split()) else -1
 
 
 def zero_shot(model_id, data, names):
     from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
     proc = AutoProcessor.from_pretrained(model_id)
-    model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).eval()
+    model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).eval().to(TORCH_DEV)
     labels = [prompt(n) for n in names]
     metric = MeanAveragePrecision(iou_type="bbox", class_metrics=True)
-    lat = []
+    agnostic = MeanAveragePrecision(iou_type="bbox")  # "is there a defect here at all", ignoring class
+    lat, n_pred = [], 0
     for im_path, gt_b, gt_c in data:
         im = Image.open(im_path).convert("RGB")
         t = time.perf_counter()
         with torch.no_grad():
             if "grounding" in model_id:
-                inputs = proc(images=im, text=". ".join(labels) + ".", return_tensors="pt")
+                inputs = proc(images=im, text=". ".join(labels) + ".", return_tensors="pt").to(TORCH_DEV)
                 out = model(**inputs)
                 r = proc.post_process_grounded_object_detection(out, inputs.input_ids, threshold=0.2, text_threshold=0.2,
                                                                 target_sizes=[im.size[::-1]])[0]
                 txt = r.get("text_labels", r.get("labels"))
-                cl = [labels.index(t) if t in labels else -1 for t in txt]
+                cl = [match_label(t, labels) for t in txt]
             else:
-                inputs = proc(text=[labels], images=im, return_tensors="pt")
+                inputs = proc(text=[labels], images=im, return_tensors="pt").to(TORCH_DEV)
                 out = model(**inputs)
-                r = proc.post_process_object_detection(out, threshold=0.1, target_sizes=torch.tensor([im.size[::-1]]))[0]
+                # OWLv2 pads to a square before resizing, so boxes must be scaled to the padded square side
+                side = max(im.size)
+                r = proc.post_process_object_detection(out, threshold=0.1, target_sizes=torch.tensor([[side, side]]))[0]
                 cl = r["labels"].tolist()
         lat.append(time.perf_counter() - t)
+        r = {k: (v.cpu() if hasattr(v, "cpu") else v) for k, v in r.items()}
         keep = [i for i, c in enumerate(cl) if c >= 0]
+        n_pred += len(keep)
+        agnostic.update([{"boxes": r["boxes"][keep], "scores": r["scores"][keep], "labels": torch.zeros(len(keep), dtype=torch.long)}],
+                        [{"boxes": gt_b, "labels": torch.zeros(len(gt_c), dtype=torch.long)}])
         metric.update([{"boxes": r["boxes"][keep], "scores": r["scores"][keep], "labels": torch.tensor([cl[i] for i in keep], dtype=torch.long)}],
                       [{"boxes": gt_b, "labels": gt_c}])
     m = metric.compute()
+    m["agnostic_map_50"] = agnostic.compute()["map_50"]
+    m["preds_per_image"] = n_pred / max(len(data), 1)
     return m, float(np.median(lat))
 
 
@@ -106,29 +131,34 @@ def main():
         try:
             m, lat = zero_shot(mid, test, names)
             rows.append({"approach": "zero-shot", "model": mid, "test_set": "clean", "n_images": len(test),
-                         "mAP50": float(m["map_50"]), "mAP50_95": float(m["map"]), "median_latency_s_cpu": lat})
+                         "mAP50": float(m["map_50"]), "mAP50_95": float(m["map"]), "median_latency_s": lat,
+                         "agnostic_mAP50": float(m["agnostic_map_50"]), "preds_per_image": round(m["preds_per_image"], 2)})
             per_class[mid] = {names[int(c)]: float(a) for c, a in zip(m["classes"].flatten(), m["map_per_class"].flatten())}
         except Exception as e:
             notes.append(f"{mid} failed: {type(e).__name__}: {str(e)[:200]}")
+    if os.environ.get("SKIP_FT") == "1":
+        write_report("detector_zs", "Zero-shot defect detection (re-run with box-scaling and label-matching fixes)",
+                     f"Dataset stats: {stats}.", rows, extra={"per_class_ap50": per_class, "class_names": names}, notes=notes)
+        return
     try:
         from ultralytics import YOLO
         model = YOLO("yolo11n.pt")
         t = time.perf_counter()
-        model.train(data=str(yaml_path), epochs=EPOCHS, imgsz=IMGSZ, fraction=FRACTION, device="cpu", batch=16,
+        model.train(data=str(yaml_path), epochs=EPOCHS, imgsz=IMGSZ, fraction=FRACTION, device=0 if TORCH_DEV == "cuda" else "cpu", batch=16 if TORCH_DEV == "cpu" else 32,
                     workers=2, seed=0, deterministic=True, plots=False, verbose=False, project=str(DATA / "runs"), name="ft", exist_ok=True)
         train_s = time.perf_counter() - t
         best = YOLO(str(DATA / "runs" / "ft" / "weights" / "best.pt"))
         sets = {"clean": yaml_path} | degraded_copies(yaml_path)
         for cond, yp in sets.items():
-            r = best.val(data=str(yp), split="test", imgsz=IMGSZ, device="cpu", plots=False, verbose=False)
-            rows.append({"approach": f"fine-tuned ({EPOCHS} ep, {int(FRACTION*100)}% train, CPU)", "model": "yolo11n",
+            r = best.val(data=str(yp), split="test", imgsz=IMGSZ, device=0 if TORCH_DEV == "cuda" else "cpu", plots=False, verbose=False)
+            rows.append({"approach": f"fine-tuned ({EPOCHS} ep, {int(FRACTION*100)}% train, {TORCH_DEV.upper()})", "model": "yolo11n",
                          "test_set": cond, "n_images": int(r.seen) if hasattr(r, "seen") else stats["per_split"]["test"],
                          "mAP50": float(r.box.map50), "mAP50_95": float(r.box.map),
-                         "median_latency_s_cpu": float(r.speed["inference"]) / 1000})
+                         "median_latency_s": float(r.speed["inference"]) / 1000})
             if cond == "clean":
                 per_class["yolo11n-ft"] = {names[i]: float(v) for i, v in zip(r.box.ap_class_index, r.box.ap50)}
         onnx = best.export(format="onnx", imgsz=IMGSZ, simplify=True)
-        notes.append(f"YOLO11n fine-tune wall time {train_s/60:.1f} min on CI CPU; ONNX export: {Path(onnx).name} ({Path(onnx).stat().st_size/1e6:.1f} MB)")
+        notes.append(f"YOLO11n fine-tune wall time {train_s/60:.1f} min on {TORCH_DEV.upper()}; ONNX export: {Path(onnx).name} ({Path(onnx).stat().st_size/1e6:.1f} MB)")
         shutil.copy(onnx, Path(os.environ.get("RVI_REPORTS", "reports")) / "yolo11n_rail_ci.onnx")
     except Exception as e:
         notes.append(f"fine-tune failed: {type(e).__name__}: {str(e)[:300]}")
@@ -136,7 +166,7 @@ def main():
                  f"Dataset stats: {stats}.", rows, extra={"per_class_ap50": per_class, "class_names": names},
                  notes=notes + ["CI fine-tune is a feasibility indicator only (CPU, few epochs, data fraction). Full training on RTX 5070: ml/train/train_detector.py.",
                                 "YOLO11 is AGPL-3.0: production use needs an Enterprise licence or an Apache-2.0 alternative (RF-DETR, D-FINE).",
-                                "Capture viewpoint of the dataset is not documented; wearable/handheld eye-level imagery differs (domain shift)."])
+                                "Dataset captured by a phone mounted on an inspection vehicle ~0.8 m above the rail (Mordia & Verma 2026); eye-level foot-patrol imagery differs (domain shift)."])
 
 
 if __name__ == "__main__":

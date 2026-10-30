@@ -16,7 +16,7 @@ object QualityGate {
     /** luma: row-major 0..255 values, width*height. */
     fun assess(luma: IntArray, width: Int, height: Int, originalMinSide: Int = minOf(width, height)): Result {
         var sum = 0.0; var clipped = 0
-        for (v in luma) { sum += v; if (v <= 2 || v >= 253) clipped++ }
+        for (v in luma) { sum += v; if (v >= 253) clipped++ } // highlights only
         val mean = sum / luma.size
         // 4-neighbour Laplacian variance (as cv2.Laplacian ksize=1)
         var n = 0; var s1 = 0.0; var s2 = 0.0
@@ -32,7 +32,7 @@ object QualityGate {
             if (varLap < MIN_SHARPNESS) add("blurred")
             if (mean < MIN_BRIGHTNESS) add("too_dark")
             if (mean > MAX_BRIGHTNESS) add("overexposed")
-            if (cf > MAX_CLIPPED) add("clipped_highlights_or_shadows")
+            if (cf > MAX_CLIPPED) add("clipped_highlights")
         }
         return Result(varLap, mean, cf, reasons)
     }

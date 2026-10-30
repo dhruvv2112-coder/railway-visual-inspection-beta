@@ -40,7 +40,7 @@ def assess(image_bgr: np.ndarray) -> QualityReport:
     gray = _normalise(cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY))
     sharp = float(cv2.Laplacian(gray, cv2.CV_64F).var())
     bright = float(gray.mean())
-    clipped = float(((gray <= 2) | (gray >= 253)).mean())
+    clipped = float((gray >= 253).mean())  # blown highlights only; darkness is judged by mean luma
     rep = QualityReport(sharp, bright, clipped, w, h)
     if min(h, w) < 480:
         rep.reasons.append("resolution_too_low")
@@ -51,7 +51,7 @@ def assess(image_bgr: np.ndarray) -> QualityReport:
     if bright > settings.max_brightness:
         rep.reasons.append("overexposed")
     if clipped > settings.max_clipped_fraction:
-        rep.reasons.append("clipped_highlights_or_shadows")
+        rep.reasons.append("clipped_highlights")
     return rep
 
 

@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     min_sharpness: float = 60.0      # variance of Laplacian on 1024-px long side
     min_brightness: float = 45.0     # mean luma 0..255
     max_brightness: float = 225.0
-    max_clipped_fraction: float = 0.25  # share of pixels at 0 or 255
+    max_clipped_fraction: float = 0.25  # share of pixels >= 253 (glare)
 
 
 settings = Settings()
