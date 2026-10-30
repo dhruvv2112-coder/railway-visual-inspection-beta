@@ -19,6 +19,12 @@ features:
       - {name: Grounding DINO tiny, licence: Apache-2.0, role: "zero-shot baseline + pre-labelling", source: "hf: IDEA-Research/grounding-dino-tiny"}
       - {name: YOLO-World, licence: GPL-3.0, role: "not used (licence)"}
       - {name: Florence-2, licence: MIT, role: "not used for detection (zero-shot mAP 3.11 on industrial cracks, Wallace et al.)"}
+  F03b_ohe_defect_detection:
+    decision: "Post-pilot. OHE defects are small parts 5-6 m above the patroller (insulators, droppers, PG clamps, bonds); no public dataset is taken from ground level with a phone. Beta ships manual classification only; candidates are trained on pilot captures (T12) and run in shadow mode."
+    models:
+      - {name: RF-DETR (small/medium), licence: Apache-2.0, role: "OHE component + defect fine-tune candidate (T12)", source: "github.com/roboflow/rf-detr"}
+      - {name: OWLv2 base / Grounding DINO tiny, licence: Apache-2.0, role: "pre-labelling of pilot OHE images (bird nest, insulator, dropper, mast plate); zero-shot failed on track defects (Ch. 11)"}
+      - {name: PatchCore (anomalib), licence: Apache-2.0, role: "insulator anomaly detection from defect-free examples (catenary insulator literature uses unsupervised baselines)"}
   F04_scene_segmentation:
     decision: "Post-Beta. SAM 2 used only as annotation assistant."
     models:
@@ -68,6 +74,7 @@ features:
 train_on_laptop:   # ProArt P16 – RTX 5070 Laptop (8 GB VRAM), 32 GB RAM. Blackwell needs PyTorch >= 2.7 with CUDA 12.8 wheels.
   - {id: T01, model: RF-DETR-S, task: track-defect detection, data: "Mendeley (CC BY) + RFD Roboflow (CC BY) + pilot captures", config: "imgsz 560, batch 4, grad_accum 4, AMP, 50 ep", est_hours: "6-10"}
   - {id: T02, model: YOLO11s, task: "same as T01 (benchmark parity)", config: "imgsz 640, batch 16, AMP, 100 ep", est_hours: "4-6"}
+  - {id: T12, model: "RF-DETR-S (OHE)", task: "OHE components and visible defects from ground level: insulator damage/flashover, dropper broken/out of plumb, bird nest/foreign object, bond missing, mast plate, ATD counterweight position", data: "pilot OHE captures (phone zoom, later glasses) + RailFOD23 for foreign objects (research only)", config: "imgsz 960 (small parts), batch 2, grad_accum 8, AMP, 60 ep", est_hours: "8-12"}
   - {id: T03, model: "T01 + USFD paint-mark classes", task: "IMR/OBS/DFWO/DFWR marks + joggled fishplate presence", data: "pilot only (no public data)"}
   - {id: T04, model: DeepLabV3-MobileNetV3, task: "rail scene segmentation (water, ballast, vegetation)", data: "RailSem19 (research-only) → own data for production"}
   - {id: T05, model: "U-Net ResNet34", task: "crack segmentation (sleeper/bridge)", data: "CrackSeg9k, SDNET2018"}
