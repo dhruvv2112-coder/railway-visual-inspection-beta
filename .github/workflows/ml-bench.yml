@@ -39,10 +39,6 @@ jobs:
         run: sudo apt-get update -q && sudo apt-get install -yq tesseract-ocr tesseract-ocr-hin fonts-noto-core fonts-dejavu-core libsndfile1
       - name: Python packages
         run: pip install -r ml/requirements-bench.txt
-      - name: Optional PaddleOCR
-        if: matrix.suite == 'vision-basic'
-        continue-on-error: true
-        run: pip install "paddlepaddle==2.6.2" "paddleocr==2.9.1"
       - name: Run
         working-directory: ml/bench
         env: {FT_EPOCHS: "${{ github.event.inputs.ft_epochs || '8' }}"}
@@ -50,7 +46,10 @@ jobs:
           mkdir -p ../../logs
           exec > >(tee ../../logs/${{ matrix.suite }}.log) 2>&1
           case "${{ matrix.suite }}" in
-            vision-basic) python bench_quality_gate.py; python bench_ocr.py; python bench_dedup.py ;;
+            vision-basic) python bench_quality_gate.py; python bench_dedup.py
+              # PaddleOCR 2.x pins an old albumentations, so install it only after the albumentations-based suites
+              pip install -q "paddlepaddle==2.6.2" "paddleocr==2.9.1" || echo "PaddleOCR install failed (optional)"
+              python bench_ocr.py ;;
             asr) python bench_asr.py ;;
             translation) python bench_translation.py ;;
             detector) python bench_detector.py ;;
