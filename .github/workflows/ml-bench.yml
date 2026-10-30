@@ -3,6 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       ft_epochs: {description: "YOLO11n CI fine-tune epochs", default: "8"}
+      skip_ft: {description: "Detector: zero-shot only (1) or zero-shot + fine-tune (0)", default: "0"}
+      zs_n: {description: "Detector: zero-shot test images", default: "200"}
       suites: {description: "JSON list of suites", default: '["vision-basic","asr","translation","detector"]'}
   push:
     branches: [main]
@@ -41,7 +43,7 @@ jobs:
         run: pip install -r ml/requirements-bench.txt
       - name: Run
         working-directory: ml/bench
-        env: {FT_EPOCHS: "${{ github.event.inputs.ft_epochs || '8' }}"}
+        env: {FT_EPOCHS: "${{ github.event.inputs.ft_epochs || '8' }}", SKIP_FT: "${{ github.event.inputs.skip_ft || '0' }}", ZS_N: "${{ github.event.inputs.zs_n || '200' }}"}
         run: |
           mkdir -p ../../logs
           exec > >(tee ../../logs/${{ matrix.suite }}.log) 2>&1

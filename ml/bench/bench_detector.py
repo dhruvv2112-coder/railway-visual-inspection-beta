@@ -50,13 +50,23 @@ def prompt(name):
     return PROMPTS.get(name, name.replace("_", " ").replace("-", " ").lower())
 
 
+def match_label(text, labels):
+    """Grounding DINO returns the matched sub-phrase (e.g. 'crack' or 'rail'); map it to the prompt with most shared words."""
+    if text in labels:
+        return labels.index(text)
+    w = set(str(text).split()) - {"on", "rail", "head", "of", "the"}
+    best = max(range(len(labels)), key=lambda i: len(w & set(labels[i].split())))
+    return best if w & set(labels[best].split()) else -1
+
+
 def zero_shot(model_id, data, names):
     from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
     proc = AutoProcessor.from_pretrained(model_id)
     model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).eval().to(TORCH_DEV)
     labels = [prompt(n) for n in names]
     metric = MeanAveragePrecision(iou_type="bbox", class_metrics=True)
-    lat = []
+    agnostic = MeanAveragePrecision(iou_type="bbox")  # "is there a defect here at all", ignoring class
+    lat, n_pred = [], 0
     for im_path, gt_b, gt_c in data:
         im = Image.open(im_path).convert("RGB")
         t = time.perf_counter()
@@ -67,18 +77,25 @@ def zero_shot(model_id, data, names):
                 r = proc.post_process_grounded_object_detection(out, inputs.input_ids, threshold=0.2, text_threshold=0.2,
                                                                 target_sizes=[im.size[::-1]])[0]
                 txt = r.get("text_labels", r.get("labels"))
-                cl = [labels.index(t) if t in labels else -1 for t in txt]
+                cl = [match_label(t, labels) for t in txt]
             else:
                 inputs = proc(text=[labels], images=im, return_tensors="pt").to(TORCH_DEV)
                 out = model(**inputs)
-                r = proc.post_process_object_detection(out, threshold=0.1, target_sizes=torch.tensor([im.size[::-1]]))[0]
+                # OWLv2 pads to a square before resizing, so boxes must be scaled to the padded square side
+                side = max(im.size)
+                r = proc.post_process_object_detection(out, threshold=0.1, target_sizes=torch.tensor([[side, side]]))[0]
                 cl = r["labels"].tolist()
         lat.append(time.perf_counter() - t)
         r = {k: (v.cpu() if hasattr(v, "cpu") else v) for k, v in r.items()}
         keep = [i for i, c in enumerate(cl) if c >= 0]
+        n_pred += len(keep)
+        agnostic.update([{"boxes": r["boxes"][keep], "scores": r["scores"][keep], "labels": torch.zeros(len(keep), dtype=torch.long)}],
+                        [{"boxes": gt_b, "labels": torch.zeros(len(gt_c), dtype=torch.long)}])
         metric.update([{"boxes": r["boxes"][keep], "scores": r["scores"][keep], "labels": torch.tensor([cl[i] for i in keep], dtype=torch.long)}],
                       [{"boxes": gt_b, "labels": gt_c}])
     m = metric.compute()
+    m["agnostic_map_50"] = agnostic.compute()["map_50"]
+    m["preds_per_image"] = n_pred / max(len(data), 1)
     return m, float(np.median(lat))
 
 
@@ -114,10 +131,15 @@ def main():
         try:
             m, lat = zero_shot(mid, test, names)
             rows.append({"approach": "zero-shot", "model": mid, "test_set": "clean", "n_images": len(test),
-                         "mAP50": float(m["map_50"]), "mAP50_95": float(m["map"]), "median_latency_s": lat})
+                         "mAP50": float(m["map_50"]), "mAP50_95": float(m["map"]), "median_latency_s": lat,
+                         "agnostic_mAP50": float(m["agnostic_map_50"]), "preds_per_image": round(m["preds_per_image"], 2)})
             per_class[mid] = {names[int(c)]: float(a) for c, a in zip(m["classes"].flatten(), m["map_per_class"].flatten())}
         except Exception as e:
             notes.append(f"{mid} failed: {type(e).__name__}: {str(e)[:200]}")
+    if os.environ.get("SKIP_FT") == "1":
+        write_report("detector_zs", "Zero-shot defect detection (re-run with box-scaling and label-matching fixes)",
+                     f"Dataset stats: {stats}.", rows, extra={"per_class_ap50": per_class, "class_names": names}, notes=notes)
+        return
     try:
         from ultralytics import YOLO
         model = YOLO("yolo11n.pt")
@@ -144,7 +166,7 @@ def main():
                  f"Dataset stats: {stats}.", rows, extra={"per_class_ap50": per_class, "class_names": names},
                  notes=notes + ["CI fine-tune is a feasibility indicator only (CPU, few epochs, data fraction). Full training on RTX 5070: ml/train/train_detector.py.",
                                 "YOLO11 is AGPL-3.0: production use needs an Enterprise licence or an Apache-2.0 alternative (RF-DETR, D-FINE).",
-                                "Capture viewpoint of the dataset is not documented; wearable/handheld eye-level imagery differs (domain shift)."])
+                                "Dataset captured by a phone mounted on an inspection vehicle ~0.8 m above the rail (Mordia & Verma 2026); eye-level foot-patrol imagery differs (domain shift)."])
 
 
 if __name__ == "__main__":
