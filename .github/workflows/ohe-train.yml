@@ -1,0 +1,54 @@
+name: ohe-train
+# Prepares the public OHE datasets, trains the component detector (CPU), builds the insulator anomaly bank,
+# and publishes reports + the ONNX detector to branch ci-ohe-train. GPU runs use the same scripts on the laptop.
+on:
+  workflow_dispatch:
+    inputs:
+      epochs: {description: "Detector epochs (CPU)", default: "25"}
+      imgsz: {description: "Detector image size", default: "640"}
+      cap: {description: "Max train images per source", default: "1500"}
+  push:
+    branches: [main, feat/ohe-visual-patrol]
+    paths: ["ml/ohe/**", ".github/workflows/ohe-train.yml"]
+concurrency: {group: "ohe-train-${{ github.ref }}", cancel-in-progress: true}
+defaults:
+  run:
+    shell: bash
+permissions:
+  contents: write
+env:
+  OHE_DATA: ${{ github.workspace }}/.cache/ohe
+  RVI_REPORTS: ${{ github.workspace }}/reports
+  PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
+  HF_HUB_DISABLE_PROGRESS_BARS: "1"
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt
+      - name: Prepare data, train detector, anomaly branch
+        working-directory: ml/ohe
+        env:
+          OHE_EPOCHS: ${{ github.event.inputs.epochs || '25' }}
+          OHE_IMGSZ: ${{ github.event.inputs.imgsz || '640' }}
+          OHE_CAP_PER_SOURCE: ${{ github.event.inputs.cap || '1500' }}
+        run: |
+          mkdir -p ../../logs ../../reports
+          python prepare_data.py 2>&1 | tee ../../logs/prepare.log
+          python anomaly.py 2>&1 | tee ../../logs/anomaly.log || echo "anomaly branch failed"
+          python train_detector.py 2>&1 | tee ../../logs/detector.log
+      - name: Publish to branch ci-ohe-train
+        if: always()
+        run: |
+          mkdir -p /tmp/pub && cp -r logs reports /tmp/pub/ 2>/dev/null || true
+          cp .cache/ohe/ohe_yolo/manifest.json /tmp/pub/reports/ 2>/dev/null || true
+          cd /tmp && rm -rf pubrepo && mkdir pubrepo && cd pubrepo && git init -q -b ci-ohe-train
+          cp -r /tmp/pub/* . 2>/dev/null || true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "results ${{ github.sha }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-ohe-train
