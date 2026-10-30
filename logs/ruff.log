@@ -1,1 +1,57 @@
-All checks passed!
+SIM115 Use a context manager for opening files
+   --> app/ohe/api.py:166:26
+    |
+164 |     """Run the cascade for one media item and link results to findings (repeat evidence never duplicates)."""
+165 |     reg = pipeline.load_registry()
+166 |     img = quality.decode(open(m.path, "rb").read())
+    |                          ^^^^
+167 |     res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m)
+168 |     if res["identity"]["selected_asset_id"] and m.lat is None:
+    |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E731`)
+   --> app/ohe/api.py:229:65
+    |
+227 |                  "observations": f.observations, "alert": f.alert, "media_ids": json.loads(f.media_ids_json),
+228 |                  **json.loads(f.payload_json)} for f in fs]
+229 |     count = lambda st: sum(r["state"] == st for r in register)  # noqa: E731
+    |                                                                 ^^^^^^^^^^^^
+230 |     return {
+231 |         "RPT-01_document_control": {"session": sess.id, "territory": sess.territory, "capture_start": sess.started_at,
+    |
+help: Remove unused `noqa` directive
+    |
+228 |                  **json.loads(f.payload_json)} for f in fs]
+    -     count = lambda st: sum(r["state"] == st for r in register)  # noqa: E731
+229 +     count = lambda st: sum(r["state"] == st for r in register)
+230 |     return {
+    |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E731`)
+   --> app/ohe/api.py:335:78
+    |
+333 |         raise HTTPException(404, "Report not found")
+334 |     c = json.loads(r.content_json)
+335 |     row = lambda *v: "<tr>" + "".join(f"<td>{x}</td>" for x in v) + "</tr>"  # noqa: E731
+    |                                                                              ^^^^^^^^^^^^
+336 |     reg = "".join(row(x["asset_id"], x["state"].replace("_", " "), len(x["findings"])) for x in c["RPT-05_asset_register"])
+337 |     fnd = "".join(row(f["id"], f["asset_id"] or "unresolved: " + ", ".join(x["asset_id"] for x in f["candidates"][:3]),
+    |
+help: Remove unused `noqa` directive
+    |
+334 |     c = json.loads(r.content_json)
+    -     row = lambda *v: "<tr>" + "".join(f"<td>{x}</td>" for x in v) + "</tr>"  # noqa: E731
+335 +     row = lambda *v: "<tr>" + "".join(f"<td>{x}</td>" for x in v) + "</tr>"
+336 |     reg = "".join(row(x["asset_id"], x["state"].replace("_", " "), len(x["findings"])) for x in c["RPT-05_asset_register"])
+    |
+
+SIM115 Use a context manager for opening files
+   --> tests/test_ohe.py:111:26
+    |
+109 |     assert a1["assessments"] == a2["assessments"] and a1["identity"] == a2["identity"]
+110 |     import app.ohe.pipeline as p
+111 |     assert "Note" not in open(p.__file__).read()                          # no code path from notes to inference
+    |                          ^^^^
+
+Found 4 errors.
+[*] 2 fixable with `--fix`.
