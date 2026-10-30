@@ -21,19 +21,19 @@ Daemon will be stopped at the end of the build
 > Task :app:extractDebugSupportedLocales
 > Task :app:generateDebugResources
 > Task :app:createDebugCompatibleScreenManifests
-> Task :app:extractDeepLinksDebug
 > Task :app:generateDebugLocaleConfig
-> Task :app:processDebugMainManifest
+> Task :app:extractDeepLinksDebug
 > Task :app:packageDebugResources
 > Task :app:mergeDebugResources
 > Task :app:parseDebugLocalResources
+> Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :app:mergeDebugAssets
+> Task :app:processDebugManifestForPackage
 > Task :app:desugarDebugFileDependencies
 > Task :app:compressDebugAssets
 > Task :app:processDebugResources
@@ -49,13 +49,13 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest
 > Task :app:packageDebugUnitTestForUnitTest
-> Task :app:generateDebugUnitTestConfig
-> Task :app:preDebugAndroidTestBuild SKIPPED
-> Task :app:generateDebugAndroidTestResValues
 
 > Task :app:stripDebugDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
 
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugUnitTestConfig
+> Task :app:generateDebugAndroidTestResValues
 > Task :app:extractProguardFiles
 > Task :app:compileDebugKotlin
 > Task :app:compileDebugJavaWithJavac
@@ -67,27 +67,27 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:bundleDebugClassesToCompileJar
 > Task :app:mergeDebugJavaResource
 > Task :app:generateDebugLintReportModel
-> Task :app:packageDebug
-> Task :app:createDebugApkListingFileRedirect
-> Task :app:assembleDebug
-> Task :app:generateDebugAndroidTestLintModel
 > Task :app:kspDebugUnitTestKotlin
-> Task :app:generateDebugUnitTestLintModel
+> Task :app:generateDebugAndroidTestLintModel
 > Task :app:compileDebugUnitTestKotlin
+> Task :app:generateDebugUnitTestLintModel
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
-> Task :app:lintAnalyzeDebug
+> Task :app:packageDebug
 > Task :app:testDebugUnitTest
 > Task :app:finalizeTestRoborazziDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
 > Task :app:recordRoborazziDebug
 > Task :app:lintAnalyzeDebugAndroidTest
 > Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebug
 
 > Task :app:lintReportDebug
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793392910223.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793393255879.json
 
-BUILD SUCCESSFUL in 4m 45s
+BUILD SUCCESSFUL in 5m 28s
 60 actionable tasks: 60 executed
