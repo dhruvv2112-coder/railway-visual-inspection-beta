@@ -1,0 +1,104 @@
+# Image-quality gate under field conditions
+
+Source: Mendeley 88sh5y3tmj v2 (Indian railway track images, CC BY 4.0). False-rejection on usable images: 24.4%. Unusable images wrongly passed: 2.7%.
+
+| condition | expected | n | pass_rate | correct_rate | median_sharpness | median_brightness |
+|---|---|---|---|---|---|---|
+| clean | pass | 200 | 0.9300 | 0.9300 | 796.6249 | 141.7191 |
+| dark_mild | pass | 200 | 0.1850 | 0.1850 | 668.0372 | 67.4631 |
+| dark_severe(night_no_torch) | reject | 200 | 0.0000 | 1.0000 | 0.0000 | 0.0000 |
+| motion_blur_mild | pass | 200 | 0.9100 | 0.9100 | 211.9664 | 141.6688 |
+| motion_blur_severe(walking) | reject | 200 | 0.1350 | 0.8650 | 24.1548 | 141.6431 |
+| defocus_severe | reject | 200 | 0.0000 | 1.0000 | 2.1457 | 142.0483 |
+| rain_drops | pass | 200 | 1.0000 | 1.0000 | 543.7116 | 126.5760 |
+| fog_dust_dense | reject | 200 | 0.0000 | 1.0000 | 2.0540 | 211.7872 |
+| glare_overexposed | reject | 200 | 0.0000 | 1.0000 | 61.8081 | 249.1174 |
+
+**Notes**
+
+- Degradations are synthetic (albumentations) – field captures needed to confirm.
+- Thresholds from backend/app/config.py; tune on pilot data.
+
+_Environment_: `{"python": "3.11.17", "machine": "x86_64", "processor": "x86_64", "cpu_count": 4, "runner": "GitHub Actions 1000000042", "timestamp_utc": "2026-10-30T02:57:48.378067+00:00", "torch": "2.15.0+cpu", "cuda": false}`
+
+Downloading detection model, please wait. This may take several minutes depending upon your network connection.
+Downloading recognition model, please wait. This may take several minutes depending upon your network connection.
+/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/torch/ao/nn/quantized/dynamic/modules/rnn.py:162: UserWarning: torch.quantize_per_tensor, torch.quantize_per_channel and other quantized tensor creation functions that produce tensors with dtype torch.quint8, torch.qint8, and torch.qint32 are deprecated and will be removed in a future PyTorch release. Please see https://github.com/pytorch/pytorch/issues/184982 for more information. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/quantized/Quantizer.cpp:111.)
+  w_ih = torch.quantize_per_tensor(
+/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Downloading recognition model, please wait. This may take several minutes depending upon your network connection.
+/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/paddle/utils/cpp_extension/extension_utils.py:712: UserWarning: No ccache found. Please be aware that recompiling all source files may be required. You can download and install ccache from: https://github.com/ccache/ccache/blob/master/doc/INSTALL.md
+  warnings.warn(warning_message)
+[32mCreating model: ('PP-LCNet_x1_0_doc_ori', None, None)[0m
+[33mChecking connectivity to the model hosters, this may take a while. To bypass this check, set `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK` to `True`.[0m
+[32mUsing official model (PP-LCNet_x1_0_doc_ori), the model files will be automatically downloaded and saved in `/home/runner/.paddlex/official_models/PP-LCNet_x1_0_doc_ori`.[0m
+[32mCreating model: ('UVDoc', None, None)[0m
+[32mUsing official model (UVDoc), the model files will be automatically downloaded and saved in `/home/runner/.paddlex/official_models/UVDoc`.[0m
+[32mCreating model: ('PP-OCRv6_medium_det', None, None)[0m
+[32mUsing official model (PP-OCRv6_medium_det), the model files will be automatically downloaded and saved in `/home/runner/.paddlex/official_models/PP-OCRv6_medium_det`.[0m
+[32mCreating model: ('PP-OCRv6_medium_rec', None, None)[0m
+[32mUsing official model (PP-OCRv6_medium_rec), the model files will be automatically downloaded and saved in `/home/runner/.paddlex/official_models/PP-OCRv6_medium_rec`.[0m
+[32mCreating model: ('PP-LCNet_x1_0_doc_ori', None, None)[0m
+[32mModel files already exist. Using cached files. To redownload, please delete the directory manually: `/home/runner/.paddlex/official_models/PP-LCNet_x1_0_doc_ori`.[0m
+[32mCreating model: ('UVDoc', None, None)[0m
+[32mModel files already exist. Using cached files. To redownload, please delete the directory manually: `/home/runner/.paddlex/official_models/UVDoc`.[0m
+[32mCreating model: ('PP-OCRv5_server_det', None, None)[0m
+[32mUsing official model (PP-OCRv5_server_det), the model files will be automatically downloaded and saved in `/home/runner/.paddlex/official_models/PP-OCRv5_server_det`.[0m
+[32mCreating model: ('devanagari_PP-OCRv5_mobile_rec', None, None)[0m
+[32mUsing official model (devanagari_PP-OCRv5_mobile_rec), the model files will be automatically downloaded and saved in `/home/runner/.paddlex/official_models/devanagari_PP-OCRv5_mobile_rec`.[0m
+# OCR of km/OHE-mast markers (English & Hindi, synthetic plates)
+
+Best clean-condition exact match: tesseract-5 en 100.0%.
+
+| engine | condition | lang | n | exact_match | cer | median_latency_s |
+|---|---|---|---|---|---|---|
+| tesseract-5 | clean | en | 80 | 1.0000 | 0.0000 | 0.1337 |
+| tesseract-5 | clean | hi | 40 | 0.0000 | 0.4609 | 0.1534 |
+| tesseract-5 | perspective+blur | en | 80 | 0.6500 | 0.2594 | 0.1365 |
+| tesseract-5 | perspective+blur | hi | 40 | 0.1750 | 0.2754 | 0.1622 |
+| tesseract-5 | low_light | en | 80 | 0.9875 | 0.0079 | 0.1310 |
+| tesseract-5 | low_light | hi | 40 | 0.0250 | 0.6087 | 0.1519 |
+| tesseract-5 | weathered(noise+fade) | en | 80 | 0.0000 | 0.9827 | 0.1886 |
+| tesseract-5 | weathered(noise+fade) | hi | 40 | 0.0000 | 0.9942 | 0.2335 |
+| easyocr | clean | en | 80 | 1.0000 | 0.0000 | 1.7930 |
+| easyocr | clean | hi | 40 | 0.0000 | 0.4145 | 1.6911 |
+| easyocr | perspective+blur | en | 80 | 0.9875 | 0.0016 | 1.4865 |
+| easyocr | perspective+blur | hi | 40 | 0.0000 | 0.4145 | 1.6777 |
+| easyocr | low_light | en | 80 | 1.0000 | 0.0000 | 1.5195 |
+| easyocr | low_light | hi | 40 | 0.0000 | 0.3913 | 1.6711 |
+| easyocr | weathered(noise+fade) | en | 80 | 1.0000 | 0.0000 | 1.5627 |
+| easyocr | weathered(noise+fade) | hi | 40 | 0.0000 | 0.4174 | 1.6999 |
+
+**Notes**
+
+- paddleocr/clean/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/clean/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/perspective+blur/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/perspective+blur/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/low_light/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/low_light/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/weathered(noise+fade)/en failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- paddleocr/weathered(noise+fade)/hi failed: NotImplementedError: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/in
+- Synthetic plates: real Indian km-post photos must be collected in pilot (gap).
+- On-device app uses ML Kit Text Recognition v2 (Latin + Devanagari); not runnable in CI – evaluate on device.
+
+_Environment_: `{"python": "3.11.17", "machine": "x86_64", "processor": "x86_64", "cpu_count": 4, "runner": "GitHub Actions 1000000042", "timestamp_utc": "2026-10-30T03:13:14.147810+00:00", "torch": "2.15.0+cpu", "cuda": false}`
+
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+# Same-asset re-identification for duplicate suppression
+
+Synthetic re-captures of Indian railway images.
+
+| model | gallery | recall@1 | recall@5 | sec_per_image_cpu |
+|---|---|---|---|---|
+| facebook/dinov2-small | 300 | 0.7467 | 0.9067 | 0.0887 |
+| google/siglip-base-patch16-224 | 300 | 0.3867 | 0.6733 | 0.2246 |
+
+**Notes**
+
+- Gallery images of the same defect class look alike; GNSS distance gating is applied first in production.
+
+_Environment_: `{"python": "3.11.17", "machine": "x86_64", "processor": "x86_64", "cpu_count": 4, "runner": "GitHub Actions 1000000042", "timestamp_utc": "2026-10-30T03:16:36.530924+00:00", "torch": "2.15.0+cpu", "cuda": false}`
+

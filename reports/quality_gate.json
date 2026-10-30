@@ -1,0 +1,106 @@
+{
+ "name": "quality_gate",
+ "title": "Image-quality gate under field conditions",
+ "summary": "Source: Mendeley 88sh5y3tmj v2 (Indian railway track images, CC BY 4.0). False-rejection on usable images: 24.4%. Unusable images wrongly passed: 2.7%.",
+ "environment": {
+  "python": "3.11.17",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "runner": "GitHub Actions 1000000042",
+  "timestamp_utc": "2026-10-30T02:57:48.378067+00:00",
+  "torch": "2.15.0+cpu",
+  "cuda": false
+ },
+ "results": [
+  {
+   "condition": "clean",
+   "expected": "pass",
+   "n": 200,
+   "pass_rate": 0.93,
+   "correct_rate": 0.93,
+   "median_sharpness": 796.6249308443039,
+   "median_brightness": 141.7191003417969
+  },
+  {
+   "condition": "dark_mild",
+   "expected": "pass",
+   "n": 200,
+   "pass_rate": 0.185,
+   "correct_rate": 0.185,
+   "median_sharpness": 668.0371631454677,
+   "median_brightness": 67.46305908203125
+  },
+  {
+   "condition": "dark_severe(night_no_torch)",
+   "expected": "reject",
+   "n": 200,
+   "pass_rate": 0.0,
+   "correct_rate": 1.0,
+   "median_sharpness": 0.0,
+   "median_brightness": 0.0
+  },
+  {
+   "condition": "motion_blur_mild",
+   "expected": "pass",
+   "n": 200,
+   "pass_rate": 0.91,
+   "correct_rate": 0.91,
+   "median_sharpness": 211.96643205469846,
+   "median_brightness": 141.66881958007812
+  },
+  {
+   "condition": "motion_blur_severe(walking)",
+   "expected": "reject",
+   "n": 200,
+   "pass_rate": 0.135,
+   "correct_rate": 0.865,
+   "median_sharpness": 24.154785046041013,
+   "median_brightness": 141.64309936523438
+  },
+  {
+   "condition": "defocus_severe",
+   "expected": "reject",
+   "n": 200,
+   "pass_rate": 0.0,
+   "correct_rate": 1.0,
+   "median_sharpness": 2.1457183077275754,
+   "median_brightness": 142.0483251953125
+  },
+  {
+   "condition": "rain_drops",
+   "expected": "pass",
+   "n": 200,
+   "pass_rate": 1.0,
+   "correct_rate": 1.0,
+   "median_sharpness": 543.7115622592419,
+   "median_brightness": 126.57600708007813
+  },
+  {
+   "condition": "fog_dust_dense",
+   "expected": "reject",
+   "n": 200,
+   "pass_rate": 0.0,
+   "correct_rate": 1.0,
+   "median_sharpness": 2.0539809667676687,
+   "median_brightness": 211.7872155761719
+  },
+  {
+   "condition": "glare_overexposed",
+   "expected": "reject",
+   "n": 200,
+   "pass_rate": 0.0,
+   "correct_rate": 1.0,
+   "median_sharpness": 61.808062700280544,
+   "median_brightness": 249.11740722656248
+  }
+ ],
+ "extra": {
+  "false_rejection_rate": 0.24375000000000002,
+  "miss_rate": 0.027000000000000003
+ },
+ "notes": [
+  "Degradations are synthetic (albumentations) – field captures needed to confirm.",
+  "Thresholds from backend/app/config.py; tune on pilot data."
+ ]
+}
