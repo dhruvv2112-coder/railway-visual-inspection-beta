@@ -1,0 +1,138 @@
+{
+ "name": "detector",
+ "title": "Track-defect detection: zero-shot vs quick fine-tune (Indian railway images)",
+ "summary": "Dataset stats: {'images': 7587, 'classes': 10, 'per_split': {'train': 6069, 'val': 759, 'test': 759}, 'instances_per_class': {'0': 138, '1': 6028, '2': 4855, '3': 4737, '4': 396, '5': 510, '6': 6245, '7': 4945, '8': 3654, '9': 4041}}.",
+ "environment": {
+  "python": "3.11.17",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "runner": "GitHub Actions 1000000040",
+  "timestamp_utc": "2026-10-30T04:14:00.487612+00:00",
+  "torch": "2.15.0+cpu",
+  "cuda": false
+ },
+ "results": [
+  {
+   "approach": "zero-shot",
+   "model": "google/owlv2-base-patch16-ensemble",
+   "test_set": "clean",
+   "n_images": 200,
+   "mAP50": 0.0,
+   "mAP50_95": 0.0,
+   "median_latency_s_cpu": 10.62017379699995
+  },
+  {
+   "approach": "zero-shot",
+   "model": "IDEA-Research/grounding-dino-tiny",
+   "test_set": "clean",
+   "n_images": 200,
+   "mAP50": 0.0,
+   "mAP50_95": 0.0,
+   "median_latency_s_cpu": 5.777077387499958
+  },
+  {
+   "approach": "fine-tuned (8 ep, 40% train, CPU)",
+   "model": "yolo11n",
+   "test_set": "clean",
+   "n_images": 759,
+   "mAP50": 0.13839750643069207,
+   "mAP50_95": 0.05103278458866918,
+   "median_latency_s_cpu": 0.012391792184451222
+  },
+  {
+   "approach": "fine-tuned (8 ep, 40% train, CPU)",
+   "model": "yolo11n",
+   "test_set": "dark",
+   "n_images": 759,
+   "mAP50": 0.04707971584044836,
+   "mAP50_95": 0.01654688548861678,
+   "median_latency_s_cpu": 0.012498943009221048
+  },
+  {
+   "approach": "fine-tuned (8 ep, 40% train, CPU)",
+   "model": "yolo11n",
+   "test_set": "motion_blur",
+   "n_images": 759,
+   "mAP50": 0.08128670280063682,
+   "mAP50_95": 0.02286231895137758,
+   "median_latency_s_cpu": 0.012479482075093154
+  },
+  {
+   "approach": "fine-tuned (8 ep, 40% train, CPU)",
+   "model": "yolo11n",
+   "test_set": "rain",
+   "n_images": 759,
+   "mAP50": 0.07066647405586844,
+   "mAP50_95": 0.02382672737547762,
+   "median_latency_s_cpu": 0.012352796407112655
+  },
+  {
+   "approach": "fine-tuned (8 ep, 40% train, CPU)",
+   "model": "yolo11n",
+   "test_set": "glare",
+   "n_images": 759,
+   "mAP50": 0.11283190699153578,
+   "mAP50_95": 0.041037831408445344,
+   "median_latency_s_cpu": 0.012366942524370048
+  }
+ ],
+ "extra": {
+  "per_class_ap50": {
+   "google/owlv2-base-patch16-ensemble": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0,
+    "6": 0.0,
+    "7": 0.0,
+    "8": 0.0,
+    "9": 0.0
+   },
+   "IDEA-Research/grounding-dino-tiny": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0,
+    "6": 0.0,
+    "7": 0.0,
+    "8": 0.0,
+    "9": 0.0
+   },
+   "yolo11n-ft": {
+    "0": 0.0,
+    "1": 0.2740867520142452,
+    "2": 0.07045936275787579,
+    "3": 0.22314193764078993,
+    "4": 0.0,
+    "5": 0.1509616662075404,
+    "6": 0.08359956652613207,
+    "7": 0.2706883051245754,
+    "8": 0.1360889062316223,
+    "9": 0.17494856780413978
+   }
+  },
+  "class_names": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9"
+  ]
+ },
+ "notes": [
+  "YOLO11n fine-tune wall time 21.7 min on CI CPU; ONNX export: best.onnx (10.6 MB)",
+  "CI fine-tune is a feasibility indicator only (CPU, few epochs, data fraction). Full training on RTX 5070: ml/train/train_detector.py.",
+  "YOLO11 is AGPL-3.0: production use needs an Enterprise licence or an Apache-2.0 alternative (RF-DETR, D-FINE).",
+  "Capture viewpoint of the dataset is not documented; wearable/handheld eye-level imagery differs (domain shift)."
+ ]
+}
