@@ -1,0 +1,24 @@
+name: dataset-inspect
+on:
+  workflow_dispatch:
+  push: {paths: [".github/workflows/dataset-inspect.yml", "ml/bench/inspect_dataset.py"]}
+permissions:
+  contents: write
+defaults: {run: {shell: bash}}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env: {RVI_REPORTS: "${{ github.workspace }}/reports", RVI_DATA: "${{ github.workspace }}/.cache/rvi"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install pyyaml && cd ml/bench && python inspect_dataset.py
+      - name: Publish
+        if: always()
+        run: |
+          cd /tmp && mkdir pub && cd pub && git init -q -b ci-dataset-inspect
+          cp -r $GITHUB_WORKSPACE/reports . 2>/dev/null || true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm inventory && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-dataset-inspect
