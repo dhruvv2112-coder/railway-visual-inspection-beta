@@ -36,6 +36,7 @@ jobs:
           OHE_EPOCHS: ${{ github.event.inputs.epochs || '25' }}
           OHE_IMGSZ: ${{ github.event.inputs.imgsz || '640' }}
           OHE_CAP_PER_SOURCE: ${{ github.event.inputs.cap || '1500' }}
+          ROBOFLOW_API_KEY: ${{ secrets.ROBOFLOW_API_KEY }}
         run: |
           mkdir -p ../../logs ../../reports
           python prepare_data.py 2>&1 | tee ../../logs/prepare.log
