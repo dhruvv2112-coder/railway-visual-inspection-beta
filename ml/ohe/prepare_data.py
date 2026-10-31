@@ -124,9 +124,12 @@ def box_format(ds, col, flat) -> tuple[bool, bool]:
         return False, False
     if all(max(b) <= 1.0 for b in bbs):
         return True, False
-    valid_xyxy = all(b[2] > b[0] and b[3] > b[1] for b in bbs)
-    overrun = sum(b[0] + b[2] > W * 1.02 or b[1] + b[3] > H * 1.02 for b, (W, H) in zip(bbs, sizes))
-    return False, valid_xyxy and overrun > 0.02 * len(bbs)
+    # tolerant to a few degenerate boxes (x2 == x1) that real annotation sets contain
+    valid_xyxy = sum(b[2] >= b[0] and b[3] >= b[1] for b in bbs) / len(bbs)
+    overrun = sum(b[0] + b[2] > W * 1.02 or b[1] + b[3] > H * 1.02 for b, (W, H) in zip(bbs, sizes)) / len(bbs)
+    print("box format evidence", {"boxes": len(bbs), "valid_as_xyxy": round(valid_xyxy, 3),
+                                  "overrun_as_xywh": round(overrun, 3)}, flush=True)
+    return False, valid_xyxy >= 0.98 and overrun > 0.02
 
 
 def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
