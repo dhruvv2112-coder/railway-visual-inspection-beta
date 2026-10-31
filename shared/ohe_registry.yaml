@@ -1,0 +1,58 @@
+# OHE asset registry, numbering grammar, routing and rule registry (HLD §1.1 I-03, §2.3, §5, §8.3).
+# FIXTURE: a fictional 1 km section used for tests and demos. Replace with the authorised registry; every
+# rule carries authority, document, revision and decision type so nothing is applied without provenance.
+version: "fixture-2026-10-31"
+section: {id: "SEC-DEMO-01", division: "DEMO", depot: "OHE-DEMO", tracks: [UP, DN]}
+numbering_grammar: '^\d{3,4}/\d{1,2}[A-Z]?$'   # km/mast e.g. 1205/14 – configure per railway
+max_observation_m: 60                             # plausible distance from phone to target (corridor)
+assets:
+  - {id: "1205/10", type: mast, track: UP, lat: 26.91200, lon: 75.78700, design: "cantilever-single"}
+  - {id: "1205/11", type: mast, track: DN, lat: 26.91204, lon: 75.78712, design: "cantilever-single"}
+  - {id: "1205/12", type: mast, track: UP, lat: 26.91260, lon: 75.78760, design: "cantilever-single"}
+  - {id: "1205/13", type: mast, track: DN, lat: 26.91264, lon: 75.78772, design: "cantilever-single"}
+  - {id: "1205/14", type: mast, track: UP, lat: 26.91320, lon: 75.78820, design: "cantilever-single"}
+  - {id: "1205/15", type: mast, track: DN, lat: 26.91324, lon: 75.78832, design: "cantilever-single"}
+# component classes the detector may emit -> inspection scope; 'supported' = a validated condition path exists
+components:
+  insulator: {scope: "Insulators", supported_conditions: [insulator_visible_damage]}
+  insulator_defect: {scope: "Insulators", symptom_of: insulator}
+  bird_nest: {scope: "Vegetation, nests and loose material", supported_conditions: [foreign_object]}
+  vegetation: {scope: "Vegetation, nests and loose material", supported_conditions: []}
+  dropper: {scope: "Droppers", supported_conditions: []}
+  number_plate: {scope: "Number plates and painted identifiers", supported_conditions: []}
+min_target_px: 48          # minimum short side of a component crop before condition is assessable (§2.2; tune empirically)
+rules:
+  - id: R-INS-01
+    authority: "RDSO TI/MI/0060 (2022) 6.1(4)(a); CAMTECH OHE Inspection §7(b)"
+    decision_type: visual_screening
+    condition: insulator_visible_damage
+    observed: "Surface damage compatible with a chipped or broken insulator shed is visible in the marked region"
+    hypothesis: "Insulator surface damage"
+    action_family: competent_closer_inspection
+    action: "Arrange competent confirmation / maintenance assessment under the applicable instructions"
+    limitations: "Internal condition and dielectric health are not assessed"
+    priority: urgent
+    route: {primary: "OHE coordinator", contributors: []}
+  - id: R-NEST-01
+    authority: "RDSO TI/MI/0060 (2022) 6.1(4)(h); CAMTECH OHE Inspection §7(p)"
+    decision_type: visual_screening
+    condition: foreign_object
+    observed: "A nest or foreign object is visible on or near the OHE in the marked region"
+    hypothesis: "Possible foreign object infringing the OHE"
+    action_family: urgent_control_assessment
+    action: "Assess for removal under the applicable instructions; image overlap does not prove contact"
+    limitations: "2D overlap is not physical contact or clearance"
+    priority: urgent
+    route: {primary: "OHE coordinator", contributors: ["Works / vegetation owner"]}
+  - id: R-ANOM-01
+    authority: "HLD §8.4 (unsupported design or unfamiliar anomaly)"
+    decision_type: administrative_workflow
+    condition: anomaly
+    observed: "Appearance differs from the normal reference bank in the marked region"
+    hypothesis: "Unclassified visual anomaly"
+    action_family: competent_closer_inspection
+    action: "Exception review; closer visual or technical assessment"
+    limitations: "Anomaly score is not a defect diagnosis"
+    priority: review
+    route: {primary: "OHE coordinator", contributors: []}
+unresolved_owner_queue: "OHE coordination queue"

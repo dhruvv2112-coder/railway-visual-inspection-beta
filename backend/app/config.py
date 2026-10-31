@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     database_url: str = "sqlite:///./rvi.db"
     evidence_dir: Path = Path("./evidence")
+    model_dir: Path = Path("./models")  # ohe_detector.onnx + ohe_detector.names.json (from ml/ohe)
     taxonomy_path: Path = REPO_ROOT / "shared" / "taxonomy.json"
     # Optional ONNX detector exported from ml/train (YOLO-format output). Absent in Beta by default.
     detector_onnx: Path | None = None
