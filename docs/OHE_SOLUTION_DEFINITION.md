@@ -65,30 +65,49 @@ Domain warning: both public datasets are drone/transmission-line views, not 25 k
 
 Thermal/electrical inputs, SCADA, weather; VLM narrative; temporal forecasting; certificate-backed signing; Triton; national approval. Proposed HLD targets (99.5 % association precision, 95 % recall, ECE ≤ 0.05) are recorded as targets, not claims.
 
-## 7. Results so far (CI run 41160563148, 31 Oct 2026, CPU)
+## 7. Results so far (CI run 41206894057, 31 Oct 2026, CPU)
 
-Artifacts are on branch `ci-ohe-train`: `reports/ohe_detector.onnx` plus `names.json`, reports and logs.
+Artifacts are on branch `ci-ohe-train`: `reports/ohe_detector.onnx`, `names.json`, the reports and the logs.
 
-**Detector:** yolo11n, 25 epochs, 640 px, 94 min on CPU. Held-out test split: 136 CPLID images, chain-grouped.
+**Detector:** yolo11n, 25 epochs, 640 px, 205 min on CPU. Classes: insulator, insulator_defect, vegetation. Scores are per source on the held-out test split; the split is chain-grouped for CPLID.
 
-| Class | Precision | Recall | AP50 | AP50-95 |
-|---|---|---|---|---|
-| insulator | 0.972 | 0.952 | 0.988 | 0.861 |
-| insulator_defect (missing cap) | 0.998 | 1.000 | 0.995 | 0.717 |
+| Test source | Class | Precision | Recall | AP50 | AP50-95 |
+|---|---|---|---|---|---|
+| CPLID (136 imgs) | insulator | 0.95 | 0.95 | 0.98 | 0.83 |
+| CPLID | insulator_defect (missing cap) | 0.99 | 1.00 | 0.995 | 0.69 |
+| Powerline (41 imgs) | insulator | 0.69 | 0.72 | 0.71 | 0.38 |
+| Powerline | insulator_defect (broken) | 0.68 | 0.54 | 0.61 | 0.35 |
+| Powerline | vegetation | 0.69 | 0.55 | 0.52 | 0.21 |
 
-**Backend check:** the ONNX file loaded through `OnnxYoloDetector` produced detections on 20/20 test images.
+- **Backend check:** the ONNX model in `OnnxYoloDetector` detects on 20/20 test images.
+- **Anomaly branch:** insulator crops from all sources; the test set is 245 normal and 54 defective crops.
+  - AUROC is 0.61.
+  - At the val-normal p95 threshold, it flags 7% of defective crops and 3% of normal ones.
+  - This is not usable for decisions. It stays evidence that routes to `anomalous_unclassified` review only.
+  - Run 1, on CPLID only, gave AUROC 0.68.
 
-**Anomaly branch** (insulator crops; 186 normal and 40 defective in test):
-- AUROC 0.68.
-- At the val-normal p95 threshold, it flags 15% of defective crops and 5.9% of normal crops.
-- This is too weak to drive decisions. It stays an evidence signal that routes to `anomalous_unclassified` review only.
+**Training data**
 
-**Training data:**
-- CPLID: 848 images, 1,321 insulators, 248 defects.
-- Synthetic broken insulators (silera, CC BY): 203 images, train and val only.
-- The powerline set (MIT) failed to load in this run. The loader is now fixed for its `bboxes`/`labels` columns (classes: Insulators, Broken Insulator, Vegetation).
-- The Roboflow railway catenary/dropper/pantograph sets are skipped until the `ROBOFLOW_API_KEY` secret is set.
+| Source | Images (train/val/test) | Boxes |
+|---|---|---|
+| CPLID | 848 (553/159/136) | 1,321 insulator, 248 defect |
+| docmhvr powerline (MIT) | 1,618 (1,500/77/41) | 6,050 insulator, 1,089 broken insulator, 274 vegetation |
+| silera synthetic (CC BY) | 203 (train/val only) | 203 insulator_defect |
 
-**What these numbers do and do not show:**
-- CPLID consists of drone views of transmission-line insulators, and its defect images are composited on simple backgrounds. Near-perfect scores show only that the pipeline works end to end; they are not field accuracy on ground-level 25 kV OHE (HLD §12.1).
-- Classes not yet trainable from public data: bird_nest, dropper, number_plate, catenary, pantograph. Until data exists for them, they return `unsupported_class` / `no_evidence`.
+Roboflow railway catenary/dropper/pantograph sets are skipped until `ROBOFLOW_API_KEY` is set.
+
+**Run history**
+
+| Run | What changed | Outcome |
+|---|---|---|
+| 1 | CPLID and synthetic data only | CPLID AP50: insulator 0.99, defect 0.99 |
+| 2 | Powerline added | Boxes were format-guessed per image and partly misread; anomaly crashed on empty crops |
+| 3 | Box format decided once per dataset | The rule rejected xyxy because of degenerate boxes |
+| 4 | Box-format rule made tolerant; evidence logged | 100% valid as xyxy, 74% overrun as xywh |
+
+**What these numbers do and do not show**
+
+- The near-perfect CPLID scores reflect composited defects on plain backgrounds.
+- The powerline scores (AP50 0.61–0.71) are the more realistic indicator for real photographs.
+- All data is drone or transmission-line imagery. None of these scores is field accuracy on ground-level 25 kV railway OHE (HLD §12.1).
+- bird_nest, dropper, number_plate, catenary and pantograph have no trainable public data yet, so they return `unsupported_class` / `no_evidence`.
