@@ -114,9 +114,13 @@ def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
     src = repo.split("/")[1][:12]
     feats = next(iter(ds.values())).features
     print("features", repo, feats, flush=True)
-    col = next(k for k, v in feats.items() if hasattr(v, "keys") and ("bbox" in v or "bboxes" in v) or
-               (getattr(v, "feature", None) is not None and hasattr(v.feature, "keys") and "bbox" in v.feature))
-    sub = feats[col].feature if getattr(feats[col], "feature", None) is not None else feats[col]
+    flat = "bboxes" in feats  # parallel top-level columns: bboxes + labels (e.g. docmhvr)
+    if flat:
+        col, sub = "bboxes", feats
+    else:
+        col = next(k for k, v in feats.items() if hasattr(v, "keys") and ("bbox" in v or "bboxes" in v) or
+                   (getattr(v, "feature", None) is not None and hasattr(v.feature, "keys") and "bbox" in v.feature))
+        sub = feats[col].feature if getattr(feats[col], "feature", None) is not None else feats[col]
     catk = next(k for k in ("category", "categories", "label", "labels", "class") if k in sub)
     cf = sub[catk]
     names = list(getattr(getattr(cf, "feature", cf), "names", []) or [])
@@ -126,17 +130,27 @@ def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
         for i, row in enumerate(part):
             im = row[img_col]
             W, H = im.size
-            objs = row[col]
-            bbs = objs["bbox"] if isinstance(objs, dict) else [o["bbox"] for o in objs]
-            cats = objs[catk] if isinstance(objs, dict) else [o[catk] for o in objs]
+            if flat:
+                bbs, cats = row["bboxes"], row[catk]
+            else:
+                objs = row[col]
+                bbs = objs["bbox"] if isinstance(objs, dict) else [o["bbox"] for o in objs]
+                cats = objs[catk] if isinstance(objs, dict) else [o[catk] for o in objs]
+            if i == 0:
+                print("sample", repo, split_name, (W, H), bbs[:3], cats[:3], flush=True)
+            # all coords <= 1: normalised YOLO [cx, cy, w, h]
+            norm = bool(bbs) and all(max(b) <= 1.0 for b in bbs)
             # COCO [x, y, w, h] unless reading it that way would run off the image while [x1, y1, x2, y2] would not
-            xyxy = bool(bbs) and all(b[2] > b[0] and b[3] > b[1] for b in bbs) and \
+            xyxy = not norm and bool(bbs) and all(b[2] > b[0] and b[3] > b[1] for b in bbs) and \
                 any(b[0] + b[2] > W * 1.02 or b[1] + b[3] > H * 1.02 for b in bbs)
             boxes = []
             for b, c in zip(bbs, cats):
                 n = names[c] if names and isinstance(c, int) else str(c)
                 t = HF_FIXED_CLASS.get(repo) or map_name(n)
                 if not t:
+                    continue
+                if norm:
+                    boxes.append((t, *map(float, b[:4])))
                     continue
                 x1, y1 = b[0], b[1]
                 bw, bh = (b[2] - b[0], b[3] - b[1]) if xyxy else (b[2], b[3])

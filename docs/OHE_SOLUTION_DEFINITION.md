@@ -64,3 +64,31 @@ Domain warning: both public datasets are drone/transmission-line views, not 25 k
 ## 6. Out of scope for this build
 
 Thermal/electrical inputs, SCADA, weather; VLM narrative; temporal forecasting; certificate-backed signing; Triton; national approval. Proposed HLD targets (99.5 % association precision, 95 % recall, ECE ≤ 0.05) are recorded as targets, not claims.
+
+## 7. Results so far (CI run 41160563148, 31 Oct 2026, CPU)
+
+Artifacts are on branch `ci-ohe-train`: `reports/ohe_detector.onnx` plus `names.json`, reports and logs.
+
+**Detector:** yolo11n, 25 epochs, 640 px, 94 min on CPU. Held-out test split: 136 CPLID images, chain-grouped.
+
+| Class | Precision | Recall | AP50 | AP50-95 |
+|---|---|---|---|---|
+| insulator | 0.972 | 0.952 | 0.988 | 0.861 |
+| insulator_defect (missing cap) | 0.998 | 1.000 | 0.995 | 0.717 |
+
+**Backend check:** the ONNX file loaded through `OnnxYoloDetector` produced detections on 20/20 test images.
+
+**Anomaly branch** (insulator crops; 186 normal and 40 defective in test):
+- AUROC 0.68.
+- At the val-normal p95 threshold, it flags 15% of defective crops and 5.9% of normal crops.
+- This is too weak to drive decisions. It stays an evidence signal that routes to `anomalous_unclassified` review only.
+
+**Training data:**
+- CPLID: 848 images, 1,321 insulators, 248 defects.
+- Synthetic broken insulators (silera, CC BY): 203 images, train and val only.
+- The powerline set (MIT) failed to load in this run. The loader is now fixed for its `bboxes`/`labels` columns (classes: Insulators, Broken Insulator, Vegetation).
+- The Roboflow railway catenary/dropper/pantograph sets are skipped until the `ROBOFLOW_API_KEY` secret is set.
+
+**What these numbers do and do not show:**
+- CPLID consists of drone views of transmission-line insulators, and its defect images are composited on simple backgrounds. Near-perfect scores show only that the pipeline works end to end; they are not field accuracy on ground-level 25 kV OHE (HLD §12.1).
+- Classes not yet trainable from public data: bird_nest, dropper, number_plate, catenary, pantograph. Until data exists for them, they return `unsupported_class` / `no_evidence`.

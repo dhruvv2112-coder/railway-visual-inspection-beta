@@ -4,10 +4,10 @@ Searched one source at a time. Every candidate is listed with what it is, whethe
 
 | # | Source / query | What it is | Access | Licence | Used? |
 |---|---|---|---|---|---|
-| 1 | GitHub InsulatorData/InsulatorDataSet (CPLID) | 848 UAV images of transmission-line insulators; VOC boxes "insulator", "defect" (missing caps) | git clone | undetermined (user decided: use for training) | Yes – detector + anomaly bank |
+| 1 | GitHub InsulatorData/InsulatorDataSet (CPLID) | 848 UAV images of transmission-line insulators; VOC boxes "insulator", "defect" (missing caps) | git clone | undetermined (user decided: use for training) | Yes – 848 imgs (553/159/136), 1,321 insulator + 248 defect boxes |
 | 2 | HF KeenForgeAI/CPLID_Insulators-corrected | Cleaned CPLID with chain-aware splits | HF per-file download hit HTTP 429 | CC BY 4.0 on changes; pixels as CPLID | No – same images via #1 |
-| 3 | HF docmhvr/powerline-components-and-faults | Drone images of power-line components and faults, parquet | `datasets` (parquet, 3 files) | MIT | Yes – classes mapped where they match OHE |
-| 4 | HF silera/broken-insulators-synthetic-detection | 203 synthetic images of broken insulators with boxes | `datasets` | CC BY 4.0 | Yes – insulator_defect (synthetic, tagged) |
+| 3 | HF docmhvr/powerline-components-and-faults | Drone images of power-line components and faults, parquet | `datasets` (parquet, 3 files) | MIT | Run 41160563148: loader failed (flat `bboxes`/`labels` schema); fixed – Insulators, Broken Insulator, Vegetation mapped |
+| 4 | HF silera/broken-insulators-synthetic-detection | 203 synthetic images of broken insulators with boxes | `datasets` | CC BY 4.0 | Yes – 203 imgs (162 train / 41 val), 203 insulator_defect boxes; kept out of test |
 | 5 | HF rohanath/insulator-defect-detection | ~3,040 images, 2-class image labels (no boxes) | `datasets` | not stated | Not yet – candidate for a crop condition classifier after licence check |
 | 6 | HF introvoyz043/InsulatorDataSet | Mirror of CPLID | – | MIT tag | No – duplicate |
 | 7 | Roboflow Universe railway-monitor/catenary | Railway catenary + dropper boxes | API key required | CC BY 4.0 | Wired in; runs when ROBOFLOW_API_KEY secret is set |
