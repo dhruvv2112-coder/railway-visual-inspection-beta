@@ -49,7 +49,8 @@ def main():
     manifest = json.loads((DATA / "manifest.json").read_text())
     rep = {"name": "ohe_detector", "title": f"OHE component detector ({Path(MODEL).stem}, {EPOCHS} ep, {IMGSZ}px, {DEVICE})",
            "summary": f"Held-out test split per class. Training {minutes:.1f} min. Sources: "
-                      + "; ".join(f"{s['repo']} ({s['licence']}) {s['images']}" for s in manifest["sources"]),
+                      + "; ".join(f"{s.get('source')} ({s.get('licence', s.get('error') or s.get('skipped'))})" for s in manifest["sources"])
+                      + f". Images per source: {json.dumps({k: v['images'] for k, v in manifest['stats'].items()})}",
            "results": rows,
            "extra": {"manifest": manifest, "onnx_mb": round(out.stat().st_size / 1e6, 1), "imgsz": IMGSZ},
            "notes": ["Public data are drone views of transmission lines, not ground-level 25 kV railway OHE: results show the "

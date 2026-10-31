@@ -25,6 +25,8 @@ OUT = BASE / "ohe_yolo"
 CAP = int(os.environ.get("OHE_CAP_PER_SOURCE", "1500"))
 TARGET = ["insulator", "insulator_defect", "bird_nest", "vegetation", "dropper", "number_plate", "catenary", "pantograph"]
 HF = [("docmhvr/powerline-components-and-faults", "MIT"), ("silera/broken-insulators-synthetic-detection", "CC BY 4.0")]
+# sources whose class names are not published but whose content is a single known class (dataset card)
+HF_FIXED_CLASS = {"silera/broken-insulators-synthetic-detection": "insulator_defect"}
 ROBOFLOW = [("railway-monitor", "catenary", 1), ("object-detection-bmosq", "panto-catenary", 1)]  # (workspace, project, version)
 
 
@@ -111,6 +113,7 @@ def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
     ds = load_dataset(repo)
     src = repo.split("/")[1][:12]
     feats = next(iter(ds.values())).features
+    print("features", repo, feats, flush=True)
     col = next(k for k, v in feats.items() if hasattr(v, "keys") and ("bbox" in v or "bboxes" in v) or
                (getattr(v, "feature", None) is not None and hasattr(v.feature, "keys") and "bbox" in v.feature))
     sub = feats[col].feature if getattr(feats[col], "feature", None) is not None else feats[col]
@@ -132,7 +135,7 @@ def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
             boxes = []
             for b, c in zip(bbs, cats):
                 n = names[c] if names and isinstance(c, int) else str(c)
-                t = map_name(n)
+                t = HF_FIXED_CLASS.get(repo) or map_name(n)
                 if not t:
                     continue
                 x1, y1 = b[0], b[1]

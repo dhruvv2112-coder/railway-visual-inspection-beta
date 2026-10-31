@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
-      - run: pip install -r ml/ohe/requirements.txt
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
       - name: Prepare data, train detector, anomaly branch
         working-directory: ml/ohe
         env:
@@ -42,6 +42,7 @@ jobs:
           python prepare_data.py 2>&1 | tee ../../logs/prepare.log
           python anomaly.py 2>&1 | tee ../../logs/anomaly.log || echo "anomaly branch failed"
           python train_detector.py 2>&1 | tee ../../logs/detector.log
+          python verify_onnx.py ../../reports "$OHE_DATA/ohe_yolo" 2>&1 | tee ../../logs/verify_onnx.log
       - name: Publish to branch ci-ohe-train
         if: always()
         run: |
