@@ -42,6 +42,16 @@ def main():
         rows.append({"class": names[int(c)], "precision": float(p), "recall": float(rc), "AP50": float(ap50), "AP50_95": float(ap)})
     rows.append({"class": "all", "precision": float(r.box.mp), "recall": float(r.box.mr), "AP50": float(r.box.map50),
                  "AP50_95": float(r.box.map)})
+    # per-source test scores: the mixed test split hides how each domain behaves (and keeps CPLID comparable)
+    per_source = {}
+    for src in sorted({p.name.split("_")[0] for p in (DATA / "test" / "images").glob("*")}):
+        lst = DATA / f"test_{src}.txt"
+        lst.write_text("\n".join(str(p.resolve()) for p in sorted((DATA / "test" / "images").glob(f"{src}_*"))))
+        yml = DATA / f"data_{src}.yaml"
+        yml.write_text(yaml.safe_dump({**cfg, "path": str(DATA.resolve()), "test": str(lst.resolve())}))
+        rs = best.val(data=str(yml), split="test", imgsz=IMGSZ, device=DEVICE, plots=False, verbose=False)
+        per_source[src] = [{"class": names[int(c)], **dict(zip(("precision", "recall", "AP50", "AP50_95"),
+                            map(float, rs.box.class_result(i))))} for i, c in enumerate(rs.box.ap_class_index)]
     onnx = Path(best.export(format="onnx", imgsz=IMGSZ, simplify=True))
     out = REPORTS / "ohe_detector.onnx"
     shutil.copy(onnx, out)
@@ -52,6 +62,7 @@ def main():
                       + "; ".join(f"{s.get('source')} ({s.get('licence', s.get('error') or s.get('skipped'))})" for s in manifest["sources"])
                       + f". Images per source: {json.dumps({k: v['images'] for k, v in manifest['stats'].items()})}",
            "results": rows,
+           "per_source_test": per_source,
            "extra": {"manifest": manifest, "onnx_mb": round(out.stat().st_size / 1e6, 1), "imgsz": IMGSZ},
            "notes": ["Public data are drone views of transmission lines, not ground-level 25 kV railway OHE: results show the "
                      "pipeline works and give starting weights; they are not field performance (HLD §12.1).",

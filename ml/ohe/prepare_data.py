@@ -108,6 +108,27 @@ def cplid(w: Writer, manifest: list):
                      "source_names": sorted(names)})
 
 
+def box_format(ds, col, flat) -> tuple[bool, bool]:
+    """Decide the box convention once per dataset, not per image (a per-image guess misreads images whose boxes
+    happen to fit either way). Normalised if every coordinate <= 1. Else COCO [x, y, w, h] unless some box would
+    then run off the image while every box is a valid [x1, y1, x2, y2]."""
+    bbs, sizes = [], []
+    for part in ds.values():
+        sub = part.select(range(min(300, len(part))))
+        size = sub[0][next(k for k, v in part.features.items() if type(v).__name__ == "Image")].size
+        rows = sub["bboxes"] if flat else [o["bbox"] if isinstance(o, dict) else [x["bbox"] for x in o] for o in sub[col]]
+        for r in rows:
+            bbs += r
+            sizes += [size] * len(r)
+    if not bbs:
+        return False, False
+    if all(max(b) <= 1.0 for b in bbs):
+        return True, False
+    valid_xyxy = all(b[2] > b[0] and b[3] > b[1] for b in bbs)
+    overrun = sum(b[0] + b[2] > W * 1.02 or b[1] + b[3] > H * 1.02 for b, (W, H) in zip(bbs, sizes))
+    return False, valid_xyxy and overrun > 0.02 * len(bbs)
+
+
 def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
     from datasets import load_dataset
     ds = load_dataset(repo)
@@ -125,6 +146,8 @@ def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
     cf = sub[catk]
     names = list(getattr(getattr(cf, "feature", cf), "names", []) or [])
     img_col = next(k for k, v in feats.items() if type(v).__name__ == "Image")
+    fmt = box_format(ds, col, flat)
+    print("box format", repo, {"normalised": fmt[0], "xyxy": fmt[1]}, flush=True)
     for split_name, part in ds.items():
         split = {"validation": "val", "valid": "val"}.get(split_name, split_name if split_name in ("train", "val", "test") else "train")
         for i, row in enumerate(part):
@@ -138,11 +161,7 @@ def hf_parquet(w: Writer, repo: str, lic: str, manifest: list):
                 cats = objs[catk] if isinstance(objs, dict) else [o[catk] for o in objs]
             if i == 0:
                 print("sample", repo, split_name, (W, H), bbs[:3], cats[:3], flush=True)
-            # all coords <= 1: normalised YOLO [cx, cy, w, h]
-            norm = bool(bbs) and all(max(b) <= 1.0 for b in bbs)
-            # COCO [x, y, w, h] unless reading it that way would run off the image while [x1, y1, x2, y2] would not
-            xyxy = not norm and bool(bbs) and all(b[2] > b[0] and b[3] > b[1] for b in bbs) and \
-                any(b[0] + b[2] > W * 1.02 or b[1] + b[3] > H * 1.02 for b in bbs)
+            norm, xyxy = fmt
             boxes = []
             for b, c in zip(bbs, cats):
                 n = names[c] if names and isinstance(c, int) else str(c)

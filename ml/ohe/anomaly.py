@@ -34,10 +34,11 @@ def crops(split: str):
         h, w = img.shape[:2]
         for _, cx, cy, bw, bh in ins:
             x1, y1, x2, y2 = int((cx - bw / 2) * w), int((cy - bh / 2) * h), int((cx + bw / 2) * w), int((cy + bh / 2) * h)
+            x1, y1, x2, y2 = max(0, x1), max(0, y1), min(w, x2), min(h, y2)
             if min(x2 - x1, y2 - y1) < 24:
                 continue
             bad = any(x1 <= dx * w <= x2 and y1 <= dy * h <= y2 for _, dx, dy, _, _ in dfs)
-            yield cv2.resize(img[max(0, y1):y2, max(0, x1):x2], (224, 224)), bad
+            yield cv2.resize(img[y1:y2, x1:x2], (224, 224)), bad
 
 
 class Features(torch.nn.Module):
@@ -78,7 +79,7 @@ def main():
     auroc = roc_auc_score(y, s) if 0 < sum(y) < len(y) else float("nan")
     tpr = float(np.mean([v > thr for v, b in test if b])) if sum(y) else float("nan")
     fpr = float(np.mean([v > thr for v, b in test if not b])) if len(y) - sum(y) else float("nan")
-    rep = {"name": "ohe_anomaly", "title": "Insulator anomaly branch (PatchCore-style, ResNet-18 features, CPLID crops)",
+    rep = {"name": "ohe_anomaly", "title": "Insulator anomaly branch (PatchCore-style, ResNet-18 features, insulator crops from all detector sources)",
            "summary": f"Memory bank from {len(train[:400])} normal training crops ({len(bank)} patches). Test: {len(y) - sum(y)} normal, "
                       f"{sum(y)} defective crops.",
            "results": [{"metric": "AUROC (test crops)", "value": auroc},
