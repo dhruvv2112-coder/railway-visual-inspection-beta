@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.CommandMatcherTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-30T23:51:10" hostname="runnervm48cm3" time="0.354">
+<testsuite name="org.rvi.inspect.CommandMatcherTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-31T04:36:21" hostname="runnervm48cm3" time="0.319">
   <properties/>
-  <testcase name="toleratesSmallAsrErrors" classname="org.rvi.inspect.CommandMatcherTest" time="0.073"/>
-  <testcase name="englishCommands" classname="org.rvi.inspect.CommandMatcherTest" time="0.044"/>
+  <testcase name="toleratesSmallAsrErrors" classname="org.rvi.inspect.CommandMatcherTest" time="0.088"/>
+  <testcase name="englishCommands" classname="org.rvi.inspect.CommandMatcherTest" time="0.041"/>
   <testcase name="oheCommands" classname="org.rvi.inspect.CommandMatcherTest" time="0.019"/>
-  <testcase name="hindiAndHinglishCommands" classname="org.rvi.inspect.CommandMatcherTest" time="0.019"/>
-  <testcase name="noVoicePathToProtectFirstDefects" classname="org.rvi.inspect.CommandMatcherTest" time="0.187"/>
+  <testcase name="hindiAndHinglishCommands" classname="org.rvi.inspect.CommandMatcherTest" time="0.015"/>
+  <testcase name="noVoicePathToProtectFirstDefects" classname="org.rvi.inspect.CommandMatcherTest" time="0.148"/>
   <testcase name="notesAreDictation" classname="org.rvi.inspect.CommandMatcherTest" time="0.001"/>
   <testcase name="unrelatedSpeechIsRejected" classname="org.rvi.inspect.CommandMatcherTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
