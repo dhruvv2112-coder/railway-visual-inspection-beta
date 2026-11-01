@@ -175,8 +175,8 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
             o.state, o.reasons = "insufficient_resolution", q.reasons
         else:
             hits = [s for s in defects if comps[s.cls]["symptom_of"] == d.cls and _overlap(d.box, s.box) > 0.5]
-            if d.cls == "bird_nest":
-                o.state, o.condition = "assessable_defect", "foreign_object"
+            if spec.get("presence_is_condition"):  # e.g. a nest or foreign object: its presence is the finding
+                o.state, o.condition = "assessable_defect", spec["supported_conditions"][0]
             elif hits:
                 best = max(hits, key=lambda s: s.score)
                 o.state, o.condition = "assessable_defect", spec["supported_conditions"][0]

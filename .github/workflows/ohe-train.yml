@@ -4,9 +4,10 @@ name: ohe-train
 on:
   workflow_dispatch:
     inputs:
-      epochs: {description: "Detector epochs (CPU)", default: "25"}
+      epochs: {description: "Detector epochs (CPU)", default: "20"}
       imgsz: {description: "Detector image size", default: "640"}
-      cap: {description: "Max train images per source", default: "1500"}
+      cap: {description: "Max train images per source", default: "350"}
+      evalcap: {description: "Max val/test images per source", default: "150"}
   push:
     branches: [main, feat/ohe-visual-patrol]
     paths: ["ml/ohe/**", ".github/workflows/ohe-train.yml"]
@@ -24,8 +25,10 @@ env:
 jobs:
   train:
     runs-on: ubuntu-latest
-    timeout-minutes: 330
+    timeout-minutes: 355
     steps:
+      - name: Free disk for the 6.5 GB RailFOD23 archive
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
@@ -33,9 +36,10 @@ jobs:
       - name: Prepare data, train detector, anomaly branch
         working-directory: ml/ohe
         env:
-          OHE_EPOCHS: ${{ github.event.inputs.epochs || '25' }}
+          OHE_EPOCHS: ${{ github.event.inputs.epochs || '20' }}
           OHE_IMGSZ: ${{ github.event.inputs.imgsz || '640' }}
-          OHE_CAP_PER_SOURCE: ${{ github.event.inputs.cap || '1500' }}
+          OHE_CAP_PER_SOURCE: ${{ github.event.inputs.cap || '350' }}
+          OHE_EVAL_CAP_PER_SOURCE: ${{ github.event.inputs.evalcap || '150' }}
           ROBOFLOW_API_KEY: ${{ secrets.ROBOFLOW_API_KEY }}
         run: |
           mkdir -p ../../logs ../../reports

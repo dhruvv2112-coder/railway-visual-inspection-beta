@@ -16,10 +16,14 @@ assets:
 components:
   insulator: {scope: "Insulators", supported_conditions: [insulator_visible_damage]}
   insulator_defect: {scope: "Insulators", symptom_of: insulator}
-  bird_nest: {scope: "Vegetation, nests and loose material", supported_conditions: [foreign_object]}
+  bird_nest: {scope: "Vegetation, nests and loose material", supported_conditions: [foreign_object], presence_is_condition: true}
+  foreign_object: {scope: "Vegetation, nests and loose material", supported_conditions: [foreign_object], presence_is_condition: true}
   vegetation: {scope: "Vegetation, nests and loose material", supported_conditions: []}
   dropper: {scope: "Droppers", supported_conditions: []}
   number_plate: {scope: "Number plates and painted identifiers", supported_conditions: []}
+  # detected for evidence and identity; no condition is claimed until validated on railway OHE images (HLD §15.1)
+  mast: {scope: "Masts and structures", supported_conditions: []}
+  corrosion: {scope: "Masts and structures", supported_conditions: []}
 min_target_px: 48          # minimum short side of a component crop before condition is assessable (§2.2; tune empirically)
 rules:
   - id: R-INS-01

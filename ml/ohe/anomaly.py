@@ -59,6 +59,39 @@ class Features(torch.nn.Module):
         return f[0].permute(1, 2, 0).reshape(-1, f.shape[1])  # patches x dims
 
 
+def railway_eval(fx) -> list:
+    """Same method on real railway catenary support components (github jsxr32/EBIST_cscuav, MVTec layout:
+    train/good, test/good, test/<defect>). Licence not stated by the authors: used for evaluation only.
+    Per component: bank from its own train/good crops; AUROC of test good vs defective."""
+    import subprocess
+    import zipfile
+    d = DATA.parent / "ebist"
+    try:
+        if not d.exists():
+            subprocess.run(["git", "clone", "-q", "--depth", "1", "https://github.com/jsxr32/EBIST_cscuav", str(d / "repo")], check=True)
+            zipfile.ZipFile(next((d / "repo").glob("*.zip"))).extractall(d)
+    except Exception as e:
+        return [{"error": str(e)[:200]}]
+    out = []
+    for comp in sorted(p for p in d.rglob("*") if p.is_dir() and (p / "train" / "good").is_dir()):
+        def load(ps):
+            return [cv2.resize(cv2.imread(str(x)), (224, 224)) for x in sorted(ps)]
+        good = load((comp / "train" / "good").glob("*.png"))
+        if not good:
+            continue
+        bank = torch.cat([fx(c) for c in good])
+        t = [(c, 0) for c in load((comp / "test" / "good").glob("*.png"))]
+        defect_dirs = [x for x in (comp / "test").iterdir() if x.is_dir() and x.name != "good"]
+        for dd in defect_dirs:
+            t += [(c, 1) for c in load(dd.glob("*.png"))]
+        sc = [float(torch.cdist(fx(c), bank).min(1).values.max()) for c, _ in t]
+        y = [b for _, b in t]
+        out.append({"component": comp.name, "defect": ",".join(x.name for x in defect_dirs), "train_good": len(good),
+                    "test_good": len(y) - sum(y), "test_defect": sum(y),
+                    "AUROC": roc_auc_score(y, sc) if 0 < sum(y) < len(y) else float("nan")})
+    return out
+
+
 def main():
     REPORTS.mkdir(parents=True, exist_ok=True)
     fx = Features()
@@ -87,7 +120,10 @@ def main():
                        {"metric": "Normal flagged at the same threshold", "value": fpr},
                        {"metric": "Threshold (anomaly distance)", "value": thr}],
            "notes": ["Anomaly score is evidence of difference from the normal bank, not a defect class (HLD §6.2).",
-                     "CPLID 'defect' marks missing insulator caps on transmission lines; railway OHE insulators need their own bank."]}
+                     "CPLID 'defect' marks missing insulator caps on transmission lines; railway OHE insulators need their own bank.",
+                     "railway_catenary_components: real railway cantilever parts (EBIST_cscuav), about 10 images per split; "
+                     "small-sample indicator, evaluation only (licence not stated)."]}
+    rep["railway_catenary_components"] = railway_eval(fx)
     (REPORTS / "ohe_anomaly.json").write_text(json.dumps(rep, indent=1))
     print(json.dumps(rep, indent=1))
 
