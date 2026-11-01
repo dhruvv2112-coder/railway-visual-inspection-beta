@@ -20,6 +20,7 @@ MODEL = os.environ.get("OHE_MODEL", "yolo11n.pt")
 EPOCHS = int(os.environ.get("OHE_EPOCHS", "25"))
 IMGSZ = int(os.environ.get("OHE_IMGSZ", "640"))
 DEVICE = os.environ.get("OHE_DEVICE", "cpu")
+BATCH = float(os.environ.get("OHE_BATCH", "16"))  # GPU: -1 = auto-size to ~60% of VRAM
 
 
 def main():
@@ -31,7 +32,7 @@ def main():
     names = cfg["names"]
     t = time.perf_counter()
     m = YOLO(MODEL)
-    m.train(data=str(DATA / "data.yaml"), epochs=EPOCHS, imgsz=IMGSZ, device=DEVICE, batch=16 if DEVICE == "cpu" else 16,
+    m.train(data=str(DATA / "data.yaml"), epochs=EPOCHS, imgsz=IMGSZ, device=DEVICE, batch=int(BATCH) if BATCH >= 1 or BATCH == -1 else BATCH,
             workers=2, seed=0, deterministic=True, plots=False, verbose=False, project=str(DATA / "runs"), name="det", exist_ok=True)
     minutes = (time.perf_counter() - t) / 60
     best = YOLO(str(DATA / "runs" / "det" / "weights" / "best.pt"))

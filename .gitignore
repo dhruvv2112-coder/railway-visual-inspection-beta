@@ -17,3 +17,6 @@ runs/
 *.pt
 *.onnx
 !reports/*.onnx
+ml/ohe/.venv/
+reports-ohe-gpu/
+logs-ohe-gpu/
