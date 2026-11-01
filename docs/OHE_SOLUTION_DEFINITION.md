@@ -111,3 +111,33 @@ Roboflow railway catenary/dropper/pantograph sets are skipped until `ROBOFLOW_AP
 - The powerline scores (AP50 0.61–0.71) are the more realistic indicator for real photographs.
 - All data is drone or transmission-line imagery. None of these scores is field accuracy on ground-level 25 kV railway OHE (HLD §12.1).
 - bird_nest, dropper, number_plate, catenary and pantograph have no trainable public data yet, so they return `unsupported_class` / `no_evidence`.
+
+### Run 6 (CI 41333478065, 1 Nov 2026): all eight sources, seven classes
+
+Configuration:
+- YOLO11n, 18 epochs, 640 px, on CPU; training took 133 min.
+- Per-source caps: 300 train images, except 800 for powerline; 150 val/test images.
+
+AP50 per test source (precision / recall in brackets):
+
+| Test source | Class | AP50 |
+|---|---|---|
+| CPLID | insulator | 0.96 |
+| CPLID | defect | 0.995 |
+| Powerline | insulator | 0.66 |
+| Powerline | broken insulator | 0.54 |
+| Powerline | vegetation | 0.26 |
+| EPDCL phone photos | mast | 0.87 (0.87 / 0.79) |
+| EPDCL phone photos | vegetation | 0.55 |
+| RailFOD23 | bird_nest | 0.975 |
+| RailFOD23 | foreign_object | 0.875 |
+| VPMBGI | broken glass insulator | 0.51 |
+| Corrosion | corrosion | 0.27 |
+
+Anomaly AUROC on CPLID/powerline crops: 0.63.
+
+EBIST railway components (run 5): AUROC was below 0.5 on 5 of 6 parts, so the bank method does not transfer.
+
+RailFOD23 is partly synthesised. Treat its high scores as optimistic.
+
+The next run is the full-data GPU run on the laptop (`ml/ohe/run_ohe_gpu.ps1`; results go to branch `local-ohe-gpu`).
