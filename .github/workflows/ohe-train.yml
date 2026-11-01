@@ -4,9 +4,9 @@ name: ohe-train
 on:
   workflow_dispatch:
     inputs:
-      epochs: {description: "Detector epochs (CPU)", default: "20"}
+      epochs: {description: "Detector epochs (CPU)", default: "18"}
       imgsz: {description: "Detector image size", default: "640"}
-      cap: {description: "Max train images per source", default: "350"}
+      cap: {description: "Max train images per source", default: "300"}
       evalcap: {description: "Max val/test images per source", default: "150"}
   push:
     branches: [main, feat/ohe-visual-patrol]
@@ -36,9 +36,10 @@ jobs:
       - name: Prepare data, train detector, anomaly branch
         working-directory: ml/ohe
         env:
-          OHE_EPOCHS: ${{ github.event.inputs.epochs || '20' }}
+          OHE_EPOCHS: ${{ github.event.inputs.epochs || '18' }}
           OHE_IMGSZ: ${{ github.event.inputs.imgsz || '640' }}
-          OHE_CAP_PER_SOURCE: ${{ github.event.inputs.cap || '350' }}
+          OHE_CAP_PER_SOURCE: ${{ github.event.inputs.cap || '300' }}
+          OHE_CAP_OVERRIDES: powerline-co=800
           OHE_EVAL_CAP_PER_SOURCE: ${{ github.event.inputs.evalcap || '150' }}
           ROBOFLOW_API_KEY: ${{ secrets.ROBOFLOW_API_KEY }}
         run: |

@@ -30,6 +30,8 @@ BASE = Path(os.environ.get("OHE_DATA", ".cache/ohe"))
 OUT = BASE / "ohe_yolo"
 CAP = int(os.environ.get("OHE_CAP_PER_SOURCE", "1500"))
 EVAL_CAP = int(os.environ.get("OHE_EVAL_CAP_PER_SOURCE", "250"))
+# e.g. "powerline-co=800" (keeps enough powerline vegetation while the global cap stays low)
+CAP_OVR = dict(kv.split("=") for kv in os.environ.get("OHE_CAP_OVERRIDES", "").split(",") if "=" in kv)
 TARGET = ["insulator", "insulator_defect", "bird_nest", "vegetation", "dropper", "number_plate", "catenary", "pantograph",
           "mast", "foreign_object", "corrosion"]
 HF = [("docmhvr/powerline-components-and-faults", "MIT"), ("silera/broken-insulators-synthetic-detection", "CC BY 4.0")]
@@ -38,8 +40,15 @@ HF_FIXED_CLASS = {"silera/broken-insulators-synthetic-detection": "insulator_def
 ROBOFLOW = [("railway-monitor", "catenary", 1), ("object-detection-bmosq", "panto-catenary", 1)]  # (workspace, project, version)
 
 
+PINYIN = {"niaocao": "bird_nest", "piaofuwu": "foreign_object", "qiqiu": "foreign_object", "suliaodai": "foreign_object"}
+
+
 def map_name(n: str) -> str | None:
     n = n.lower().replace("_", " ").replace("-", " ")
+    if n.strip().replace(" ", "") in PINYIN:  # RailFOD23 class names are pinyin
+        return PINYIN[n.strip().replace(" ", "")]
+    if re.search(r"broken glass|iso broken", n):  # VPMBGI 'iso_broken_glass'
+        return "insulator_defect"
     if re.search(r"defect|broken|damag|fault|flash|crack|missing|burn", n) and ("insulator" in n or n.strip() in
                                                                                 ("defect", "broken", "damaged", "flashed")):
         return "insulator_defect"
@@ -75,7 +84,7 @@ class Writer:
 
     def add(self, src: str, split: str, name: str, img_bytes: bytes, boxes: list[tuple[str, float, float, float, float]]):
         st = self.stats.setdefault(src, {"images": {"train": 0, "val": 0, "test": 0}, "instances": {t: 0 for t in TARGET}})
-        if st["images"][split] >= (CAP if split == "train" else EVAL_CAP):
+        if st["images"][split] >= (int(CAP_OVR.get(src, CAP)) if split == "train" else EVAL_CAP):
             return
         for d in ("images", "labels"):
             (OUT / split / d).mkdir(parents=True, exist_ok=True)
@@ -238,7 +247,7 @@ def _boxes_from_yolo_txt(txt: str, names: list) -> list:
     return out
 
 
-def yolo_tree(w: Writer, src: str, root: Path, manifest: list, lic: str, label: str):
+def yolo_tree(w: Writer, src: str, root: Path, manifest: list, lic: str, label: str, hash_split: bool = False):
     """Any YOLO export: data.yaml somewhere for names; images/ + labels/ siblings; split from the path."""
     ymls = sorted(root.rglob("data.yaml")) or sorted(root.rglob("*.yaml"))
     raw = yaml.safe_load(ymls[0].read_text()) if ymls else {}
@@ -251,7 +260,7 @@ def yolo_tree(w: Writer, src: str, root: Path, manifest: list, lic: str, label: 
         lab = Path(*parts[:i], "labels", *parts[i + 1:]).with_suffix(".txt")
         boxes = _boxes_from_yolo_txt(lab.read_text(), names) if lab.exists() else []
         sp = next((s for s in ("train", "valid", "val", "test") if s in [x.lower() for x in parts]), None)
-        sp = {"valid": "val"}.get(sp, sp) or split_for(f"{src}-{img.stem}")
+        sp = split_for(f"{src}-{img.stem}") if hash_split else ({"valid": "val"}.get(sp, sp) or split_for(f"{src}-{img.stem}"))
         w.add(src, sp, re.sub(r"[^A-Za-z0-9]+", "-", img.stem)[:60] + f"-{n}", img.read_bytes(), boxes)
         n += 1
     manifest.append({"source": label, "licence": lic, "source_names": names, "files_seen": n})
@@ -298,7 +307,50 @@ def epdcl(w: Writer, manifest: list):
         if root.exists():
             readme = root / "README.md"
             print("epdcl", sub, (readme.read_text()[:1200] if readme.exists() else "no README"), flush=True)
-            yolo_tree(w, "epdcl" + sub.split("_")[0][:4], root, manifest, "CC BY 4.0", f"hf:EPDCL/pd-defect/{sub}")
+            if sub == "vegetation_conductor":
+                coco_dir(w, "epdclvege", root, manifest, "CC BY 4.0", f"hf:EPDCL/pd-defect/{sub}")
+            else:
+                yolo_tree(w, "epdcl" + sub.split("_")[0][:4], root, manifest, "CC BY 4.0", f"hf:EPDCL/pd-defect/{sub}")
+
+
+def coco_dir(w: Writer, src: str, root: Path, manifest: list, lic: str, label: str):
+    """COCO json(s) with boxes or polygons; images looked up by file name under the same tree; hash split."""
+    imgs = {p.name: p for p in root.rglob("*") if p.suffix.lower() in (".jpg", ".jpeg", ".png")}
+    cats_all, n = set(), 0
+    for jf in sorted(root.rglob("*.json")):
+        try:
+            coco = json.loads(jf.read_text())
+        except Exception:
+            continue
+        if not isinstance(coco, dict) or "annotations" not in coco or "images" not in coco:
+            continue
+        cats = {c["id"]: c["name"] for c in coco.get("categories", [])}
+        cats_all |= set(cats.values())
+        anns = {}
+        for a in coco["annotations"]:
+            anns.setdefault(a["image_id"], []).append(a)
+        for im in coco["images"]:
+            p = imgs.get(Path(im["file_name"]).name)
+            if not p:
+                continue
+            W, H = im["width"], im["height"]
+            boxes = []
+            for a in anns.get(im["id"], []):
+                t = map_name(cats.get(a["category_id"], ""))
+                if not t:
+                    continue
+                if a.get("bbox"):
+                    x, y, bw, bh = a["bbox"]
+                else:
+                    seg = [v for poly in a.get("segmentation", []) for v in poly]
+                    if not seg:
+                        continue
+                    xs, ys = seg[0::2], seg[1::2]
+                    x, y, bw, bh = min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys)
+                boxes.append((t, (x + bw / 2) / W, (y + bh / 2) / H, bw / W, bh / H))
+            w.add(src, split_for(f"{src}-{p.stem}"), re.sub(r"[^A-Za-z0-9]+", "-", p.stem)[:60], p.read_bytes(), boxes)
+            n += 1
+    manifest.append({"source": label, "licence": lic, "source_names": sorted(cats_all), "files_seen": n})
 
 
 def download(url: str, dest: Path) -> Path:
@@ -318,7 +370,7 @@ def railfod23(w: Writer, manifest: list):
     jsons = [m for m in members if m.endswith(".json")]
     print("railfod23 jsons", jsons[:10], "images", len(by_base), flush=True)
     cats_all = set()
-    for jm in jsons:
+    for jm in [j for j in jsons if "train_val" not in j]:
         try:
             coco = json.loads(z.read(jm))
         except Exception:
@@ -343,7 +395,7 @@ def railfod23(w: Writer, manifest: list):
                 x, y, bw, bh = a["bbox"]
                 if t:
                     boxes.append((t, (x + bw / 2) / W, (y + bh / 2) / H, bw / W, bh / H))
-            w.add("railfod", sp or split_for(f"railfod-{im['file_name']}"), Path(im["file_name"]).stem[:60], z.read(m), boxes)
+            w.add("railfod", split_for(f"railfod-{im['file_name']}"), Path(im["file_name"]).stem[:60], z.read(m), boxes)
     manifest.append({"source": "figshare:RailFOD23 (24180738)", "licence": "CC BY 4.0", "source_names": sorted(cats_all),
                      "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"})
 
@@ -355,7 +407,7 @@ def vpmbgi(w: Writer, manifest: list):
     d = BASE / "vpmbgi"
     if not d.exists():
         zipfile.ZipFile(z).extractall(d)
-    yolo_tree(w, "vpmbgi", d, manifest, "CC BY 4.0", "github:phd-benel/VPMBGI")
+    yolo_tree(w, "vpmbgi", d, manifest, "CC BY 4.0", "github:phd-benel/VPMBGI", hash_split=True)
 
 
 def corrosion(w: Writer, manifest: list):
