@@ -30,4 +30,4 @@ PASSED tests/test_quality.py::test_overexposed_image_rejected
 PASSED tests/test_quality.py::test_low_resolution_rejected
 PASSED tests/test_quality.py::test_unreadable
 PASSED tests/test_quality.py::test_mildly_dark_but_usable_image_passes
-23 passed, 1 warning in 2.07s
+23 passed, 1 warning in 2.12s
