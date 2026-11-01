@@ -1,0 +1,78 @@
+[0;93m2026-11-01 21:04:18.800829902 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+{
+ "adapter": "onnx:ohe_detector.onnx",
+ "images": 20,
+ "images_with_detections": 20,
+ "sample": [
+  {
+   "image": "cplid_000.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.93
+    ],
+    [
+     "insulator_defect",
+     0.9
+    ]
+   ]
+  },
+  {
+   "image": "cplid_001.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.96
+    ],
+    [
+     "insulator_defect",
+     0.81
+    ]
+   ]
+  },
+  {
+   "image": "cplid_002.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.95
+    ],
+    [
+     "insulator_defect",
+     0.8
+    ]
+   ]
+  },
+  {
+   "image": "cplid_003.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.97
+    ],
+    [
+     "insulator_defect",
+     0.83
+    ]
+   ]
+  },
+  {
+   "image": "cplid_004.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.84
+    ],
+    [
+     "insulator_defect",
+     0.75
+    ]
+   ]
+  }
+ ]
+}

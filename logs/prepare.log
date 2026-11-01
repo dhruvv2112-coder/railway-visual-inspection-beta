@@ -1,0 +1,324 @@
+{"source": "CPLID github.com/InsulatorData/InsulatorDataSet", "licence": "undetermined (user: use for training)", "source_names": ["defect", "insulator"]}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Repo card metadata block was not found. Setting CardData to empty.
+Generating train split:   0%|          | 0/1794 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 1794/1794 [00:00<00:00, 22558.81 examples/s]
+Generating validation split:   0%|          | 0/77 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 77/77 [00:00<00:00, 12105.00 examples/s]
+Generating test split:   0%|          | 0/41 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 41/41 [00:00<00:00, 17305.67 examples/s]
+features docmhvr/powerline-components-and-faults {'image': Image(mode=None, decode=True), 'bboxes': List(List(Value('float32'))), 'labels': List(ClassLabel(names=['Broken Cable', 'Broken Insulator', 'Cable', 'Insulators', 'Tower', 'Vegetation']))}
+box format evidence {'boxes': 3142, 'valid_as_xyxy': 1.0, 'overrun_as_xywh': 0.739}
+box format docmhvr/powerline-components-and-faults {'normalised': False, 'xyxy': True}
+sample docmhvr/powerline-components-and-faults train (640, 640) [[289.9665832519531, 88.19859313964844, 435.8779602050781, 321.6927185058594]] [0]
+sample docmhvr/powerline-components-and-faults validation (640, 640) [[340.25, 53.75, 353.75, 150.25], [407.5, 57.5, 415.5, 139.5], [400.5, 227.75, 411.5, 297.25]] [3, 3, 3]
+sample docmhvr/powerline-components-and-faults test (640, 640) [[393.0, 409.25, 442.0, 431.75], [266.0, 341.0, 489.0, 640.0], [150.0, 0.0, 640.0, 640.0]] [1, 3, 4]
+{"source": "hf:docmhvr/powerline-components-and-faults", "licence": "MIT", "source_names": ["Broken Cable", "Broken Insulator", "Cable", "Insulators", "Tower", "Vegetation"], "bbox_column": "bboxes"}
+Downloading data:   0%|          | 0/162 [00:00<?, ?files/s]Downloading data:  10%|▉         | 16/162 [00:02<00:21,  6.85files/s]Downloading data:  20%|█▉        | 32/162 [00:03<00:15,  8.61files/s]Downloading data:  30%|██▉       | 48/162 [00:05<00:12,  9.23files/s]Downloading data:  40%|███▉      | 64/162 [00:06<00:10,  9.78files/s]Downloading data:  49%|████▉     | 80/162 [00:07<00:08, 10.11files/s]Downloading data:  59%|█████▉    | 96/162 [00:09<00:06, 10.30files/s]Downloading data:  69%|██████▉   | 112/162 [00:10<00:04, 10.31files/s]Downloading data:  79%|███████▉  | 128/162 [00:12<00:03, 10.45files/s]Downloading data:  89%|████████▉ | 144/162 [00:13<00:01, 10.54files/s]Downloading data:  99%|█████████▉| 160/162 [00:15<00:00, 10.55files/s]Downloading data: 100%|██████████| 162/162 [00:15<00:00, 10.61files/s]
+Downloading data:   0%|          | 0/41 [00:00<?, ?files/s]Downloading data:  39%|███▉      | 16/41 [00:01<00:02,  9.64files/s]Downloading data:  78%|███████▊  | 32/41 [00:03<00:00,  9.42files/s]Downloading data: 100%|██████████| 41/41 [00:04<00:00,  9.82files/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 162 examples [00:00, 32082.59 examples/s]
+Generating validation split: 0 examples [00:00, ? examples/s]Generating validation split: 41 examples [00:00, 21987.78 examples/s]
+features silera/broken-insulators-synthetic-detection {'image': Image(mode=None, decode=True), 'objects': {'bbox': List(List(Value('int64'))), 'category': List(Value('int64'))}}
+box format evidence {'boxes': 203, 'valid_as_xyxy': 0.0, 'overrun_as_xywh': 0.0}
+box format silera/broken-insulators-synthetic-detection {'normalised': False, 'xyxy': False}
+sample silera/broken-insulators-synthetic-detection train (640, 640) [[280, 513, 58, 46]] [1]
+sample silera/broken-insulators-synthetic-detection validation (640, 640) [[325, 232, 43, 88]] [1]
+{"source": "hf:silera/broken-insulators-synthetic-detection", "licence": "CC BY 4.0", "source_names": [], "bbox_column": "objects"}
+{"source": "roboflow railway catenary/panto sets", "skipped": "no ROBOFLOW_API_KEY"}
+hf_files EPDCL/pd-defect 2873 files {'vegetation_conductor/train': 300, 'pole_detection/train/images': 300, 'pole_detection/test/images': 294, 'pole_detection/valid/images': 293, 'vegetation_conductor/valid': 300, 'vegetation_conductor/examples': 3, 'pole_detection/examples': 1}
+epdcl pole_detection # Pole Detection Module - PD-Defect
+
+Collection, licensing, and citation are documented on the [main dataset card](../README.md).
+
+## TL;DR
+
+Object detection of distribution poles in full-frame smartphone images. The release contains 2,252 annotated images and 2,425 pole instances.
+
+## Task Definition
+
+Localize poles from top to base in full-frame field images, including scenes that contain more than one pole.
+
+## Label Definitions
+
+- **Pole:** a distribution pole annotated from top to base. The released class name is `Pole` (class 0).
+
+## Annotation Protocol
+
+Only structurally identifiable distribution poles are annotated. Telecommunication poles and other non-distribution vertical structures are not labeled. Bounding boxes run from pole top to base and follow the shaft tightly. Attached components such as crossarms and insulators are included when they overlap the visible pole extent; this differs from [Pole Lean Assessment](../pole_lean_assessment/README.md) object detection, where those fittings are excluded. When the base is only partially visible, annotators estimate the ground-contact location according to protocol. Samples that cannot be interpreted reliably are excluded.
+
+
+epdcl vegetation_conductor # Vegetation–Conductor Segmentation Module - PD-Defect
+
+Collection, licensing, and citation are documented on the [main dataset card](../README.md).
+
+## TL;DR
+
+Semantic segmentation of vegetation and conductors in distribution scenes. Annotations are COCO polygons (`1 = Conductor`, `2 = Vegetation`) that rasterize to per-class masks. The release contains 1,781 images (1,324 train (74.34%) / 457 validation (25.66%)) and has no test split. An image-level Risky / Safe Ground Truth file is provided for the validation split. Thin low-contrast conductors, occlusion, and severe class imbalance are present in the data.
+
+## Task Definition
+
+Segment vegetation and conductors at the pixel level.
+
+## Label Definitions
+
+- **Vegetation:** trees, branches, leaves, and other plant structure within the conductor corridor or its immediate vicinity relevant to clearance assessment (see Annotation Protocol).
+- **Conductor:** electrical conductors associated with distribution infrastructure
+- **Background:** all regions not covered by a Conductor or Vegetation polygon (implicit; not separately annotated)
+
+The masks define regions only. They do not encode distance or clearance risk. Risk labels are prov
+{"source": "hf:EPDCL/pd-defect/vegetation_conductor", "licence": "CC BY 4.0", "source_names": ["Conductor", "Vegetation"], "files_seen": 600}
+downloaded RailFOD23_v2.zip 6504.7 MB
+railfod23 jsons ['coco/New_an/instances_train2017.json', 'coco/New_an/instances_val2017.json', 'coco/New_an/train_val.json'] images 14615
+{"source": "figshare:RailFOD23 (24180738)", "licence": "CC BY 4.0", "source_names": ["niaocao", "piaofuwu", "qiqiu", "suliaodai"], "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"}
+downloaded vpmbgi.zip 71.2 MB
+{"source": "github:phd-benel/VPMBGI", "licence": "CC BY 4.0", "source_names": ["iso_broken_glass"], "files_seen": 1010}
+{"source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)", "licence": "CC BY 4.0", "source_names": ["Slippage", "corrosion", "crack"], "files_seen": 1249}
+{
+ "target_names": [
+  "insulator",
+  "insulator_defect",
+  "bird_nest",
+  "vegetation",
+  "mast",
+  "foreign_object",
+  "corrosion"
+ ],
+ "sources": [
+  {
+   "source": "CPLID github.com/InsulatorData/InsulatorDataSet",
+   "licence": "undetermined (user: use for training)",
+   "source_names": [
+    "defect",
+    "insulator"
+   ]
+  },
+  {
+   "source": "hf:docmhvr/powerline-components-and-faults",
+   "licence": "MIT",
+   "source_names": [
+    "Broken Cable",
+    "Broken Insulator",
+    "Cable",
+    "Insulators",
+    "Tower",
+    "Vegetation"
+   ],
+   "bbox_column": "bboxes"
+  },
+  {
+   "source": "hf:silera/broken-insulators-synthetic-detection",
+   "licence": "CC BY 4.0",
+   "source_names": [],
+   "bbox_column": "objects"
+  },
+  {
+   "source": "roboflow railway catenary/panto sets",
+   "skipped": "no ROBOFLOW_API_KEY"
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/pole_detection",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Pole"
+   ],
+   "files_seen": 887
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/vegetation_conductor",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Conductor",
+    "Vegetation"
+   ],
+   "files_seen": 600
+  },
+  {
+   "source": "figshare:RailFOD23 (24180738)",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "niaocao",
+    "piaofuwu",
+    "qiqiu",
+    "suliaodai"
+   ],
+   "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"
+  },
+  {
+   "source": "github:phd-benel/VPMBGI",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "iso_broken_glass"
+   ],
+   "files_seen": 1010
+  },
+  {
+   "source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Slippage",
+    "corrosion",
+    "crack"
+   ],
+   "files_seen": 1249
+  }
+ ],
+ "stats": {
+  "cplid": {
+   "images": {
+    "train": 300,
+    "val": 150,
+    "test": 136
+   },
+   "instances": {
+    "insulator": 875,
+    "insulator_defect": 248,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "powerline-co": {
+   "images": {
+    "train": 800,
+    "val": 77,
+    "test": 41
+   },
+   "instances": {
+    "insulator": 3473,
+    "insulator_defect": 607,
+    "bird_nest": 0,
+    "vegetation": 149,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "broken-insul": {
+   "images": {
+    "train": 162,
+    "val": 41,
+    "test": 0
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 203,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdclpole": {
+   "images": {
+    "train": 300,
+    "val": 150,
+    "test": 150
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 644,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdclvege": {
+   "images": {
+    "train": 300,
+    "val": 98,
+    "test": 96
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 1253,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "railfod": {
+   "images": {
+    "train": 300,
+    "val": 150,
+    "test": 150
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 393,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 1196,
+    "corrosion": 0
+   }
+  },
+  "vpmbgi": {
+   "images": {
+    "train": 300,
+    "val": 150,
+    "test": 150
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 695,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "corros": {
+   "images": {
+    "train": 300,
+    "val": 150,
+    "test": 105
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 423
+   }
+  }
+ }
+}

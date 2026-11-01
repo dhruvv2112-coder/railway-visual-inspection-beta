@@ -1,0 +1,80 @@
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /home/runner/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+  0%|          | 0.00/44.7M [00:00<?, ?B/s] 74%|███████▍  | 33.0M/44.7M [00:00<00:00, 346MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 345MB/s]
+{
+ "name": "ohe_anomaly",
+ "title": "Insulator anomaly branch (PatchCore-style, ResNet-18 features, insulator crops from all detector sources)",
+ "summary": "Memory bank from 400 normal training crops (31360 patches). Test: 245 normal, 54 defective crops.",
+ "results": [
+  {
+   "metric": "AUROC (test crops)",
+   "value": 0.6283446712018141
+  },
+  {
+   "metric": "Defective flagged at val-normal p95 threshold",
+   "value": 0.09259259259259259
+  },
+  {
+   "metric": "Normal flagged at the same threshold",
+   "value": 0.053061224489795916
+  },
+  {
+   "metric": "Threshold (anomaly distance)",
+   "value": 3.3174299001693726
+  }
+ ],
+ "notes": [
+  "Anomaly score is evidence of difference from the normal bank, not a defect class (HLD \u00a76.2).",
+  "CPLID 'defect' marks missing insulator caps on transmission lines; railway OHE insulators need their own bank.",
+  "railway_catenary_components: real railway cantilever parts (EBIST_cscuav), about 10 images per split; small-sample indicator, evaluation only (licence not stated)."
+ ],
+ "railway_catenary_components": [
+  {
+   "component": "casing_base",
+   "defect": "crack_cb",
+   "train_good": 10,
+   "test_good": 10,
+   "test_defect": 10,
+   "AUROC": 0.26999999999999996
+  },
+  {
+   "component": "connector_sleeve",
+   "defect": "crack_cs",
+   "train_good": 10,
+   "test_good": 10,
+   "test_defect": 10,
+   "AUROC": 0.06999999999999999
+  },
+  {
+   "component": "insulator",
+   "defect": "drop",
+   "train_good": 10,
+   "test_good": 10,
+   "test_defect": 10,
+   "AUROC": 0.15
+  },
+  {
+   "component": "locator_base",
+   "defect": "crack_lb",
+   "train_good": 10,
+   "test_good": 10,
+   "test_defect": 10,
+   "AUROC": 1.0
+  },
+  {
+   "component": "locator_tube_connector",
+   "defect": "crack_ltc",
+   "train_good": 10,
+   "test_good": 10,
+   "test_defect": 10,
+   "AUROC": 0.29000000000000004
+  },
+  {
+   "component": "sleeve_double_ear_crack",
+   "defect": "crack_sdr",
+   "train_good": 8,
+   "test_good": 10,
+   "test_defect": 10,
+   "AUROC": 0.68
+  }
+ ]
+}
