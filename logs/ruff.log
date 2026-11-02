@@ -1,1 +1,21 @@
-All checks passed!
+BLE001 Do not catch blind exception: `Exception`
+   --> app/ohe/api.py:176:12
+    |
+174 |                                      headers={"Content-Type": "application/json"})
+175 |         urllib.request.urlopen(req, timeout=5).read()
+176 |     except Exception as e:  # never block ingest on a notification
+    |            ^^^^^^^^^
+177 |         print("alert webhook failed:", e)
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+  --> app/ohe/auth.py:53:12
+   |
+51 |         data = json.loads(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4)))
+52 |         return data if data["exp"] > time.time() else None
+53 |     except Exception:
+   |            ^^^^^^^^^
+54 |         return None
+   |
+
+Found 2 errors.
