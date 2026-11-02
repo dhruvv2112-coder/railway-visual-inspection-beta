@@ -136,4 +136,8 @@
     <string name="ohe_sign_out">साइन आउट</string>
     <string name="ohe_signed_in">साइन इन: %1$s</string>
     <string name="prompt_square">मस्त के ठीक सामने खड़े होकर फोटो दोबारा लें।</string>
+    <string name="update_available">नया संस्करण उपलब्ध: %1$s</string>
+    <string name="update_install">डाउनलोड करके इंस्टॉल करें</string>
+    <string name="update_downloading">डाउनलोड हो रहा है…</string>
+    <string name="app_version">संस्करण %1$s</string>
 </resources>

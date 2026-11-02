@@ -15,7 +15,7 @@ RUN pip install "/srv/backend[ocr]" \
 COPY deploy/models/ /srv/models/
 WORKDIR /srv/backend
 ENV RVI_MODEL_DIR=/srv/models RVI_DATABASE_URL=sqlite:////data/rvi.db RVI_EVIDENCE_DIR=/data/evidence \
-    RVI_USERS_FILE=/data/users.yaml RVI_AUTH_MODE=token
+    RVI_USERS_FILE=/data/users.yaml RVI_AUTH_MODE=token RVI_APP_DIR=/data/app
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s CMD python -c "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/health')"
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]

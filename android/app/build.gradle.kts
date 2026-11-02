@@ -15,8 +15,9 @@ android {
         applicationId = "org.rvi.inspect.beta"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0-beta"
+        // CI sets RVI_VERSION_CODE (rises with every build) so a newer APK always installs over an older one
+        versionCode = (System.getenv("RVI_VERSION_CODE") ?: "1").toInt()
+        versionName = System.getenv("RVI_VERSION_NAME") ?: "0.2.0-dev"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8000/\"")
     }
@@ -28,7 +29,27 @@ android {
 
     sourceSets["main"].assets.srcDir("../../shared") // taxonomy.json shared with backend – single source of truth
 
+    signingConfigs {
+        // One fixed key for every Beta build: an update installs only if it is signed with the installed app's key.
+        // The key lives only in CI secrets (ANDROID_KEYSTORE_B64 / ANDROID_KEYSTORE_PASSWORD), never in the repository.
+        System.getenv("ANDROID_KEYSTORE_FILE")?.let { ks ->
+            create("beta") {
+                storeFile = file(ks)
+                storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ANDROID_KEY_ALIAS") ?: "rvi-beta"
+                keyPassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
+        create("beta") {
+            // what testers install: signed, not debuggable, same app id as debug so it updates in place
+            isDebuggable = false
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.findByName("beta") ?: signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

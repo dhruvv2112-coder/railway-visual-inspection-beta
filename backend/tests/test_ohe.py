@@ -276,3 +276,17 @@ def test_view_check_only_adds_a_retake_request(client, models):
         models.view = None
     assert a["view_check"]["flag"] is True and a["recapture_prompt"] == "Take the photo square-on to the mast"
     assert [x["state"] for x in a["assessments"]] == [x["state"] for x in base["assessments"]]   # assessment unchanged
+
+
+def test_app_update_publish_and_latest(client, tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "app_dir", tmp_path / "app")
+    assert client.get("/ohe/app/latest", headers=PATROL).status_code == 404
+    admin = {"X-Actor": "admin", "X-Role": "Admin"}
+    assert client.post("/ohe/app", files={"apk": ("a.apk", b"APK1", "application/octet-stream")},
+                       data={"version_code": "1012", "version_name": "0.2.1012"}, headers=PATROL).status_code == 403
+    r = client.post("/ohe/app", files={"apk": ("a.apk", b"APK1", "application/octet-stream")},
+                    data={"version_code": "1012", "version_name": "0.2.1012", "notes": "Sign-in\nUpdates"}, headers=admin)
+    assert r.status_code == 201
+    latest = client.get("/ohe/app/latest", headers=PATROL).json()
+    assert latest["version_code"] == 1012 and latest["notes"] == ["Sign-in", "Updates"]
+    assert client.get("/ohe/app/apk", headers=PATROL).content == b"APK1"

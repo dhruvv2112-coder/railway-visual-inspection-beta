@@ -76,6 +76,20 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
     }
     fun signOut() = viewModelScope.launch { repo.signOut(); signMsg.value = null }
 
+    /** Newer build on the server (null = up to date or not known). */
+    val update = MutableStateFlow<org.rvi.inspect.data.AppRelease?>(null)
+    val updating = MutableStateFlow(false)
+    fun checkUpdate() = viewModelScope.launch {
+        val r = repo.latestRelease()
+        update.value = r.takeIf { org.rvi.inspect.data.isNewer(org.rvi.inspect.BuildConfig.VERSION_CODE, it) }
+    }
+    fun installUpdate() = viewModelScope.launch {
+        val r = update.value ?: return@launch
+        val (url, token) = repo.serverAndToken()
+        updating.value = true
+        org.rvi.inspect.data.Updater(getApplication()).download(url, token, r) { updating.value = false }
+    }
+
     /** After CameraX saved the JPEG: hash it, check quality on the phone, attach a location fix, queue it. No
      *  classification and no confirmation: the server decides what the photo shows (HLD: no per-asset confirmation). */
     fun onCaptured(file: File) = viewModelScope.launch {

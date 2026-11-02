@@ -12,6 +12,8 @@ import org.rvi.inspect.data.OheCaptureEntity
 import org.rvi.inspect.data.OheSessionEntity
 import org.rvi.inspect.data.Prompt
 import org.rvi.inspect.data.parseUpload
+import org.rvi.inspect.data.AppRelease
+import org.rvi.inspect.data.isNewer
 import org.rvi.inspect.domain.Command
 import org.rvi.inspect.domain.CommandMatcher
 import org.rvi.inspect.ui.summaryFrom
@@ -69,5 +71,17 @@ class OheTest {
         assertEquals(Command.Capture, CommandMatcher.match("फोटो"))
         assertEquals(Command.EndPatrol, CommandMatcher.match("end patrol"))
         assertTrue(CommandMatcher.match("note insulator looks dirty") is Command.Note)
+    }
+
+    @Test fun updateOnlyWhenNewer() {
+        assertTrue(isNewer(1005, AppRelease(1006, "0.2.1006")))
+        assertFalse(isNewer(1006, AppRelease(1006, "0.2.1006")))
+        assertFalse(isNewer(1006, null))
+    }
+
+    @Test fun releaseManifestParses() {
+        val r = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }.decodeFromString(AppRelease.serializer(),
+            """{"version_code":1012,"version_name":"0.2.1012","notes":["Sign-in on home"],"sha256":"ab","size_bytes":123,"built_at":"x","extra":1}""")
+        assertEquals(1012, r.versionCode); assertEquals("Sign-in on home", r.notes[0])
     }
 }

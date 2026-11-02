@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     users_file: Path = Path("./users.yaml")
     # Optional web push for urgent findings (empty = alert feed only)
     alert_webhook: str = ""
+    # Phone app updates: newest build served at /ohe/app/latest + /ohe/app/apk from this folder. Optionally kept in sync
+    # with the GitHub pre-release that CI publishes (needs a read-only token for the private repository).
+    app_dir: Path = Path("./app_releases")
+    github_token: str = ""
+    app_release_repo: str = "dhruvv2112-coder/railway-visual-inspection-beta"
+    app_release_tag: str = "android-beta"
 
 
 settings = Settings()

@@ -100,7 +100,8 @@ abstract class Shots(private val lang: String) {
     }
 
     @Test fun s09_ohe_home() = shot("09_ohe_home") {
-        OheHomeScreen(OheHomeState("CP-0412", "SEC-DEMO-01", "https://rvi.example.in/", false, 0, true, "CP-0412 · Patrol"), {}, {}, {}, {}, {}, {}, null)
+        OheHomeScreen(OheHomeState("CP-0412", "SEC-DEMO-01", "https://rvi.example.in/", false, 0, true, "CP-0412 · Patrol",
+            "0.2.1012 (1012)", "0.2.1015", listOf(if (lang == "hi") "नंबर प्लेट पढ़ना बेहतर" else "Better number-plate reading", if (lang == "hi") "तेज़ अपलोड" else "Faster uploads")), {}, {}, {}, {}, {}, {}, null)
     }
 
     @Test fun s10_ohe_hud() = shot("10_ohe_patrol") {

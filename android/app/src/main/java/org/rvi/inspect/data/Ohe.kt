@@ -180,7 +180,9 @@ interface OheApi {
 
     companion object {
         /** With a token (from sign-in) every call carries it; the server then ignores the X-Actor/X-Role headers. */
-        fun create(baseUrl: String, token: String? = null): OheApi = Retrofit.Builder()
+        fun create(baseUrl: String, token: String? = null): OheApi = retrofit(baseUrl, token).create(OheApi::class.java)
+
+        fun retrofit(baseUrl: String, token: String? = null): Retrofit = Retrofit.Builder()
             .baseUrl(if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/")
             .client(OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS)
                 .addInterceptor { chain ->
@@ -189,7 +191,6 @@ interface OheApi {
                 }.build())
             .addConverterFactory(RviApi.json.asConverterFactory("application/json".toMediaType()))
             .build()
-            .create(OheApi::class.java)
     }
 }
 
@@ -233,6 +234,14 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
     }
 
     suspend fun signOut() { save("token", "") }
+
+    /** Latest published app build on this server, or null when none is published or the server is unreachable. */
+    suspend fun latestRelease(): AppRelease? = runCatching {
+        val s = settings()
+        OheApi.retrofit(baseUrl(), s.token).create(UpdateApi::class.java).latest()
+    }.getOrNull()
+
+    suspend fun serverAndToken(): Pair<String, String> = baseUrl() to settings().token
 
     suspend fun addCapture(c: OheCaptureEntity) { dao.insertCapture(c); schedule() }
     suspend fun addNote(sid: String, text: String) { dao.insertNote(OheNoteEntity(sessionId = sid, text = text)); schedule() }

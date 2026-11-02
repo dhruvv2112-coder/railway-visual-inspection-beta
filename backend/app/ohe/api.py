@@ -531,3 +531,74 @@ def media_image(mid: str, s: SessionDep, a: ActorDep):
 @router.get("/review", response_class=HTMLResponse, include_in_schema=False)
 def review_page():
     return (Path(__file__).parent / "static" / "review.html").read_text(encoding="utf-8")
+
+
+# ---- phone app updates ------------------------------------------------------------------------------------------------
+
+_app_sync = {"at": 0.0}
+
+
+def _sync_app_from_github() -> None:
+    """Pull latest.json and the APK of the CI pre-release into settings.app_dir (at most every 10 minutes)."""
+    import time
+    import urllib.request
+    if not settings.github_token or time.time() - _app_sync["at"] < 600:
+        return
+    _app_sync["at"] = time.time()
+    api = f"https://api.github.com/repos/{settings.app_release_repo}/releases/tags/{settings.app_release_tag}"
+    hdr = {"Authorization": f"Bearer {settings.github_token}", "Accept": "application/vnd.github+json", "User-Agent": "rvi-ohe"}
+    try:
+        rel = json.loads(urllib.request.urlopen(urllib.request.Request(api, headers=hdr), timeout=20).read())
+        assets = {a["name"]: a for a in rel.get("assets", [])}
+        if "latest.json" not in assets:
+            return
+        def get(a):
+            return urllib.request.urlopen(urllib.request.Request(a["url"], headers=hdr | {"Accept": "application/octet-stream"}),
+                                          timeout=300).read()
+        meta = json.loads(get(assets["latest.json"]))
+        d = settings.app_dir
+        d.mkdir(parents=True, exist_ok=True)
+        cur = json.loads((d / "latest.json").read_text()) if (d / "latest.json").exists() else {}
+        apk = next((a for n, a in assets.items() if n.endswith(".apk")), None)
+        if apk and meta.get("version_code", 0) > cur.get("version_code", 0):
+            data = get(apk)
+            if meta.get("sha256") and hashlib.sha256(data).hexdigest() != meta["sha256"]:
+                print("app sync: checksum mismatch, ignored")
+                return
+            (d / "app.apk").write_bytes(data)
+            (d / "latest.json").write_text(json.dumps(meta))
+    except (OSError, ValueError, KeyError) as e:
+        print("app sync failed:", e)
+
+
+@router.get("/app/latest")
+def app_latest(a: ActorDep):
+    _sync_app_from_github()
+    p = settings.app_dir / "latest.json"
+    if not p.exists() or not (settings.app_dir / "app.apk").exists():
+        raise HTTPException(404, "No app build published on this server")
+    return json.loads(p.read_text())
+
+
+@router.get("/app/apk")
+def app_apk(a: ActorDep):
+    f = settings.app_dir / "app.apk"
+    if not f.exists():
+        raise HTTPException(404, "No app build published on this server")
+    return FileResponse(f, media_type="application/vnd.android.package-archive", filename="rvi-ohe-patrol.apk")
+
+
+@router.post("/app", status_code=201)
+async def app_publish(a: ActorDep, apk: Annotated[UploadFile, File()], version_code: Annotated[int, Form()],
+                      version_name: Annotated[str, Form()], notes: Annotated[str, Form()] = ""):
+    """Publish a build by hand (servers without GitHub access). Admin only. Notes: one per line."""
+    if a["role"] != "Admin":
+        raise HTTPException(403, "Admin role required")
+    data = await apk.read()
+    d = settings.app_dir
+    d.mkdir(parents=True, exist_ok=True)
+    meta = {"version_code": version_code, "version_name": version_name, "notes": [x for x in notes.splitlines() if x.strip()],
+            "sha256": hashlib.sha256(data).hexdigest(), "size_bytes": len(data), "built_at": now().isoformat()}
+    (d / "app.apk").write_bytes(data)
+    (d / "latest.json").write_text(json.dumps(meta))
+    return meta

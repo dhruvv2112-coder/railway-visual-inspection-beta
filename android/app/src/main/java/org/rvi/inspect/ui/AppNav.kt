@@ -118,12 +118,16 @@ fun AppNav(vm: PatrolViewModel = viewModel(), ovm: OheViewModel = viewModel()) {
             var server by remember(s?.serverUrl) { mutableStateOf(s?.serverUrl ?: "") }
             var inspector by remember(s?.inspectorId) { mutableStateOf(s?.inspectorId ?: "") }
             val signMsg by ovm.signMsg.collectAsState()
-            OheHomeScreen(OheHomeState(inspector, territory, server, active != null, opending, !s?.token.isNullOrBlank(), signMsg),
+            val upd by ovm.update.collectAsState()
+            val updating by ovm.updating.collectAsState()
+            LaunchedEffect(s?.token, s?.serverUrl) { ovm.checkUpdate() }
+            OheHomeScreen(OheHomeState(inspector, territory, server, active != null, opending, !s?.token.isNullOrBlank(), signMsg,
+                "${org.rvi.inspect.BuildConfig.VERSION_NAME} (${org.rvi.inspect.BuildConfig.VERSION_CODE})", upd?.versionName, upd?.notes.orEmpty(), updating),
                 onTerritory = { territory = it }, onServer = { server = it; ovm.setServer(it) }, onInspector = { inspector = it; ovm.setInspector(it) },
                 onStart = { ovm.start(territory); nav.navigate("ohe_hud") }, onResume = { nav.navigate("ohe_hud") },
                 onSettings = { nav.navigate("settings") },
                 onLastReport = if (active == null && latest?.endedAt != null) ({ nav.navigate("ohe_end") }) else null,
-                onSignIn = { pin -> ovm.signIn(inspector, pin) }, onSignOut = { ovm.signOut() })
+                onSignIn = { pin -> ovm.signIn(inspector, pin) }, onSignOut = { ovm.signOut() }, onUpdate = { ovm.installUpdate() })
         }
         composable("ohe_hud") {
             val caps by ovm.captures.collectAsState()

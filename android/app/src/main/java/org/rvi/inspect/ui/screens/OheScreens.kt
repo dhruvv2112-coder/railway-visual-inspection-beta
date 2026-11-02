@@ -70,12 +70,14 @@ fun promptRes(p: Prompt): Int = when (p) {
 }
 
 data class OheHomeState(val inspector: String, val territory: String, val server: String, val active: Boolean, val pending: Int,
-                        val signedIn: Boolean = false, val signMsg: String? = null)
+                        val signedIn: Boolean = false, val signMsg: String? = null,
+                        val appVersion: String = "", val updateVersion: String? = null, val updateNotes: List<String> = emptyList(),
+                        val updating: Boolean = false)
 
 @Composable
 fun OheHomeScreen(st: OheHomeState, onTerritory: (String) -> Unit, onServer: (String) -> Unit, onInspector: (String) -> Unit,
                   onStart: () -> Unit, onResume: () -> Unit, onSettings: () -> Unit, onLastReport: (() -> Unit)?,
-                  onSignIn: (String) -> Unit = {}, onSignOut: () -> Unit = {}) {
+                  onSignIn: (String) -> Unit = {}, onSignOut: () -> Unit = {}, onUpdate: () -> Unit = {}) {
     AmbientBackground {
         Column(OPad.fillMaxSize().verticalScroll(rememberScrollState())) {
             Spacer(Modifier.height(20.dp))
@@ -87,6 +89,16 @@ fun OheHomeScreen(st: OheHomeState, onTerritory: (String) -> Unit, onServer: (St
                 GlassRoundButton(Icons.Outlined.Settings, stringResource(R.string.settings), onSettings, size = 48.dp)
             }
             Spacer(Modifier.height(20.dp))
+            st.updateVersion?.let { v ->
+                GlassCard(Modifier.fillMaxWidth(), strong = true) {
+                    Text(stringResource(R.string.update_available, v), style = MaterialTheme.typography.titleMedium, color = Grey.White)
+                    st.updateNotes.take(5).forEach { n -> Text("· $n", style = MaterialTheme.typography.bodyMedium, color = Grey.G200) }
+                    Spacer(Modifier.height(10.dp))
+                    PrimaryButton(if (st.updating) stringResource(R.string.update_downloading) else stringResource(R.string.update_install),
+                        onUpdate, Modifier.fillMaxWidth(), enabled = !st.updating)
+                }
+                Spacer(Modifier.height(16.dp))
+            }
             GlassCard(Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.ohe_how), style = MaterialTheme.typography.bodyLarge, color = Grey.G200)
             }
@@ -129,6 +141,9 @@ fun OheHomeScreen(st: OheHomeState, onTerritory: (String) -> Unit, onServer: (St
                 Spacer(Modifier.height(10.dp))
                 GhostButton(stringResource(R.string.ohe_last_patrol), onLastReport, Modifier.fillMaxWidth())
             }
+            Spacer(Modifier.height(12.dp))
+            if (st.appVersion.isNotBlank()) Text(stringResource(R.string.app_version, st.appVersion), style = MaterialTheme.typography.labelSmall,
+                color = Grey.G500, modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(Modifier.height(16.dp))
         }
     }

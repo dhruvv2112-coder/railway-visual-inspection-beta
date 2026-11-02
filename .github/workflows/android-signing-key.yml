@@ -1,0 +1,25 @@
+name: android-signing-key
+# Run ONCE. Creates the Beta signing key inside GitHub and offers it as a private download that expires in 1 day.
+# Then add two repository secrets (Settings > Secrets and variables > Actions):
+#   ANDROID_KEYSTORE_B64      = contents of ANDROID_KEYSTORE_B64.txt
+#   ANDROID_KEYSTORE_PASSWORD = contents of ANDROID_KEYSTORE_PASSWORD.txt
+# Keep the .jks file somewhere safe: every future update must be signed with it.
+on: workflow_dispatch
+permissions: {contents: read}
+jobs:
+  keygen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "17"}
+      - name: Generate key
+        run: |
+          mkdir out && cd out
+          PW=$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)
+          keytool -genkeypair -keystore rvi-beta.jks -storetype PKCS12 -alias rvi-beta -keyalg RSA -keysize 3072 \
+            -validity 10950 -storepass "$PW" -keypass "$PW" -dname "CN=RVI OHE Patrol Beta, O=Railway Visual Inspection, C=IN"
+          base64 -w0 rvi-beta.jks > ANDROID_KEYSTORE_B64.txt
+          printf "%s" "$PW" > ANDROID_KEYSTORE_PASSWORD.txt
+          keytool -list -keystore rvi-beta.jks -storepass "$PW" | grep "SHA-256" > FINGERPRINT.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: android-signing-key, path: out/, retention-days: 1}
