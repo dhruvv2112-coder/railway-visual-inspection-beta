@@ -12,10 +12,10 @@ Daemon will be stopped at the end of the build
 > Task :app:generateDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:generateDebugLocaleConfig
-> Task :app:extractDeepLinksDebug
 > Task :app:packageDebugResources
-> Task :app:parseDebugLocalResources
+> Task :app:extractDeepLinksDebug
 > Task :app:mergeDebugResources
+> Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
 > Task :app:javaPreCompileDebug
@@ -23,57 +23,61 @@ Daemon will be stopped at the end of the build
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :app:mergeDebugAssets
+> Task :app:processDebugManifestForPackage
 > Task :app:desugarDebugFileDependencies
 > Task :app:compressDebugAssets
 > Task :app:mergeDebugJniLibFolders
-> Task :app:processDebugManifestForPackage
 > Task :app:checkDebugDuplicateClasses
-> Task :app:mergeLibDexDebug
 > Task :app:mergeDebugNativeLibs
+> Task :app:mergeLibDexDebug
 > Task :app:processDebugResources
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
+
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest
 > Task :app:packageDebugUnitTestForUnitTest
-
-> Task :app:stripDebugDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
-
 > Task :app:preDebugAndroidTestBuild SKIPPED
 > Task :app:generateDebugAndroidTestResValues
 > Task :app:generateDebugUnitTestConfig
 > Task :app:extractProguardFiles
 > Task :app:kspDebugKotlin
 > Task :app:mergeExtDexDebug
+> Task :app:compileDebugKotlin
+> Task :app:compileDebugJavaWithJavac
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:testDebugUnitTest
+> Task :app:finalizeTestRoborazziDebug
+> Task :app:recordRoborazziDebug
 
-> Task :app:compileDebugKotlin FAILED
-e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:100:29 Type 'androidx.compose.runtime.MutableState<kotlin.String>' has no method 'setValue(Nothing?, KMutableProperty0<*>, ERROR CLASS: Ambiguity: getValue, [kotlin/getValue, kotlin/getValue, kotlin/getValue, kotlin/collections/getValue, kotlin/collections/getValue, kotlin/collections/getValue])', so it cannot serve as a delegate for var (read-write property).
-e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:100:29 Property delegate must have a 'getValue(Nothing?, KMutableProperty0<*>)' method. None of the following functions is applicable:
-fun <T> Lazy<T>.getValue(thisRef: Any?, property: KProperty<*>): T
-fun <V> KProperty0<V>.getValue(thisRef: Any?, property: KProperty<*>): V
-fun <T, V> KProperty1<T, V>.getValue(thisRef: T, property: KProperty<*>): V
-fun <K, V> Map<K, V>.getValue(key: K): V
-fun <V, V1 : V> Map<in String, V>.getValue(thisRef: Any?, property: KProperty<*>): V1
-fun <V, V1 : V> MutableMap<in String, out V>.getValue(thisRef: Any?, property: KProperty<*>): V1
-e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:101:52 Unresolved reference 'it'.
-e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:101:123 @Composable invocations can only happen from the context of a @Composable function
-e: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:101:128 @Composable invocations can only happen from the context of a @Composable function
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793650404980.json
+> Task :app:lintReportDebug
+Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
-FAILURE: Build failed with an exception.
+> Task :app:lintDebug
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793650532792.json
 
-* What went wrong:
-Execution failed for task ':app:compileDebugKotlin'.
-> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
-   > Compilation error. See log for more details
-
-* Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights.
-> Get more help at https://help.gradle.org.
-
-BUILD FAILED in 43s
-37 actionable tasks: 37 executed
+BUILD SUCCESSFUL in 2m 6s
+60 actionable tasks: 60 executed
