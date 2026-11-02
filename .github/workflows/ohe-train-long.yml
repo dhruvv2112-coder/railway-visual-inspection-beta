@@ -1,0 +1,248 @@
+name: ohe-train-long
+# Full-data OHE detector training on GitHub-hosted CPU runners, split into chained jobs that each train for a time
+# budget, save a resumable checkpoint and hand over (each job is limited to 6 h). Dataset + checkpoint travel between
+# jobs as the artifact 'state'. Results: branch ci-ohe-train-long.
+on:
+  workflow_dispatch:
+    inputs:
+      epochs: {description: "Detector epochs", default: "40"}
+      model: {description: "Model", default: "yolo11n.pt"}
+      imgsz: {description: "Image size", default: "640"}
+      cap: {description: "Max train images per source", default: "3000"}
+      evalcap: {description: "Max val/test images per source", default: "400"}
+      budget: {description: "Training minutes per job", default: "280"}
+concurrency: {group: ohe-train-long, cancel-in-progress: false}
+permissions:
+  contents: write
+env:
+  OHE_DATA: ${{ github.workspace }}/.cache/ohe
+  RVI_REPORTS: ${{ github.workspace }}/reports
+  PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
+  HF_HUB_DISABLE_PROGRESS_BARS: "1"
+  OHE_EPOCHS: ${{ inputs.epochs }}
+  OHE_MODEL: ${{ inputs.model }}
+  OHE_IMGSZ: ${{ inputs.imgsz }}
+  OHE_TIME_BUDGET_MIN: ${{ inputs.budget }}
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - name: Prepare full dataset
+        working-directory: ml/ohe
+        env:
+          OHE_CAP_PER_SOURCE: ${{ inputs.cap }}
+          OHE_EVAL_CAP_PER_SOURCE: ${{ inputs.evalcap }}
+          ROBOFLOW_API_KEY: ${{ secrets.ROBOFLOW_API_KEY }}
+        run: |
+          mkdir -p ../../logs ../../reports
+          python prepare_data.py 2>&1 | tee ../../logs/prepare.log
+          rm -f "$OHE_DATA/RailFOD23_v2.zip"; du -sh "$OHE_DATA/ohe_yolo"
+      - uses: actions/upload-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train1:
+    needs: [prepare]
+    if: success()
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 1
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "0"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_1.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train2:
+    needs: [train1]
+    if: needs.train1.outputs.paused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 2
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "1"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_2.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train3:
+    needs: [train2]
+    if: needs.train2.outputs.paused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 3
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "1"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_3.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train4:
+    needs: [train3]
+    if: needs.train3.outputs.paused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 4
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "1"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_4.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train5:
+    needs: [train4]
+    if: needs.train4.outputs.paused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 5
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "1"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_5.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train6:
+    needs: [train5]
+    if: needs.train5.outputs.paused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 6
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "1"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_6.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  train7:
+    needs: [train6]
+    if: needs.train6.outputs.paused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    outputs:
+      paused: ${{ steps.t.outputs.paused }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - id: t
+        name: Train segment 7
+        working-directory: ml/ohe
+        env: {OHE_RESUME: "1"}
+        run: |
+          mkdir -p ../../logs ../../reports; ls "$OHE_DATA/ohe_yolo" | head
+          python train_detector.py 2>&1 | tee ../../logs/detector_7.log
+          if [ -f "$OHE_DATA/ohe_yolo/runs/det/PAUSED" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: state, path: "${{ github.workspace }}/.cache/ohe/ohe_yolo\n${{ github.workspace }}/reports\n${{ github.workspace }}/logs", compression-level: 0, retention-days: 5, overwrite: true, include-hidden-files: true}
+  publish:
+    needs: [prepare, train1, train2, train3, train4, train5, train6, train7]
+    if: always() && needs.prepare.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: ml/ohe/requirements.txt}
+      - run: pip install -r ml/ohe/requirements.txt fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: "${{ github.workspace }}"}
+      - name: Anomaly branch and backend ONNX check
+        working-directory: ml/ohe
+        run: |
+          python anomaly.py 2>&1 | tee ../../logs/anomaly.log || true
+          [ -f ../../reports/ohe_detector.onnx ] && python verify_onnx.py ../../reports "$OHE_DATA/ohe_yolo" 2>&1 | tee ../../logs/verify_onnx.log || echo "detector not finished"
+      - name: Publish to branch ci-ohe-train-long
+        run: |
+          mkdir -p /tmp/pub && cp -r logs reports /tmp/pub/ 2>/dev/null || true
+          cp .cache/ohe/ohe_yolo/manifest.json .cache/ohe/ohe_yolo/runs/det/progress.json .cache/ohe/ohe_yolo/runs/det/results.csv /tmp/pub/reports/ 2>/dev/null || true
+          cd /tmp/pub && git init -q -b ci-ohe-train-long
+          echo "${{ github.sha }} $(cat reports/progress.json 2>/dev/null)" > STATUS
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "results ${{ github.sha }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-ohe-train-long

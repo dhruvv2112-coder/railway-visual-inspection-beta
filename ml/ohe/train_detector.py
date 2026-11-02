@@ -20,7 +20,11 @@ MODEL = os.environ.get("OHE_MODEL", "yolo11n.pt")
 EPOCHS = int(os.environ.get("OHE_EPOCHS", "25"))
 IMGSZ = int(os.environ.get("OHE_IMGSZ", "640"))
 DEVICE = os.environ.get("OHE_DEVICE", "cpu")
-BATCH = float(os.environ.get("OHE_BATCH", "16"))  # GPU: -1 = auto-size to ~60% of VRAM
+BATCH = float(os.environ.get("OHE_BATCH", "16"))
+# Segmented training for 6-hour CI jobs: stop cleanly after this many minutes and resume in the next job
+BUDGET_MIN = float(os.environ.get("OHE_TIME_BUDGET_MIN", "0"))
+RUN = DATA / "runs" / "det"
+RESUME = RUN / "weights" / "resume.pt"  # copy of last.pt WITH optimizer state (final_eval strips last.pt)  # GPU: -1 = auto-size to ~60% of VRAM
 
 
 def main():
@@ -31,10 +35,41 @@ def main():
         (DATA / "data.yaml").write_text(yaml.safe_dump(cfg))
     names = cfg["names"]
     t = time.perf_counter()
-    m = YOLO(MODEL)
-    m.train(data=str(DATA / "data.yaml"), epochs=EPOCHS, imgsz=IMGSZ, device=DEVICE, batch=int(BATCH) if BATCH >= 1 or BATCH == -1 else BATCH,
-            workers=2, seed=0, deterministic=True, plots=False, verbose=False, project=str(DATA / "runs"), name="det", exist_ok=True)
+    state = {"paused": False, "epoch": None}
+
+    def keep_resume(tr):
+        if tr.last.exists():
+            shutil.copy(tr.last, RESUME)
+
+    def budget(tr):
+        if state["paused"] or not BUDGET_MIN or tr.epoch + 1 >= tr.epochs:
+            return
+        if (time.perf_counter() - t) / 60 > BUDGET_MIN:
+            tr.stop, state["paused"], state["epoch"] = True, True, tr.epoch + 1
+
+    if os.environ.get("OHE_RESUME") == "1" and RESUME.exists():
+        m = YOLO(str(RESUME))
+        kw = {"resume": True}
+        print("resuming from", RESUME, flush=True)
+    else:
+        m = YOLO(MODEL)
+        kw = dict(data=str(DATA / "data.yaml"), epochs=EPOCHS, imgsz=IMGSZ, device=DEVICE,
+                  batch=int(BATCH) if BATCH >= 1 or BATCH == -1 else BATCH, workers=2, seed=0, deterministic=True,
+                  plots=False, verbose=False, project=str(DATA / "runs"), name="det", exist_ok=True)
+    m.add_callback("on_model_save", keep_resume)
+    m.add_callback("on_fit_epoch_end", budget)
+    m.train(**kw)
     minutes = (time.perf_counter() - t) / 60
+    prog = RUN / "progress.json"
+    done_before = json.loads(prog.read_text())["minutes"] if prog.exists() else 0
+    prog.write_text(json.dumps({"epochs_done": state["epoch"], "epochs": EPOCHS, "paused": state["paused"],
+                                "minutes": done_before + minutes}))
+    if state["paused"]:
+        print(f"PAUSED after epoch {state['epoch']} of {EPOCHS}; resume in the next job", flush=True)
+        (RUN / "PAUSED").write_text(str(state["epoch"]))
+        return
+    (RUN / "PAUSED").unlink(missing_ok=True)
+    minutes += done_before
     best = YOLO(str(DATA / "runs" / "det" / "weights" / "best.pt"))
     r = best.val(data=str(DATA / "data.yaml"), split="test", imgsz=IMGSZ, device=DEVICE, plots=False, verbose=False)
     rows = []

@@ -78,6 +78,26 @@ def split_for(key: str) -> str:
     return "train" if h < 70 else "val" if h < 85 else "test"
 
 
+MAX_SIDE = int(os.environ.get("OHE_MAX_SIDE", "1280"))  # store large photos downscaled (training is at 640-800 px)
+
+
+def _shrink(b: bytes) -> bytes:
+    """Downscale images whose long side exceeds MAX_SIDE. EXIF orientation is applied first, matching how the
+    trainer (OpenCV) reads the original, so normalised labels stay valid."""
+    from PIL import Image, ImageOps
+    try:
+        im = Image.open(io.BytesIO(b))
+        if max(im.size) <= MAX_SIDE:
+            return b
+        im = ImageOps.exif_transpose(im).convert("RGB")
+        im.thumbnail((MAX_SIDE, MAX_SIDE))
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=90)
+        return buf.getvalue()
+    except Exception:
+        return b
+
+
 class Writer:
     def __init__(self):
         self.stats = {}
@@ -88,7 +108,7 @@ class Writer:
             return
         for d in ("images", "labels"):
             (OUT / split / d).mkdir(parents=True, exist_ok=True)
-        (OUT / split / "images" / f"{src}_{name}.jpg").write_bytes(img_bytes)
+        (OUT / split / "images" / f"{src}_{name}.jpg").write_bytes(_shrink(img_bytes))
         lines = []
         for t, cx, cy, w, h in boxes:
             if w > 0 and h > 0:
