@@ -50,7 +50,7 @@ def verify(token: str) -> dict | None:
             return None
         data = json.loads(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4)))
         return data if data["exp"] > time.time() else None
-    except Exception:
+    except (ValueError, KeyError, TypeError):  # malformed token, bad base64 or JSON
         return None
 
 

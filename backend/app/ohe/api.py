@@ -173,7 +173,7 @@ def _push_alert(payload: dict) -> None:
         req = urllib.request.Request(settings.alert_webhook, data=json.dumps(payload, default=str).encode(),
                                      headers={"Content-Type": "application/json"})
         urllib.request.urlopen(req, timeout=5).read()
-    except Exception as e:  # never block ingest on a notification
+    except (OSError, ValueError) as e:  # never block ingest on a notification
         print("alert webhook failed:", e)
 
 
