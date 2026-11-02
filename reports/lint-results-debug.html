@@ -179,7 +179,7 @@ document.getElementById(id).style.display = 'none';
     <div class="mdl-layout__header-row">
       <span class="mdl-layout-title">Lint Report: 74 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Mon Nov 02 20:46:33 UTC 2026 by AGP (8.7.3)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Mon Nov 02 22:57:54 UTC 2026 by AGP (8.7.3)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -319,13 +319,13 @@ Dismiss</button>            </div>
 <div class="issue">
 <div class="warningslist">
 <span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:17</span>: <span class="message">Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the <code>android.os.Build.VERSION_CODES</code> javadoc for details.</span><br /><pre class="errorlines">
-<span class="lineno">  14 </span>    defaultConfig {
-<span class="lineno">  15 </span>        applicationId = "org.rvi.inspect.beta"
-<span class="lineno">  16 </span>        minSdk = 26
-<span class="caretline"><span class="lineno">  17 </span>        <span class="warning">targetSdk = 35</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  18 </span>        versionCode = 1
-<span class="lineno">  19 </span>        versionName = "0.1.0-beta"
-<span class="lineno">  20 </span>        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+<span class="lineno">  14 </span>  defaultConfig {
+<span class="lineno">  15 </span>      applicationId = "org.rvi.inspect.beta"
+<span class="lineno">  16 </span>      minSdk = 26
+<span class="caretline"><span class="lineno">  17 </span>      <span class="warning">targetSdk = 35</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  18 </span>      // CI sets RVI_VERSION_CODE (rises with every build) so a newer APK always installs over an older one
+<span class="lineno">  19 </span>      versionCode = (System.getenv("RVI_VERSION_CODE") ?: "1").toInt()
+<span class="lineno">  20 </span>      versionName = System.getenv("RVI_VERSION_NAME") ?: "0.2.0-dev"
 </pre>
 
 </div>
@@ -1116,14 +1116,14 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/AndroidManifest.xml">../../src/main/AndroidManifest.xml</a>:20</span>: <span class="message">The attribute <code>android:allowBackup</code> is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute <code>android:dataExtractionRules</code> specifying an <code>@xml</code> resource which configures cloud backups and device transfers on Android 12 and higher.</span><br /><pre class="errorlines">
-<span class="lineno"> 17 </span>
-<span class="lineno"> 18 </span>    <span class="tag">&lt;application</span><span class="attribute">
-</span><span class="lineno"> 19 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">name</span>=<span class="value">".RviApp"</span>
-<span class="caretline"><span class="lineno"> 20 </span>        <span class="prefix">android:</span><span class="attribute">allowBackup</span>=<span class="value">"</span><span class="warning"><span class="value">false</span></span><span class="value">"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 21 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@mipmap/ic_launcher"</span>
-<span class="lineno"> 22 </span>        <span class="prefix">android:</span><span class="attribute">label</span>=<span class="value">"@string/app_name"</span>
-<span class="lineno"> 23 </span>        <span class="prefix">android:</span><span class="attribute">supportsRtl</span>=<span class="value">"true"</span></pre>
+<span class="location"><a href="../../src/main/AndroidManifest.xml">../../src/main/AndroidManifest.xml</a>:22</span>: <span class="message">The attribute <code>android:allowBackup</code> is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute <code>android:dataExtractionRules</code> specifying an <code>@xml</code> resource which configures cloud backups and device transfers on Android 12 and higher.</span><br /><pre class="errorlines">
+<span class="lineno"> 19 </span>
+<span class="lineno"> 20 </span>    <span class="tag">&lt;application</span><span class="attribute">
+</span><span class="lineno"> 21 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">name</span>=<span class="value">".RviApp"</span>
+<span class="caretline"><span class="lineno"> 22 </span>        <span class="prefix">android:</span><span class="attribute">allowBackup</span>=<span class="value">"</span><span class="warning"><span class="value">false</span></span><span class="value">"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 23 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@mipmap/ic_launcher"</span>
+<span class="lineno"> 24 </span>        <span class="prefix">android:</span><span class="attribute">label</span>=<span class="value">"@string/app_name"</span>
+<span class="lineno"> 25 </span>        <span class="prefix">android:</span><span class="attribute">supportsRtl</span>=<span class="value">"true"</span></pre>
 
 </div>
 <div class="metadata"><div class="explanation" id="explanationDataExtractionRules" style="display: none;">

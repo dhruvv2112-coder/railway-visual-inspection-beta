@@ -283,7 +283,7 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
 
    https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
 
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/AndroidManifest.xml:20: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/AndroidManifest.xml:22: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
         android:allowBackup="false"
                              ~~~~~
 
