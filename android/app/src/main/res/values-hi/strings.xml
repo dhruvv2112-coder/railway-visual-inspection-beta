@@ -131,4 +131,8 @@
     <string name="prompt_blur">फोटो धुंधली है। स्थिर रहकर दोबारा लें।</string>
     <string name="prompt_dark">फोटो बहुत अंधेरी है। रोशनी पीछे रखकर दोबारा लें।</string>
     <string name="prompt_bright">फोटो बहुत चमकीली है। सूरज की ओर पीठ करके दोबारा लें।</string>
+    <string name="ohe_pin">पिन</string>
+    <string name="ohe_sign_in">साइन इन</string>
+    <string name="ohe_sign_out">साइन आउट</string>
+    <string name="ohe_signed_in">साइन इन: %1$s</string>
 </resources>

@@ -61,11 +61,13 @@ fun promptRes(p: Prompt): Int = when (p) {
     Prompt.BRIGHT -> R.string.prompt_bright
 }
 
-data class OheHomeState(val inspector: String, val territory: String, val server: String, val active: Boolean, val pending: Int)
+data class OheHomeState(val inspector: String, val territory: String, val server: String, val active: Boolean, val pending: Int,
+                        val signedIn: Boolean = false, val signMsg: String? = null)
 
 @Composable
 fun OheHomeScreen(st: OheHomeState, onTerritory: (String) -> Unit, onServer: (String) -> Unit, onInspector: (String) -> Unit,
-                  onStart: () -> Unit, onResume: () -> Unit, onSettings: () -> Unit, onLastReport: (() -> Unit)?) {
+                  onStart: () -> Unit, onResume: () -> Unit, onSettings: () -> Unit, onLastReport: (() -> Unit)?,
+                  onSignIn: (String) -> Unit = {}, onSignOut: () -> Unit = {}) {
     AmbientBackground {
         Column(OPad.fillMaxSize().verticalScroll(rememberScrollState())) {
             Spacer(Modifier.height(20.dp))
@@ -87,6 +89,22 @@ fun OheHomeScreen(st: OheHomeState, onTerritory: (String) -> Unit, onServer: (St
                 Field(stringResource(R.string.ohe_section), st.territory, onTerritory)
                 Spacer(Modifier.height(10.dp))
                 Field(stringResource(R.string.ohe_server), st.server, onServer)
+                Spacer(Modifier.height(10.dp))
+                if (st.signedIn) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.ohe_signed_in, st.signMsg ?: st.inspector), style = MaterialTheme.typography.labelMedium,
+                            color = Grey.G200, modifier = Modifier.weight(1f))
+                        GhostButton(stringResource(R.string.ohe_sign_out), onSignOut)
+                    }
+                } else {
+                    var pin by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf("") }
+                    OutlinedTextField(pin, { pin = it.filter(Char::isDigit).take(8) }, Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.ohe_pin)) },
+                        singleLine = true, visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.NumberPassword))
+                    Spacer(Modifier.height(8.dp))
+                    GhostButton(stringResource(R.string.ohe_sign_in), { onSignIn(pin) }, Modifier.fillMaxWidth())
+                    st.signMsg?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = Grey.G300) }
+                }
             }
             Spacer(Modifier.height(16.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {

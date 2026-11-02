@@ -117,11 +117,13 @@ fun AppNav(vm: PatrolViewModel = viewModel(), ovm: OheViewModel = viewModel()) {
             var territory by remember { mutableStateOf("SEC-DEMO-01") }
             var server by remember(s?.serverUrl) { mutableStateOf(s?.serverUrl ?: "") }
             var inspector by remember(s?.inspectorId) { mutableStateOf(s?.inspectorId ?: "") }
-            OheHomeScreen(OheHomeState(inspector, territory, server, active != null, opending),
+            val signMsg by ovm.signMsg.collectAsState()
+            OheHomeScreen(OheHomeState(inspector, territory, server, active != null, opending, !s?.token.isNullOrBlank(), signMsg),
                 onTerritory = { territory = it }, onServer = { server = it; ovm.setServer(it) }, onInspector = { inspector = it; ovm.setInspector(it) },
                 onStart = { ovm.start(territory); nav.navigate("ohe_hud") }, onResume = { nav.navigate("ohe_hud") },
                 onSettings = { nav.navigate("settings") },
-                onLastReport = if (active == null && latest?.endedAt != null) ({ nav.navigate("ohe_end") }) else null)
+                onLastReport = if (active == null && latest?.endedAt != null) ({ nav.navigate("ohe_end") }) else null,
+                onSignIn = { pin -> ovm.signIn(inspector, pin) }, onSignOut = { ovm.signOut() })
         }
         composable("ohe_hud") {
             val caps by ovm.captures.collectAsState()

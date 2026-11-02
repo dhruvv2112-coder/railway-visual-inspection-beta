@@ -145,9 +145,14 @@ object Hashing {
 @Serializable data class OheSessionIn(val territory: String, @SerialName("expected_assets") val expectedAssets: List<String>? = null)
 @Serializable data class OheIdOut(val id: String)
 @Serializable data class OheNoteIn(val text: String)
+@Serializable data class OheLoginIn(val id: String, val pin: String)
+@Serializable data class OheLoginOut(val token: String, val id: String, val role: String, val name: String = "")
 @Serializable data class OheEndOut(@SerialName("report_id") val reportId: String, val revision: Int, val sha256: String, val summary: JsonObject)
 
 interface OheApi {
+    @POST("ohe/auth/login")
+    suspend fun login(@Body body: OheLoginIn): OheLoginOut
+
     @POST("ohe/sessions")
     suspend fun start(@Body body: OheSessionIn, @Header("X-Actor") actor: String, @Header("X-Role") role: String): OheIdOut
 
@@ -173,9 +178,14 @@ interface OheApi {
     suspend fun end(@Path("sid") sid: String, @Header("X-Actor") actor: String, @Header("X-Role") role: String): OheEndOut
 
     companion object {
-        fun create(baseUrl: String): OheApi = Retrofit.Builder()
+        /** With a token (from sign-in) every call carries it; the server then ignores the X-Actor/X-Role headers. */
+        fun create(baseUrl: String, token: String? = null): OheApi = Retrofit.Builder()
             .baseUrl(if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/")
-            .client(OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS).build())
+            .client(OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS)
+                .addInterceptor { chain ->
+                    val req = chain.request()
+                    chain.proceed(if (token.isNullOrBlank()) req else req.newBuilder().header("Authorization", "Bearer $token").build())
+                }.build())
             .addConverterFactory(RviApi.json.asConverterFactory("application/json".toMediaType()))
             .build()
             .create(OheApi::class.java)
@@ -195,7 +205,7 @@ fun parseUpload(body: JsonObject): UploadResult {
 }
 
 class OheRepository(private val context: Context, private val db: RviDatabase, private val settings: suspend () -> UserSettings,
-                    private val baseUrl: suspend () -> String) {
+                    private val baseUrl: suspend () -> String, private val save: suspend (String, String) -> Unit = { _, _ -> }) {
     private val dao get() = db.ohe()
     val active = dao.active()
     val latest = dao.latest()
@@ -208,6 +218,20 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
         val e = OheSessionEntity(territory = territory, inspectorId = s.inspectorId, role = s.role)
         dao.insertSession(e); schedule(); return e
     }
+
+    /** ID + PIN sign-in. Stores the token and the role the server assigned. Throws with a readable message. */
+    suspend fun signIn(id: String, pin: String): OheLoginOut {
+        val out = try {
+            OheApi.create(baseUrl()).login(OheLoginIn(id.trim(), pin.trim()))
+        } catch (e: HttpException) {
+            throw IllegalStateException(if (e.code() == 401) "Wrong ID or PIN" else "Server error ${e.code()}")
+        }
+        save("token", out.token); save("inspector", out.id); save("role", out.role)
+        schedule()
+        return out
+    }
+
+    suspend fun signOut() { save("token", "") }
 
     suspend fun addCapture(c: OheCaptureEntity) { dao.insertCapture(c); schedule() }
     suspend fun addNote(sid: String, text: String) { dao.insertNote(OheNoteEntity(sessionId = sid, text = text)); schedule() }
@@ -236,8 +260,8 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
     /** Upload photos and notes in capture order, then close any ended session. Safe to repeat: the server accepts the
      *  same photo bytes once (same SHA-256) and returns the earlier result. */
     suspend fun syncOnce() {
-        val api = OheApi.create(baseUrl())
         val s = settings()
+        val api = OheApi.create(baseUrl(), s.token)
         val text = { v: String -> v.toRequestBody("text/plain".toMediaType()) }
         for (c in dao.pendingCaptures()) {
             val sess = dao.session(c.sessionId) ?: continue

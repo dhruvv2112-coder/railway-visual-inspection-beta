@@ -131,4 +131,8 @@
     <string name="prompt_blur">Photo is blurred. Hold still and take it again.</string>
     <string name="prompt_dark">Photo is too dark. Retake with the light behind you.</string>
     <string name="prompt_bright">Photo is too bright. Retake facing away from the sun.</string>
+    <string name="ohe_pin">PIN</string>
+    <string name="ohe_sign_in">Sign in</string>
+    <string name="ohe_sign_out">Sign out</string>
+    <string name="ohe_signed_in">Signed in: %1$s</string>
 </resources>

@@ -11,7 +11,8 @@ class AppContainer(context: Context) {
     val database by lazy { RviDatabase.build(context) }
     val repository by lazy { Repository(context, database) }
     val ohe by lazy {
-        org.rvi.inspect.data.OheRepository(context, database, { repository.settings.first() }, { repository.settings.first().serverUrl })
+        org.rvi.inspect.data.OheRepository(context, database, { repository.settings.first() }, { repository.settings.first().serverUrl },
+            { k, v -> repository.setText(k, v) })
     }
 }
 

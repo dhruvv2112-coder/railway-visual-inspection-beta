@@ -68,6 +68,14 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
     fun setInspector(id: String) = viewModelScope.launch { c.repository.setText("inspector", id) }
     fun retrySync() = repo.schedule()
 
+    /** Sign-in message for the home screen: null = nothing to show. */
+    val signMsg = MutableStateFlow<String?>(null)
+    fun signIn(id: String, pin: String) = viewModelScope.launch {
+        signMsg.value = "…"
+        signMsg.value = try { repo.signIn(id, pin).let { "${it.id} · ${it.role}" } } catch (e: Exception) { e.message ?: "Sign-in failed" }
+    }
+    fun signOut() = viewModelScope.launch { repo.signOut(); signMsg.value = null }
+
     /** After CameraX saved the JPEG: hash it, check quality on the phone, attach a location fix, queue it. No
      *  classification and no confirmation: the server decides what the photo shows (HLD: no per-asset confirmation). */
     fun onCaptured(file: File) = viewModelScope.launch {
