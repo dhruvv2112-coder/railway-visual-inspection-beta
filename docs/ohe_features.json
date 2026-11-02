@@ -4,81 +4,81 @@
 "area": "Field capture app",
 "feature": "Start patrol session (section, expected assets)",
 "hld_ref": "Field flow",
-"status": "Partial",
-"built": "Backend POST /ohe/sessions",
-"next": "Phone screen not built"
+"status": "Built",
+"built": "Capture app: start/resume patrol with section and ID",
+"next": "Test on a phone against the server"
 },
 {
 "id": "A02",
 "area": "Field capture app",
 "feature": "Capture original photo with time, GPS and SHA-256",
 "hld_ref": "§1.1, field flow",
-"status": "Partial",
-"built": "Backend media ingest with checksum check; camera in the earlier app",
-"next": "Wire camera to /ohe media upload"
+"status": "Built",
+"built": "Capture app: photo + GPS + SHA-256, uploaded to /ohe media",
+"next": "Test on a phone"
 },
 {
 "id": "A03",
 "area": "Field capture app",
 "feature": "Offline queue and resumable upload",
 "hld_ref": "Field flow",
-"status": "Partial",
-"built": "Offline queue (Room) in the earlier app",
-"next": "Connect to /ohe endpoints"
+"status": "Built",
+"built": "Room queue + WorkManager upload in capture order; duplicate-safe",
+"next": "Test offline/online switch on a phone"
 },
 {
 "id": "A04",
 "area": "Field capture app",
 "feature": "On-phone photo quality check before upload",
 "hld_ref": "Cascade stage 1",
-"status": "Partial",
-"built": "Quality rules in backend; blur check in earlier app",
-"next": "Run the same rules on the phone"
+"status": "Built",
+"built": "On-phone blur/dark/bright check gives an instant retake request",
+"next": "—"
 },
 {
 "id": "A05",
 "area": "Field capture app",
 "feature": "Targeted recapture prompt (optical zoom, never move closer)",
 "hld_ref": "§8.4",
-"status": "Partial",
-"built": "Backend writes the prompt",
-"next": "Show it on the phone"
+"status": "Built",
+"built": "Server retake requests shown and spoken in Hindi/English; never 'move closer'",
+"next": "—"
 },
 {
 "id": "A06",
 "area": "Field capture app",
 "feature": "Finite voice command set, Hindi and English",
 "hld_ref": "§1.1, I-06",
-"status": "Partial",
-"built": "Vosk voice phrases in the earlier app",
-"next": "Cut to the HLD command set"
+"status": "Built",
+"built": "Voice in patrol: photo, note, end patrol only",
+"next": "Field check of recognition"
 },
 {
 "id": "A07",
 "area": "Field capture app",
 "feature": "Dictated notes kept apart from inspection",
 "hld_ref": "I-06",
-"status": "Partial",
-"built": "Backend notes channel; test proves notes don't change results",
-"next": "Phone note button"
+"status": "Built",
+"built": "Note sheet (typed or dictated), sent to the separate notes channel",
+"next": "—"
 },
 {
 "id": "A08",
 "area": "Field capture app",
 "feature": "End patrol and sync",
 "hld_ref": "Field flow",
-"status": "Partial",
-"built": "Backend POST /ohe/sessions/{id}/end",
-"next": "Phone screen not built"
+"status": "Built",
+"built": "End patrol uploads the rest, closes the cycle, shows the report summary",
+"next": "—"
 },
 {
 "id": "A09",
 "area": "Field capture app",
 "feature": "No per-asset confirmation in the flow",
 "hld_ref": "Core principle",
-"status": "Not started",
-"built": "—",
-"next": "Design rule for the new capture app"
+"status": "Built",
+"built": "No classify or confirm step anywhere in the capture flow",
+"next": "—"
 },
 {
 "id": "A10",
@@ -220,9 +220,9 @@
 "area": "Inspection service",
 "feature": "Immediate alert for urgent findings",
 "hld_ref": "§8.4",
-"status": "Partial",
-"built": "Alert record created without waiting for sign-off",
-"next": "Deliver it (push/SMS)"
+"status": "Built",
+"built": "Alert feed /ohe/alerts + optional webhook, raised on upload",
+"next": "Connect SMS/push gateway"
 },
 {
 "id": "B15",
@@ -292,9 +292,9 @@
 "area": "Inspection service",
 "feature": "User accounts and roles",
 "hld_ref": "—",
-"status": "Not started",
-"built": "Role checked on sign-off only",
-"next": "Login and roles"
+"status": "Built",
+"built": "ID + PIN sign-in, signed tokens, roles (Patrol, SSE, ADEE, DEE, Sr DEE)",
+"next": "Railway identity system later"
 },
 {
 "id": "B23",
@@ -409,18 +409,18 @@
 "area": "Review and reporting",
 "feature": "Reviewer screens: report, sign-off",
 "hld_ref": "RPT-01–13",
-"status": "Partial",
-"built": "HTML report endpoint",
-"next": "Reviewer web screens"
+"status": "Built",
+"built": "Reviewer web /ohe/review: reports, findings with photos and boxes, sign-off",
+"next": "—"
 },
 {
 "id": "D02",
 "area": "Review and reporting",
 "feature": "Exception queue (anomalous, unsupported, uncertain identity)",
 "hld_ref": "§8.4",
-"status": "Partial",
-"built": "States exist in backend",
-"next": "Queue screen"
+"status": "Built",
+"built": "Exception queue: unresolved mast, anomaly, not assessable, no evidence",
+"next": "—"
 },
 {
 "id": "D03",
@@ -436,9 +436,9 @@
 "area": "Review and reporting",
 "feature": "Print / PDF export of signed report",
 "hld_ref": "RPT-01–13",
-"status": "Partial",
-"built": "HTML render",
-"next": "PDF export"
+"status": "Built",
+"built": "Print view of the frozen revision (browser print to PDF)",
+"next": "—"
 },
 {
 "id": "E01",
