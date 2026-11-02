@@ -164,10 +164,12 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
     defects = [d for d in dets if comps.get(d.cls, {}).get("symptom_of")]
     for d in dets:
         spec = comps.get(d.cls)
-        if spec is None or spec.get("symptom_of"):
+        if spec is not None and spec.get("symptom_of"):
             continue  # symptom boxes are attached to their component below
         o = Observation(d.cls, tuple(round(v, 1) for v in d.box), "", raw_scores={"detector": round(d.score, 4)})
-        if not spec.get("supported_conditions"):
+        if spec is None:  # a design or part the registry does not know: never a generic pass (HLD V12)
+            o.state, o.reasons = "unsupported_class", ["component or design not in the asset registry"]
+        elif not spec.get("supported_conditions"):
             o.state, o.reasons = "unsupported_class", ["no validated condition model for this component"]
         elif d.short_side < reg["min_target_px"]:
             o.state, o.reasons = "insufficient_resolution", [f"target {d.short_side:.0f}px < {reg['min_target_px']}px"]

@@ -3,6 +3,7 @@ findings, end-of-cycle reconciliation, immutable report revisions, signing, and 
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import uuid
 from datetime import datetime
@@ -154,7 +155,13 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, imag
                  location_source="capture" if lat is not None else "none", device=device, path=str(path))
     s.add(m)
     audit(s, "ohe_media", m.id, "persisted", a["id"], {"sha256": m.sha256})
-    new_alerts = process(m, s)
+    try:
+        new_alerts = process(m, s)
+    except Exception as e:  # noqa: BLE001 - any model/runtime failure: keep the evidence, report it truthfully (HLD V08)
+        new_alerts = []
+        m.status = "failed"
+        m.analysis_json = json.dumps({"error": f"{type(e).__name__}: {str(e)[:300]}", "assessments": []})
+        audit(s, "ohe_media", m.id, "processing.failed", "system", {"error": type(e).__name__})
     s.commit()
     s.refresh(m)
     for f in new_alerts:
@@ -224,10 +231,20 @@ def add_note(sid: str, body: dict, s: SessionDep, a: ActorDep):
     return {"id": n.id}
 
 
+def esc(v) -> str:
+    return html.escape(str(v))
+
+
+def _an(m) -> dict:
+    return json.loads(m.analysis_json or "{}")
+
+
 def _reconcile(sess: OheSession, s: Session) -> dict:
     """Cycle ledger: every expected asset gets a state; unlocated findings and failed media stay visible (HLD §10)."""
     media = s.exec(select(OheMedia).where(OheMedia.session_id == sess.id)).all()
     fs = s.exec(select(OheFinding).where(OheFinding.session_id == sess.id)).all()
+    notes = s.exec(select(OheNote).where(OheNote.session_id == sess.id)).all()  # report annex only (RPT-12), never inspection
+    reg_version = pipeline.load_registry()["version"]
     per_asset: dict[str, set] = {}
     for m in media:
         an = json.loads(m.analysis_json)
@@ -256,17 +273,37 @@ def _reconcile(sess: OheSession, s: Session) -> dict:
                            "unlocated_findings": sum(f["asset_id"] is None for f in findings),
                            "alerts": sum(f["alert"] for f in findings), "media": len(media),
                            "failed_media": sum(m.status == "failed" for m in media)},
+        "RPT-03_coverage": {
+            "registry_version": reg_version,
+            "statement": "Capture locations and associations below show where photos were taken and which masts they were "
+                         "linked to. A walked route is not verified inspection coverage.",
+            "captures": [{"media_id": m.id, "lat": m.lat, "lon": m.lon, "accuracy_m": m.accuracy_m,
+                          "location_source": m.location_source, "asset_id": (_an(m).get("identity") or {}).get("selected_asset_id"),
+                          "identity_state": (_an(m).get("identity") or {}).get("state")} for m in media],
+            "ambiguous_captures": [m.id for m in media if m.status == "assessed"
+                                   and not (_an(m).get("identity") or {}).get("selected_asset_id")],
+            "evidence_gaps": [r["asset_id"] for r in register if r["state"] == "no_evidence"]},
         "RPT-04_special_attention": [f for f in findings if f["alert"]],
         "RPT-05_asset_register": register,
         "RPT-06_findings": findings,
+        "RPT-07_temporal": {"state": "not_comparable",
+                            "statement": "Comparison with earlier cycles is not part of this release (HLD Release C). "
+                                         "No change, improvement or deterioration is claimed."},
         "RPT-08_actions": [{"finding": f["id"], "primary": f.get("routing", {}).get("primary", "OHE coordination queue"),
-                            "contributors": f.get("routing", {}).get("contributors", []),
-                            "action": f.get("recommendation"), "status": "suggested"} for f in findings],
+                            "contributors": f.get("routing", {}).get("contributors", []), "action_family": f.get("action_family"),
+                            "urgency_basis": f.get("rule_id"), "action": f.get("recommendation"),
+                            "status": "suggested – not adopted until the authorised organisation assigns it"} for f in findings],
         "RPT-09_limitations": ["Visual-only inspection: no electrical, thermal, tension or dimensional claims",
                                "Model scores are uncalibrated until a calibration set is fitted",
-                               *[f"Finding {f['id']} not associated to a single asset" for f in findings if f["asset_id"] is None]],
+                               *[f"Finding {f['id']} not associated to a single asset" for f in findings if f["asset_id"] is None],
+                               *[f"Photo {m.id} could not be processed ({_an(m).get('error', 'error')}); evidence kept, "
+                                 "its masts are not assessed from it" for m in media if m.status == "failed"],
+                               *[f"Mast {r['asset_id']}: design or part not supported by the current models" for r in register
+                                 if r["state"] == "unsupported_class"]],
         "RPT-10_provenance": {"models": sorted({json.dumps(json.loads(m.analysis_json).get("model_versions", {}), sort_keys=True)
                                                 for m in media}), "registry": pipeline.load_registry()["version"]},
+        **({"RPT-12_notes": {"statement": "Transcribed or typed notes from the patrol. They were not used by the AI inspection.",
+                             "notes": [{"at": n.created_at, "author": n.author, "text": n.text} for n in notes]}} if notes else {}),
         "RPT-13_evidence_manifest": [{"media_id": m.id, "sha256": m.sha256, "captured_at": m.captured_at,
                                       "location_source": m.location_source} for m in media],
     }
@@ -297,7 +334,19 @@ def get_report(rid: str, s: SessionDep, a: ActorDep):
     if not r:
         raise HTTPException(404, "Report not found")
     return {"id": r.id, "revision": r.revision, "status": r.status, "sha256": r.sha256, "signed_by": r.signed_by,
-            "content": json.loads(r.content_json)}
+            "content": json.loads(r.content_json), "RPT-11_review": _review_record(r, s)}
+
+
+def _review_record(r: OheReport, s: Session) -> dict:
+    """RPT-11: who reviewed, amended and signed, and the checksum of the frozen revision that was signed."""
+    chain, cur = [], r
+    while cur is not None:
+        chain.append({"report_id": cur.id, "revision": cur.revision, "status": cur.status, "sha256": cur.sha256})
+        cur = s.get(OheReport, cur.supersedes) if cur.supersedes else None
+    amendments = [a | {"finding": f["id"]} for f in json.loads(r.content_json).get("RPT-06_findings", [])
+                  for a in f.get("amendments", [])]
+    return {"signer": r.signed_by, "signed_at": r.signed_at, "signature_mechanism": "signed-in role check; SHA-256 of the frozen revision",
+            "report_checksum": r.sha256, "amendments": amendments, "revisions": chain[::-1]}
 
 
 @router.post("/reports/{rid}/sign")
@@ -352,7 +401,7 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
     if not r:
         raise HTTPException(404, "Report not found")
     c = json.loads(r.content_json)
-    row = lambda *v: "<tr>" + "".join(f"<td>{x}</td>" for x in v) + "</tr>"
+    row = lambda *v: "<tr>" + "".join(f"<td>{esc(x)}</td>" for x in v) + "</tr>"
     reg = "".join(row(x["asset_id"], x["state"].replace("_", " "), len(x["findings"])) for x in c["RPT-05_asset_register"])
     fnd = "".join(row(f["id"], f["asset_id"] or "unresolved: " + ", ".join(x["asset_id"] for x in f["candidates"][:3]),
                       f.get("observed_feature", f["state"]), f.get("priority", "review"), f.get("routing", {}).get("primary", ""))
@@ -360,13 +409,25 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
     css = ("body{font-family:Montserrat,Arial,sans-serif;color:#222;background:#fff;margin:24px}table{border-collapse:collapse;"
            "width:100%;font-size:12px}td,th{border:1px solid #bbb;padding:4px 6px;text-align:left}h1{font-size:20px}")
     sm = c["RPT-02_summary"]
+    cov = c.get("RPT-03_coverage", {})
+    act = "".join(row(a["finding"], a["primary"], a.get("action") or "", a["status"]) for a in c["RPT-08_actions"])
+    nt = c.get("RPT-12_notes")
+    notes = (f"<h2>Patrol notes (not used by the AI inspection)</h2><ul>"
+             + "".join(f"<li>{esc(n['at'])} · {esc(n['author'])}: {esc(n['text'])}</li>" for n in nt["notes"]) + "</ul>") if nt else ""
     return (f"<!doctype html><html><head><meta charset='utf-8'><title>OHE patrol report {r.id}</title><style>{css}</style></head><body>"
             f"<h1>OHE visual patrol report · revision {r.revision} · {r.status}</h1><p>Session {c['RPT-01_document_control']['session']}"
-            f" · territory {c['RPT-01_document_control']['territory']} · SHA-256 {r.sha256}</p>"
+            f" · territory {esc(c['RPT-01_document_control']['territory'])} · SHA-256 {r.sha256}</p>"
             f"<h2>Summary</h2><table>{''.join(row(k.replace('_', ' '), v) for k, v in sm.items())}</table>"
             f"<h2>Asset register</h2><table><tr><th>Asset</th><th>State</th><th>Findings</th></tr>{reg}</table>"
             f"<h2>Findings</h2><table><tr><th>ID</th><th>Asset</th><th>Observed</th><th>Priority</th><th>Route</th></tr>{fnd}</table>"
-            f"<h2>Limitations</h2><ul>{''.join(f'<li>{x}</li>' for x in c['RPT-09_limitations'])}</ul></body></html>")
+            f"<h2>Coverage</h2><p>{esc(cov.get('statement', ''))}</p><p>Photos: {len(cov.get('captures', []))} · not linked to one mast: "
+            f"{len(cov.get('ambiguous_captures', []))} · masts with no photo: {esc(', '.join(cov.get('evidence_gaps', [])) or 'none')}"
+            f" · registry {esc(cov.get('registry_version', ''))}</p>"
+            f"<h2>Suggested actions</h2><table><tr><th>Finding</th><th>Primary</th><th>Action</th><th>Status</th></tr>{act}</table>"
+            f"<h2>Comparison with earlier cycles</h2><p>{esc(c.get('RPT-07_temporal', {}).get('statement', ''))}</p>"
+            f"<h2>Limitations</h2><ul>{''.join(f'<li>{esc(x)}</li>' for x in c['RPT-09_limitations'])}</ul>"
+            f"<h2>Review and authorisation</h2><p>Signed by {esc(r.signed_by or '—')} at {esc(r.signed_at or '—')} · "
+            f"checksum {r.sha256}</p>{notes}</body></html>")
 
 
 # ---- sign-in, reviewer lists, evidence images and the reviewer web page --------------------------------------------
@@ -427,6 +488,25 @@ def media_info(mid: str, s: SessionDep, a: ActorDep):
     return {"id": m.id, "sha256": m.sha256, "captured_at": m.captured_at, "lat": m.lat, "lon": m.lon,
             "location_source": m.location_source, "status": m.status, "identity": an.get("identity"),
             "assessments": an.get("assessments", []), "quality": an.get("quality"), "image_state": an.get("image_state")}
+
+
+@router.post("/media/{mid}/reprocess")
+def reprocess(mid: str, s: SessionDep, a: ActorDep):
+    """Retry a photo whose processing failed (HLD V08). Evidence bytes are unchanged."""
+    m = s.get(OheMedia, mid)
+    if not m:
+        raise HTTPException(404, "Photo not found")
+    if m.status != "failed":
+        raise HTTPException(409, "Photo is already processed")
+    try:
+        process(m, s)
+    except Exception as e:  # noqa: BLE001 - still failing: stay visible as failed
+        m.analysis_json = json.dumps({"error": f"{type(e).__name__}: {str(e)[:300]}", "assessments": []})
+        s.commit()
+        raise HTTPException(503, "Processing still failing; try again later") from e
+    audit(s, "ohe_media", m.id, "processing.retried", a["id"], {})
+    s.commit()
+    return {"id": m.id, "status": m.status, "analysis": _an(m)}
 
 
 @router.get("/media/{mid}/image")

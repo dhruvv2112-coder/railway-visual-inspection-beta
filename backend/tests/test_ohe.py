@@ -189,3 +189,71 @@ def test_token_mode_requires_sign_in(client, tmp_path, monkeypatch):
     assert me == {"id": "SSE-1", "role": "SSE", "can_sign": True}
     bad = tok[:-2] + ("AA" if not tok.endswith("AA") else "BB")
     assert client.get("/ohe/me", headers={"Authorization": f"Bearer {bad}"}).status_code == 401
+
+
+# ---- HLD V08, V10, V12 and report sections RPT-03/07/11/12 ----
+
+class BrokenDet:
+    version = "broken"
+    def detect(self, img): raise TimeoutError("model backend timed out")
+
+
+def test_v08_processing_failure_is_visible_and_retryable(client, models):
+    models.detector, models.ocr = FixDet([INS, DEFECT]), FixOCR(["1205/12"])
+    sid = _session(client)
+    good = _upload(client, sid, _jpeg(20), **NEAR_12).json()
+    assert good["analysis"]["assessments"]
+    models.detector = BrokenDet()
+    bad = _upload(client, sid, _jpeg(21), **NEAR_12)
+    assert bad.status_code == 201 and bad.json()["media"]["status"] == "failed"     # evidence kept, failure recorded
+    mid = bad.json()["media"]["id"]
+    assert client.post(f"/ohe/media/{mid}/reprocess", headers=PATROL).status_code == 503
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    c = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["content"]
+    assert c["RPT-02_summary"]["failed_media"] == 1
+    assert any(mid in x and "could not be processed" in x for x in c["RPT-09_limitations"])
+    assert c["RPT-06_findings"]                                                      # completed findings remain available
+    models.detector = FixDet([INS])
+    assert client.post(f"/ohe/media/{mid}/reprocess", headers=PATROL).json()["status"] == "assessed"
+
+
+def test_v10_no_improvement_claim_without_comparison(client, models):
+    models.detector, models.ocr = FixDet([INS]), FixOCR(["1205/12"])
+    sid = _session(client)
+    _upload(client, sid, _jpeg(22), **NEAR_12)
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    c = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["content"]
+    assert c["RPT-07_temporal"]["state"] == "not_comparable"
+    import json as _j
+    text = _j.dumps(c["RPT-06_findings"]).lower()
+    assert "improv" not in text and "resolved since" not in text
+
+
+def test_v12_unknown_design_is_unsupported_not_a_pass(client, models):
+    models.detector, models.ocr = FixDet([Det("cantilever_tube_unknown", 0.88, (300, 150, 600, 400))]), FixOCR(["1205/12"])
+    sid = _session(client, expected=["1205/12"])
+    a = _upload(client, sid, _jpeg(23), **NEAR_12).json()["analysis"]
+    assert a["assessments"][0]["state"] == "unsupported_class"
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    c = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["content"]
+    row = c["RPT-05_asset_register"][0]
+    assert row["state"] == "unsupported_class" and c["RPT-02_summary"]["no_visible_defect"] == 0
+    assert any("not supported" in x for x in c["RPT-09_limitations"])
+
+
+def test_report_sections_coverage_notes_and_review(client, models):
+    models.detector, models.ocr = FixDet([INS, DEFECT]), FixOCR(["1205/12"])
+    sid = _session(client, expected=["1205/12", "1205/13"])
+    _upload(client, sid, _jpeg(24), **NEAR_12)
+    client.post(f"/ohe/sessions/{sid}/notes", json={"text": "branch near mast"}, headers=PATROL)
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    r = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()
+    c = r["content"]
+    assert "not verified inspection coverage" in c["RPT-03_coverage"]["statement"]
+    assert c["RPT-03_coverage"]["evidence_gaps"] == ["1205/13"]
+    assert c["RPT-12_notes"]["notes"][0]["text"] == "branch near mast"
+    assert "not used by the AI" in c["RPT-12_notes"]["statement"]
+    assert all(a["status"].startswith("suggested") for a in c["RPT-08_actions"])
+    client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER)
+    rev = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["RPT-11_review"]
+    assert rev["signer"] == "sse-trd-1" and rev["report_checksum"] == r["sha256"] and rev["signed_at"]
