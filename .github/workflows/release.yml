@@ -26,6 +26,10 @@ jobs:
               echo "MODEL_SOURCE=$b@$(git rev-parse --short FETCH_HEAD)" >> "$GITHUB_ENV"; echo "model from $b"; break
             fi
           done
+          if git fetch -q --depth 1 origin ci-ohe-assess 2>/dev/null && git cat-file -e FETCH_HEAD:reports/ohe_assess.onnx 2>/dev/null; then
+            git show FETCH_HEAD:reports/ohe_assess.onnx > deploy/models/ohe_assess.onnx
+            git show FETCH_HEAD:reports/ohe_assess.json > deploy/models/ohe_assess.json
+          fi
           ls -la deploy/models
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3

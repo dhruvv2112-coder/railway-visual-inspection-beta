@@ -63,6 +63,7 @@ fun promptRes(p: Prompt): Int = when (p) {
     Prompt.ZOOM -> R.string.prompt_zoom
     Prompt.PLATE -> R.string.prompt_plate
     Prompt.WHOLE -> R.string.prompt_whole
+    Prompt.SQUARE -> R.string.prompt_square
     Prompt.BLUR -> R.string.prompt_blur
     Prompt.DARK -> R.string.prompt_dark
     Prompt.BRIGHT -> R.string.prompt_bright

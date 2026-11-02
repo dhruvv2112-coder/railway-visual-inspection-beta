@@ -257,3 +257,22 @@ def test_report_sections_coverage_notes_and_review(client, models):
     client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER)
     rev = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["RPT-11_review"]
     assert rev["signer"] == "sse-trd-1" and rev["report_checksum"] == r["sha256"] and rev["signed_at"]
+
+
+class FixView:
+    version, threshold = "fixture-view", 0.5
+    def __init__(self, p): self.p = p
+    def p_distorted(self, img): return self.p
+
+
+def test_view_check_only_adds_a_retake_request(client, models):
+    models.detector, models.ocr = FixDet([INS]), FixOCR(["1205/12"])
+    sid = _session(client)
+    base = _upload(client, sid, _jpeg(30), **NEAR_12).json()["analysis"]
+    models.view = FixView(0.9)
+    try:
+        a = _upload(client, sid, _jpeg(31), **NEAR_12).json()["analysis"]
+    finally:
+        models.view = None
+    assert a["view_check"]["flag"] is True and a["recapture_prompt"] == "Take the photo square-on to the mast"
+    assert [x["state"] for x in a["assessments"]] == [x["state"] for x in base["assessments"]]   # assessment unchanged

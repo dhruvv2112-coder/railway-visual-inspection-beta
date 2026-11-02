@@ -166,9 +166,37 @@ class Observation:
     reasons: list[str] = field(default_factory=list)
 
 
+class ViewCheck(Protocol):
+    version: str
+    threshold: float
+    def p_distorted(self, img: np.ndarray) -> float: ...
+
+
+class OnnxViewCheck:
+    """Photo-angle (perspective) check: MobileNetV3-small trained on EPDCL PD-Defect perspective_validation (CC BY 4.0).
+    Output is a recapture reason only; it never changes an assessment (deterministic gate unchanged)."""
+    def __init__(self, path: str, threshold: float = 0.5, size: int = 224):
+        import onnxruntime as ort
+        self.sess = ort.InferenceSession(path, providers=["CPUExecutionProvider"])
+        self.inp = self.sess.get_inputs()[0].name
+        self.threshold, self.size, self.version = threshold, size, f"onnx:{Path(path).name}"
+
+    def p_distorted(self, img):
+        import cv2
+        x = cv2.resize(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), (self.size, self.size)).astype(np.float32) / 255.0
+        x = (x - np.array([0.485, 0.456, 0.406], np.float32)) / np.array([0.229, 0.224, 0.225], np.float32)
+        logits = self.sess.run(None, {self.inp: x.transpose(2, 0, 1)[None]})[0][0]
+        e = np.exp(logits - logits.max())
+        return float(e[1] / e.sum())   # classes: [valid, perspective_distorted]
+
+
 def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: Anomaly | None = None,
-                 lat=None, lon=None, acc=None) -> dict:
+                 lat=None, lon=None, acc=None, view: ViewCheck | None = None) -> dict:
     q = quality.assess(img)
+    view_res = None
+    if view is not None and img is not None:
+        p = view.p_distorted(img)
+        view_res = {"p_perspective_distorted": round(p, 4), "flag": p >= view.threshold, "model": view.version}
     comps = reg["components"]
     dets = det.detect(img) if img is not None else []
     cands = candidates(reg, lat, lon, acc)
@@ -217,9 +245,12 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
         image_state = "insufficient_resolution" if not q.passed else "occluded_or_missing_view"
     return {"quality": asdict(q) | {"passed": q.passed}, "detections": [asdict(d) for d in dets], "identity": ident,
             "observations": [asdict(o) for o in obs], "image_state": image_state,
-            "recapture_prompt": recapture_prompt(q, obs, ident, image_state),
+            "view_check": view_res,
+            "recapture_prompt": recapture_prompt(q, obs, ident, image_state)
+            or ("Take the photo square-on to the mast" if view_res and view_res["flag"] else None),
             "model_versions": {"detector": det.version, "ocr": ocr.version,
-                               "anomaly": anomaly.version if anomaly else "none", "quality": "opencv-rules-v2"}}
+                               "anomaly": anomaly.version if anomaly else "none", "quality": "opencv-rules-v2",
+                               "view_check": view.version if view else "none"}}
 
 
 def recapture_prompt(q, obs, ident, image_state) -> str | None:

@@ -112,13 +112,14 @@ interface OheDao {
 }
 
 /** Recapture prompts as codes, so the phone shows them in the user's language (backend sends English text). */
-enum class Prompt { ZOOM, PLATE, WHOLE, BLUR, DARK, BRIGHT;
+enum class Prompt { ZOOM, PLATE, WHOLE, SQUARE, BLUR, DARK, BRIGHT;
     companion object {
         fun fromServer(text: String?): Prompt? = when {
             text == null -> null
             text.contains("optical zoom", true) -> ZOOM
             text.contains("number plate", true) -> PLATE
             text.contains("whole assembly", true) -> WHOLE
+            text.contains("square-on", true) -> SQUARE
             else -> null
         }
         fun fromLocal(reasons: List<String>): Prompt? = when {

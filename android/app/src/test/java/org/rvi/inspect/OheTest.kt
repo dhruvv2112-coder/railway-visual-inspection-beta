@@ -48,6 +48,7 @@ class OheTest {
     @Test fun promptsNeverAskToApproachLiveOhe() {
         // every server prompt maps to a code whose wording is reviewed in strings.xml; unknown text maps to nothing
         assertNull(Prompt.fromServer("Walk up to the mast and look closely"))
+        assertEquals(Prompt.SQUARE, Prompt.fromServer("Take the photo square-on to the mast"))
     }
 
     @Test fun sha256MatchesKnownVector() {

@@ -135,4 +135,5 @@
     <string name="ohe_sign_in">Sign in</string>
     <string name="ohe_sign_out">Sign out</string>
     <string name="ohe_signed_in">Signed in: %1$s</string>
+    <string name="prompt_square">Stand square-on to the mast and take the photo again.</string>
 </resources>

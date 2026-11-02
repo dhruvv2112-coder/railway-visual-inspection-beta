@@ -95,6 +95,7 @@ class Models:
     detector: pipeline.Detector = pipeline.NullDetector()
     ocr: pipeline.OCR = pipeline.NullOCR()
     anomaly = None
+    view: pipeline.ViewCheck | None = None
 
     @classmethod
     def load(cls):
@@ -102,6 +103,11 @@ class Models:
         names = settings.model_dir / "ohe_detector.names.json"
         if p.exists() and names.exists():
             cls.detector = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
+        vc = settings.model_dir / "ohe_assess.onnx"
+        if vc.exists():
+            meta = settings.model_dir / "ohe_assess.json"
+            thr = json.loads(meta.read_text()).get("threshold", 0.5) if meta.exists() else 0.5
+            cls.view = pipeline.OnnxViewCheck(str(vc), thr)
         try:
             cls.ocr = pipeline.RapidOcrAdapter()
         except ImportError:  # optional dependency (installed in the server image)
@@ -192,7 +198,8 @@ def process(m: OheMedia, s: Session) -> list:
     """Run the cascade for one media item and link results to findings (repeat evidence never duplicates)."""
     reg = pipeline.load_registry()
     img = quality.decode(Path(m.path).read_bytes())
-    res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m)
+    res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m,
+                                Models.view)
     if res["identity"]["selected_asset_id"] and m.lat is None:
         m.location_source = "registry_inherited"
     res["assessments"] = [pipeline.decide(o, res["identity"], res["quality"]["passed"], reg) for o in res["observations"]]
