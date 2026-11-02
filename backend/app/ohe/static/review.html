@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OHE Patrol Review</title>
+<style>
+  /* Greyscale reviewer console (project style: greyscale, monospaced, translucent panels). Works offline: fonts fall back. */
+  :root { --bg:#f4f4f5; --panel:#ffffffcc; --line:#d4d4d8; --fg:#18181b; --muted:#6b6b73; --strong:#000; --sel:#e4e4e7;
+          --urgent:#18181b; --mono:"JetBrains Mono","Cascadia Mono",Consolas,ui-monospace,monospace; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0b0b0c; --panel:#1c1c1fcc; --line:#3a3a3f; --fg:#ececee; --muted:#8e8e95; --strong:#fff; --sel:#26262a; --urgent:#fff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:14px/1.45 var(--mono); }
+  header { display:flex; gap:12px; align-items:center; padding:12px max(16px, env(safe-area-inset-left)); border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:5; flex-wrap:wrap; }
+  header h1 { font-size:15px; margin:0; flex:1; letter-spacing:.02em; }
+  .who { color:var(--muted); font-size:12px; }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  button { background:transparent; border:1px solid var(--fg); padding:6px 12px; border-radius:6px; cursor:pointer; }
+  button.primary { background:var(--fg); color:var(--bg); }
+  button:disabled { opacity:.4; cursor:not-allowed; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .item:focus-visible { outline:2px solid var(--strong); outline-offset:2px; }
+  input, select, textarea { background:transparent; border:1px solid var(--line); border-radius:6px; padding:6px 8px; width:100%; }
+  main { display:grid; grid-template-columns:minmax(260px, 340px) 1fr; gap:16px; padding:16px max(16px, env(safe-area-inset-left)); }
+  @media (max-width: 820px) { main { grid-template-columns:1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; backdrop-filter:blur(8px); min-width:0; }
+  .panel + .panel { margin-top:16px; }
+  h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 10px; font-weight:600; }
+  h3 { font-size:14px; margin:18px 0 8px; }
+  .item { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--line); border-radius:0; padding:10px 4px; }
+  .item:hover, .item[aria-current="true"] { background:var(--sel); }
+  .item .t { font-weight:600; } .item .s { color:var(--muted); font-size:12px; }
+  .chip { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:1px 8px; font-size:11px; white-space:nowrap; }
+  .chip.urgent { background:var(--urgent); color:var(--bg); border-color:var(--urgent); }
+  .chip.signed { border-color:var(--fg); }
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:10px; }
+  .tile { border:1px solid var(--line); border-radius:8px; padding:10px; }
+  .tile b { display:block; font-size:22px; font-weight:500; font-variant-numeric:tabular-nums; }
+  .tile span { color:var(--muted); font-size:11px; }
+  .tbl { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; font-size:12px; }
+  th, td { border-bottom:1px solid var(--line); padding:6px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  .claim { display:grid; grid-template-columns:auto 1fr; gap:2px 10px; margin:6px 0; }
+  .claim dt { color:var(--muted); } .claim dd { margin:0; }
+  .finding { border:1px solid var(--line); border-radius:8px; padding:12px; margin-bottom:10px; }
+  .finding.urgent { border-color:var(--urgent); border-width:2px; }
+  .thumbs { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .thumbs button { padding:0; border:1px solid var(--line); width:96px; height:72px; overflow:hidden; }
+  .thumbs img { width:100%; height:100%; object-fit:cover; display:block; }
+  .muted { color:var(--muted); } .small { font-size:12px; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .msg { padding:8px 10px; border:1px solid var(--line); border-radius:6px; margin:8px 0; }
+  .empty { color:var(--muted); padding:10px 4px; }
+  dialog { border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--fg); max-width:min(96vw, 1100px); padding:12px; }
+  dialog::backdrop { background:#000a; }
+  .viewer { position:relative; display:inline-block; max-width:100%; }
+  .viewer img { max-width:100%; max-height:75vh; display:block; }
+  .box { position:absolute; border:2px solid #fff; outline:1px solid #000; }
+  .box span { position:absolute; left:0; top:-18px; background:#000; color:#fff; font-size:10px; padding:0 4px; white-space:nowrap; }
+  #login { max-width:380px; margin:10vh auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>OHE visual patrol · review</h1>
+  <span class="who" id="who"></span>
+  <button id="signout" hidden>Sign out</button>
+</header>
+
+<section id="login" class="panel" hidden>
+  <h2>Sign in</h2>
+  <form id="loginForm" class="grid" autocomplete="off">
+    <label class="small">User ID<input id="uid" required></label>
+    <label class="small">PIN<input id="pin" type="password" inputmode="numeric"></label>
+    <details class="small muted" style="margin:8px 0"><summary>Development server without PINs</summary>
+      <p>Leave PIN empty and pick a role. Works only on a server running in development mode.</p>
+      <select id="devrole"><option>SSE</option><option>ADEE</option><option>DEE</option><option>SrDEE</option><option>Patrol</option></select>
+    </details>
+    <div class="row"><button class="primary" type="submit">Sign in</button><span id="loginMsg" class="small"></span></div>
+  </form>
+</section>
+
+<main id="app" hidden>
+  <div>
+    <section class="panel">
+      <h2>Urgent findings</h2>
+      <div id="alerts" aria-live="polite"><div class="empty">Loading…</div></div>
+    </section>
+    <section class="panel">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Patrol reports</h2><button id="refresh" class="small">Refresh</button></div>
+      <input id="filter" placeholder="Filter by section, status, ID" aria-label="Filter reports" style="margin:10px 0">
+      <div id="reports"><div class="empty">Loading…</div></div>
+    </section>
+  </div>
+  <section class="panel" id="detail"><div class="empty">Choose a report on the left.</div></section>
+</main>
+
+<dialog id="photo"><div class="row" style="justify-content:space-between"><b id="photoTitle"></b><button id="closePhoto">Close</button></div><div id="photoBody"></div></dialog>
+
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const human = (s) => String(s ?? '').replaceAll('_', ' ');
+  const when = (t) => t ? new Date(t + (String(t).endsWith('Z') ? '' : 'Z')).toLocaleString() : '—';
+  let auth = null, me = null, reports = [], current = null;
+  try { auth = JSON.parse(sessionStorage.getItem('ohe_auth') || 'null'); } catch (e) { auth = null; }
+
+  const headers = () => auth?.token ? {Authorization: 'Bearer ' + auth.token} : auth ? {'X-Actor': auth.id, 'X-Role': auth.role} : {};
+  async function api(path, opts = {}) {
+    const r = await fetch(path, {...opts, headers: {...headers(), ...(opts.body ? {'Content-Type': 'application/json'} : {}), ...(opts.headers || {})}});
+    if (r.status === 401) { signOut(); throw new Error('Please sign in again'); }
+    if (!r.ok) { let d = ''; try { d = (await r.json()).detail; } catch (e) {} throw new Error(d || r.statusText); }
+    const ct = r.headers.get('content-type') || '';
+    return ct.includes('json') ? r.json() : r;
+  }
+  const keep = () => { try { sessionStorage.setItem('ohe_auth', JSON.stringify(auth)); } catch (e) {} };
+
+  function signOut() { auth = null; me = null; try { sessionStorage.removeItem('ohe_auth'); } catch (e) {} show(); }
+  $('#signout').onclick = signOut;
+
+  $('#loginForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const id = $('#uid').value.trim(), pin = $('#pin').value.trim();
+    $('#loginMsg').textContent = 'Signing in…';
+    try {
+      if (pin) { const r = await fetch(U('ohe/auth/login'), {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id, pin})});
+        if (!r.ok) throw new Error((await r.json()).detail || 'Sign-in failed');
+        auth = await r.json();
+      } else { auth = {id, role: $('#devrole').value}; }
+      keep(); await show();
+    } catch (err) { $('#loginMsg').textContent = err.message; }
+  };
+  function base() { const p = location.pathname; return p.slice(0, p.indexOf('/ohe/') + 1) || '/'; }
+  const U = (p) => base() + p;
+
+  async function show() {
+    if (!auth) { $('#login').hidden = false; $('#app').hidden = true; $('#signout').hidden = true; $('#who').textContent = ''; return; }
+    try { me = await api(U('ohe/me')); } catch (e) { $('#loginMsg').textContent = e.message; return; }
+    $('#login').hidden = true; $('#app').hidden = false; $('#signout').hidden = false;
+    $('#who').textContent = `${me.id} · ${me.role}${me.can_sign ? ' · can sign' : ''}`;
+    await Promise.all([loadAlerts(), loadReports()]);
+  }
+
+  async function loadAlerts() {
+    const el = $('#alerts');
+    try {
+      const rows = await api(U('ohe/alerts'));
+      if (!rows.length) { el.innerHTML = '<div class="empty">No urgent findings.</div>'; return; }
+      el.innerHTML = rows.slice(0, 20).map((a) => `<div class="item"><span class="chip urgent">urgent</span>
+        <div class="t">${esc(a.assessment.hypothesis || human(a.assessment.condition))}</div>
+        <div class="s">${esc(a.territory)} · mast ${esc(a.asset_id || 'unresolved: ' + a.candidates.map((c) => c.asset_id).join(', '))} · seen ${a.observations}×</div></div>`).join('');
+    } catch (e) { el.innerHTML = `<div class="msg">${esc(e.message)}</div>`; }
+  }
+
+  async function loadReports() {
+    try { reports = await api(U('ohe/reports')); } catch (e) { $('#reports').innerHTML = `<div class="msg">${esc(e.message)}</div>`; return; }
+    drawReports();
+  }
+  function drawReports() {
+    const q = $('#filter').value.trim().toLowerCase();
+    const rows = reports.filter((r) => !q || [r.territory, r.status, r.id, r.session, r.created_by].join(' ').toLowerCase().includes(q));
+    $('#reports').innerHTML = rows.length ? rows.map((r) => `<button class="item" data-id="${esc(r.id)}" aria-current="${current?.id === r.id}">
+      <div class="row" style="justify-content:space-between"><span class="t">${esc(r.territory)}</span>
+      <span class="chip ${r.status === 'AUTHORISED_SIGNED' ? 'signed' : ''}">${esc(human(r.status).toLowerCase())}</span></div>
+      <div class="s">${esc(when(r.ended_at))} · rev ${r.revision} · ${r.summary.evidenced_assets ?? 0}/${r.summary.expected_assets ?? 0} masts ·
+      ${r.summary.with_findings ?? 0} with findings${r.summary.alerts ? ` · <b>${r.summary.alerts} urgent</b>` : ''}</div></button>`).join('')
+      : '<div class="empty">No reports yet. A report appears when a patroller ends a patrol.</div>';
+    document.querySelectorAll('#reports .item').forEach((b) => b.onclick = () => openReport(b.dataset.id));
+  }
+  $('#filter').oninput = drawReports;
+  $('#refresh').onclick = () => { loadAlerts(); loadReports(); };
+
+  async function openReport(id) {
+    const d = $('#detail');
+    d.innerHTML = '<div class="empty">Loading…</div>';
+    try { current = await api(U(`ohe/reports/${id}`)); } catch (e) { d.innerHTML = `<div class="msg">${esc(e.message)}</div>`; return; }
+    drawReports(); drawReport();
+  }
+
+  function drawReport() {
+    const r = current, c = r.content, s = c['RPT-02_summary'], dc = c['RPT-01_document_control'];
+    const findings = c['RPT-06_findings'] || [], reg = c['RPT-05_asset_register'] || [];
+    const exceptions = findings.filter((f) => f.state === 'anomalous_unclassified' || !f.asset_id);
+    const gaps = reg.filter((x) => ['insufficient_resolution', 'occluded_or_missing_view', 'no_evidence', 'unsupported_class'].includes(x.state));
+    const signable = me?.can_sign && r.status === 'READY_FOR_REVIEW';
+    $('#detail').innerHTML = `
+      <div class="row" style="justify-content:space-between">
+        <div><h2 style="margin:0">Report · ${esc(dc.territory)}</h2>
+        <div class="small muted">Revision ${r.revision} · ${esc(human(r.status).toLowerCase())}${r.signed_by ? ' by ' + esc(r.signed_by) : ''} · patrol ${esc(when(dc.capture_start))} – ${esc(when(dc.capture_end))}</div>
+        <div class="small muted">SHA-256 ${esc(r.sha256)}</div></div>
+        <div class="row"><button id="print">Print view</button><button class="primary" id="sign" ${signable ? '' : 'disabled'} title="${signable ? '' : (r.status !== 'READY_FOR_REVIEW' ? 'This revision is ' + human(r.status).toLowerCase() : 'Needs an SSE, ADEE, DEE or Sr DEE sign-in')}">Sign report</button></div>
+      </div>
+      <div id="actionMsg"></div>
+      <h3>Summary</h3>
+      <div class="tiles">${[['Masts expected', s.expected_assets], ['Photographed', s.evidenced_assets], ['No visible defect', s.no_visible_defect],
+        ['With findings', s.with_findings], ['Not assessable', s.not_assessable], ['Urgent', s.alerts], ['Unlocated findings', s.unlocated_findings], ['Photos', s.media]]
+        .map(([k, v]) => `<div class="tile"><b>${esc(v ?? 0)}</b><span>${k}</span></div>`).join('')}</div>
+      <h3>Needs a reviewer decision (${exceptions.length + gaps.length})</h3>
+      ${exceptions.length + gaps.length ? `<div class="tbl"><table><tr><th>What</th><th>Where</th><th>Why it is here</th></tr>
+        ${exceptions.map((f) => `<tr><td>Finding ${esc(f.id)}</td><td>${esc(f.asset_id || 'candidates: ' + (f.candidates || []).map((x) => x.asset_id).join(', '))}</td>
+          <td>${f.asset_id ? 'Unfamiliar appearance (anomaly), not a classified defect' : 'Mast identity not resolved – choose the mast below'}</td></tr>`).join('')}
+        ${gaps.map((x) => `<tr><td>Mast ${esc(x.asset_id)}</td><td>${esc(x.asset_id)}</td><td>${esc(human(x.state))}</td></tr>`).join('')}</table></div>`
+        : '<div class="empty">Nothing waiting for a decision.</div>'}
+      <h3>Findings (${findings.length})</h3>
+      ${findings.length ? findings.map(findingCard).join('') : '<div class="empty">No findings in this patrol.</div>'}
+      <h3>Mast register</h3>
+      <div class="tbl"><table><tr><th>Mast</th><th>State</th><th>Findings</th></tr>
+        ${reg.map((x) => `<tr><td>${esc(x.asset_id)}</td><td>${esc(human(x.state))}</td><td>${x.findings.length}</td></tr>`).join('')}</table></div>
+      <h3>Limitations</h3><ul class="small">${(c['RPT-09_limitations'] || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+    $('#sign').onclick = signReport;
+    $('#print').onclick = printView;
+    document.querySelectorAll('.thumbs button').forEach((b) => b.onclick = () => openPhoto(b.dataset.mid));
+    document.querySelectorAll('form.amend').forEach((f) => f.onsubmit = amend);
+    loadThumbs();
+  }
+
+  function findingCard(f) {
+    const conf = f.confidence || {};
+    return `<div class="finding ${f.alert ? 'urgent' : ''}">
+      <div class="row" style="justify-content:space-between"><b>${esc(f.hypothesis || human(f.condition || f.state))}</b>
+        <span>${f.alert ? '<span class="chip urgent">urgent</span> ' : ''}<span class="chip">${esc(f.priority || 'review')}</span></span></div>
+      <div class="small muted">Finding ${esc(f.id)} · mast ${esc(f.asset_id || 'unresolved')} · ${esc(f.component)} · seen in ${f.observations} photo(s) · rule ${esc(f.rule_id || '—')}</div>
+      <dl class="claim small">
+        <dt>Observed</dt><dd>${esc(f.observed_feature || human(f.state))}</dd>
+        <dt>Hypothesis</dt><dd>${esc(f.hypothesis || '—')}</dd>
+        <dt>Action</dt><dd>${esc(f.recommendation || 'Exception review')}</dd>
+        <dt>Route</dt><dd>${esc((f.routing && f.routing.primary) || 'OHE coordination queue')}</dd>
+        <dt>Authority</dt><dd>${esc(f.authority || '—')}</dd>
+        <dt>Limits</dt><dd>${esc(f.limitations || '—')}</dd>
+        <dt>Scores</dt><dd>quality ${conf.Q ?? '—'} · identity ${conf.A ?? '—'} · condition ${conf.C ?? '—'} (${esc(conf.calibration || 'uncalibrated')})</dd>
+      </dl>
+      ${(f.amendments || []).map((a) => `<div class="small msg">Amended ${esc(a.field)}: ${esc(a.old)} → ${esc(a.new)} · ${esc(a.reason)} · ${esc(a.by)}</div>`).join('')}
+      <div class="thumbs">${(f.media_ids || []).slice(0, 6).map((m) => `<button data-mid="${esc(m)}" aria-label="Open photo ${esc(m)}"><img alt="" data-mid="${esc(m)}"></button>`).join('')}</div>
+      <details class="small" style="margin-top:8px"><summary>Amend this finding (creates a new revision)</summary>
+        <form class="amend grid2" data-fid="${esc(f.id)}" style="margin-top:8px">
+          <label>Field<select name="field"><option value="asset_id">Mast</option><option value="priority">Priority</option><option value="state">State</option></select></label>
+          <label>New value<input name="value" required ${f.asset_id ? '' : `list="cand-${esc(f.id)}"`}></label>
+          <datalist id="cand-${esc(f.id)}">${(f.candidates || []).map((x) => `<option value="${esc(x.asset_id)}">`).join('')}</datalist>
+          <label style="grid-column:1/-1">Reason<input name="reason" required placeholder="What you saw that supports the change"></label>
+          <div><button type="submit">Save as new revision</button></div>
+        </form></details>
+    </div>`;
+  }
+
+  const blobs = new Map();
+  async function photoUrl(mid) {
+    if (blobs.has(mid)) return blobs.get(mid);
+    const r = await api(U(`ohe/media/${mid}/image`));
+    const u = URL.createObjectURL(await r.blob()); blobs.set(mid, u); return u;
+  }
+  async function loadThumbs() {
+    for (const img of document.querySelectorAll('.thumbs img')) { try { img.src = await photoUrl(img.dataset.mid); } catch (e) { img.alt = 'photo unavailable'; } }
+  }
+  async function openPhoto(mid) {
+    const dlg = $('#photo'); $('#photoTitle').textContent = 'Photo ' + mid; $('#photoBody').innerHTML = '<div class="empty">Loading…</div>'; dlg.showModal();
+    try {
+      const [info, url] = await Promise.all([api(U(`ohe/media/${mid}`)), photoUrl(mid)]);
+      $('#photoBody').innerHTML = `<div class="viewer"><img id="pv" alt="Patrol photo ${esc(mid)}"></div>
+        <div class="small muted">Captured ${esc(when(info.captured_at))} · ${info.lat != null ? info.lat.toFixed(5) + ', ' + info.lon.toFixed(5) : 'no location'} · identity: ${esc(info.identity?.selected_asset_id || 'unresolved')} · SHA-256 ${esc(info.sha256)}</div>`;
+      const img = $('#pv'); img.onload = () => {
+        const sx = img.clientWidth / img.naturalWidth, sy = img.clientHeight / img.naturalHeight;
+        (info.assessments || []).forEach((a) => { if (!a.box) return; const [x1, y1, x2, y2] = a.box; const b = document.createElement('div'); b.className = 'box';
+          Object.assign(b.style, {left: x1 * sx + 'px', top: y1 * sy + 'px', width: (x2 - x1) * sx + 'px', height: (y2 - y1) * sy + 'px'});
+          const l = document.createElement('span'); l.textContent = `${a.component} · ${human(a.state)}`; b.append(l); img.parentElement.append(b); });
+      }; img.src = url;
+    } catch (e) { $('#photoBody').innerHTML = `<div class="msg">${esc(e.message)}</div>`; }
+  }
+  $('#closePhoto').onclick = () => $('#photo').close();
+
+  async function signReport() {
+    const m = $('#actionMsg');
+    try { await api(U(`ohe/reports/${current.id}/sign`), {method: 'POST'}); m.innerHTML = '<div class="msg">Signed. The signed revision can no longer change; amendments create a new revision.</div>';
+      await openReport(current.id); loadReports(); }
+    catch (e) { m.innerHTML = `<div class="msg">Not signed: ${esc(e.message)}</div>`; }
+  }
+  async function amend(e) {
+    e.preventDefault(); const f = e.target, fd = new FormData(f);
+    try { const out = await api(U(`ohe/reports/${current.id}/amend`), {method: 'POST', body: JSON.stringify({finding_id: f.dataset.fid, field: fd.get('field'), new_value: fd.get('value'), reason: fd.get('reason')})});
+      await loadReports(); await openReport(out.report_id); $('#actionMsg').innerHTML = `<div class="msg">Saved as revision ${out.revision}. The earlier revision is kept.</div>`; }
+    catch (err) { $('#actionMsg').innerHTML = `<div class="msg">Not saved: ${esc(err.message)}</div>`; }
+  }
+  async function printView() {
+    try { const r = await api(U(`ohe/reports/${current.id}/html`)); const html = await r.text();
+      const w = window.open('', '_blank'); if (w) { w.document.write(html); w.document.close(); w.focus(); w.print(); } }
+    catch (e) { $('#actionMsg').innerHTML = `<div class="msg">${esc(e.message)}</div>`; }
+  }
+
+  show();
+  setInterval(() => { if (me) loadAlerts(); }, 60000);
+})();
+</script>
+</body>
+</html>

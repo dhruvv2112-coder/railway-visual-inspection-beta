@@ -21,6 +21,13 @@ class Settings(BaseSettings):
     min_brightness: float = 45.0     # mean luma 0..255
     max_brightness: float = 225.0
     max_clipped_fraction: float = 0.25  # share of pixels >= 253 (glare)
+    # Sign-in (OHE service). 'header' trusts X-Actor/X-Role (development, tests); 'token' requires sign-in.
+    auth_mode: str = "header"
+    secret_key: str = "change-me"     # set RVI_SECRET_KEY in production
+    token_hours: int = 12
+    users_file: Path = Path("./users.yaml")
+    # Optional web push for urgent findings (empty = alert feed only)
+    alert_webhook: str = ""
 
 
 settings = Settings()

@@ -9,8 +9,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, select
 
@@ -18,7 +18,7 @@ from .. import quality
 from ..config import settings
 from ..db import audit, get_session
 from ..models import now
-from . import pipeline
+from . import auth, pipeline
 
 router = APIRouter(prefix="/ohe", tags=["ohe"])
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -103,8 +103,7 @@ class Models:
             cls.detector = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
 
 
-def actor(x_actor: Annotated[str, Header()] = "anon", x_role: Annotated[str, Header()] = "Patrol"):
-    return {"id": x_actor, "role": x_role}
+actor = auth.actor  # bearer token, or X-Actor/X-Role headers in development (settings.auth_mode)
 
 
 ActorDep = Annotated[dict, Depends(actor)]
@@ -134,7 +133,7 @@ def _finding_key(ident: dict, a: dict) -> str:
 
 
 @router.post("/sessions/{sid}/media", status_code=201)
-async def ingest(sid: str, s: SessionDep, a: ActorDep, image: Annotated[UploadFile, File()],
+async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, image: Annotated[UploadFile, File()],
                  sha256: Annotated[str, Form()], captured_at: Annotated[datetime, Form()],
                  lat: Annotated[float | None, Form()] = None, lon: Annotated[float | None, Form()] = None,
                  accuracy_m: Annotated[float | None, Form()] = None, device: Annotated[str, Form()] = ""):
@@ -155,13 +154,30 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, image: Annotated[UploadFi
                  location_source="capture" if lat is not None else "none", device=device, path=str(path))
     s.add(m)
     audit(s, "ohe_media", m.id, "persisted", a["id"], {"sha256": m.sha256})
-    process(m, s)
+    new_alerts = process(m, s)
     s.commit()
     s.refresh(m)
+    for f in new_alerts:
+        bg.add_task(_push_alert, {"finding": f.id, "session": sid, "territory": sess.territory, "asset_id": f.asset_id,
+                                  "assessment": json.loads(f.payload_json)})
     return {"media": m, "analysis": json.loads(m.analysis_json), "idempotent": False}
 
 
-def process(m: OheMedia, s: Session) -> None:
+def _push_alert(payload: dict) -> None:
+    """Urgent finding raised the moment it is seen, before any report is signed (HLD §8.4). Optional webhook;
+    the alert feed (/ohe/alerts) always has it."""
+    if not settings.alert_webhook:
+        return
+    import urllib.request
+    try:
+        req = urllib.request.Request(settings.alert_webhook, data=json.dumps(payload, default=str).encode(),
+                                     headers={"Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=5).read()
+    except Exception as e:  # never block ingest on a notification
+        print("alert webhook failed:", e)
+
+
+def process(m: OheMedia, s: Session) -> list:
     """Run the cascade for one media item and link results to findings (repeat evidence never duplicates)."""
     reg = pipeline.load_registry()
     img = quality.decode(Path(m.path).read_bytes())
@@ -171,6 +187,7 @@ def process(m: OheMedia, s: Session) -> None:
     res["assessments"] = [pipeline.decide(o, res["identity"], res["quality"]["passed"], reg) for o in res["observations"]]
     m.analysis_json = json.dumps(res, default=str)
     m.status = "assessed"
+    new_alerts = []
     for asm in res["assessments"]:
         if asm["state"] not in ("assessable_defect", "anomalous_unclassified"):
             continue
@@ -185,11 +202,13 @@ def process(m: OheMedia, s: Session) -> None:
                            media_ids_json=json.dumps([m.id]), alert=asm.get("alert", False))
             if f.alert:
                 audit(s, "ohe_finding", f.id, "concern.flagged", "system", {"key": key})  # immediate, before signing
+                new_alerts.append(f)
         s.add(f)
+    return new_alerts
 
 
 @router.get("/sessions/{sid}/processing")
-def processing(sid: str, s: SessionDep):
+def processing(sid: str, s: SessionDep, a: ActorDep):
     media = s.exec(select(OheMedia).where(OheMedia.session_id == sid)).all()
     fs = s.exec(select(OheFinding).where(OheFinding.session_id == sid)).all()
     return {"media": [{"id": m.id, "status": m.status, "analysis": json.loads(m.analysis_json)} for m in media],
@@ -273,7 +292,7 @@ def end(sid: str, s: SessionDep, a: ActorDep):
 
 
 @router.get("/reports/{rid}")
-def get_report(rid: str, s: SessionDep):
+def get_report(rid: str, s: SessionDep, a: ActorDep):
     r = s.get(OheReport, rid)
     if not r:
         raise HTTPException(404, "Report not found")
@@ -327,7 +346,7 @@ def amend(rid: str, body: Amendment, s: SessionDep, a: ActorDep):
 
 
 @router.get("/reports/{rid}/html", response_class=HTMLResponse)
-def report_html(rid: str, s: SessionDep):
+def report_html(rid: str, s: SessionDep, a: ActorDep):
     """Deterministic render from the frozen revision; no AI at export time (HLD §10.4). Print to PDF from here."""
     r = s.get(OheReport, rid)
     if not r:
@@ -348,3 +367,76 @@ def report_html(rid: str, s: SessionDep):
             f"<h2>Asset register</h2><table><tr><th>Asset</th><th>State</th><th>Findings</th></tr>{reg}</table>"
             f"<h2>Findings</h2><table><tr><th>ID</th><th>Asset</th><th>Observed</th><th>Priority</th><th>Route</th></tr>{fnd}</table>"
             f"<h2>Limitations</h2><ul>{''.join(f'<li>{x}</li>' for x in c['RPT-09_limitations'])}</ul></body></html>")
+
+
+# ---- sign-in, reviewer lists, evidence images and the reviewer web page --------------------------------------------
+
+class LoginIn(BaseModel):
+    id: str
+    pin: str
+
+
+@router.post("/auth/login")
+def login(body: LoginIn):
+    return auth.login(body.id.strip(), body.pin.strip())
+
+
+@router.get("/me")
+def me(a: ActorDep):
+    return a | {"can_sign": a["role"] in SIGNER_ROLES}
+
+
+@router.get("/reports")
+def list_reports(s: SessionDep, a: ActorDep, limit: int = 100):
+    """Latest revision per patrol, newest first, with the summary counts a reviewer sorts by."""
+    out = {}
+    for r in s.exec(select(OheReport).order_by(OheReport.revision.desc())).all():
+        out.setdefault(r.session_id, r)
+    rows = []
+    for r in out.values():
+        sess = s.get(OheSession, r.session_id)
+        c = json.loads(r.content_json)
+        rows.append({"id": r.id, "session": r.session_id, "territory": sess.territory if sess else "", "revision": r.revision,
+                     "status": r.status, "signed_by": r.signed_by, "started_at": sess.started_at if sess else None,
+                     "ended_at": sess.ended_at if sess else None, "summary": c.get("RPT-02_summary", {}),
+                     "created_by": sess.created_by if sess else ""})
+    rows.sort(key=lambda x: str(x["ended_at"] or ""), reverse=True)
+    return rows[:limit]
+
+
+@router.get("/alerts")
+def alerts(s: SessionDep, a: ActorDep, limit: int = 50):
+    """Urgent findings as raised, newest first (does not wait for the report to be signed)."""
+    fs = s.exec(select(OheFinding).where(OheFinding.alert)).all()
+    rows = []
+    for f in fs:
+        sess = s.get(OheSession, f.session_id)
+        rows.append({"finding": f.id, "session": f.session_id, "territory": sess.territory if sess else "", "asset_id": f.asset_id,
+                     "candidates": json.loads(f.candidates_json)[:3], "observations": f.observations,
+                     "media_ids": json.loads(f.media_ids_json), "assessment": json.loads(f.payload_json),
+                     "raised_at": sess.started_at if sess else None})
+    return rows[::-1][:limit]
+
+
+@router.get("/media/{mid}")
+def media_info(mid: str, s: SessionDep, a: ActorDep):
+    m = s.get(OheMedia, mid)
+    if not m:
+        raise HTTPException(404, "Photo not found")
+    an = json.loads(m.analysis_json)
+    return {"id": m.id, "sha256": m.sha256, "captured_at": m.captured_at, "lat": m.lat, "lon": m.lon,
+            "location_source": m.location_source, "status": m.status, "identity": an.get("identity"),
+            "assessments": an.get("assessments", []), "quality": an.get("quality"), "image_state": an.get("image_state")}
+
+
+@router.get("/media/{mid}/image")
+def media_image(mid: str, s: SessionDep, a: ActorDep):
+    m = s.get(OheMedia, mid)
+    if not m or not Path(m.path).exists():
+        raise HTTPException(404, "Photo not found")
+    return FileResponse(m.path, media_type="image/jpeg")
+
+
+@router.get("/review", response_class=HTMLResponse, include_in_schema=False)
+def review_page():
+    return (Path(__file__).parent / "static" / "review.html").read_text(encoding="utf-8")
