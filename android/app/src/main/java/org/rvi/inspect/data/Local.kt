@@ -73,19 +73,35 @@ interface FindingDao {
     @Query("SELECT * FROM finding ORDER BY createdAt DESC LIMIT 200") fun recent(): Flow<List<FindingEntity>>
 }
 
-@Database(entities = [PatrolEntity::class, FindingEntity::class], version = 2, exportSchema = false)
+@Database(entities = [PatrolEntity::class, FindingEntity::class, OheSessionEntity::class, OheCaptureEntity::class, OheNoteEntity::class],
+    version = 3, exportSchema = false)
 abstract class RviDatabase : RoomDatabase() {
     abstract fun patrols(): PatrolDao
     abstract fun findings(): FindingDao
+    abstract fun ohe(): OheDao
 
     companion object {
         fun build(context: Context) = Room.databaseBuilder(context, RviDatabase::class.java, "rvi.db")
-            .addMigrations(MIGRATION_1_2).build()
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
 
         /** v2: OHE danger record (TPC informed) for the combined track + OHE foot patrol. */
         val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE finding ADD COLUMN tpcInformedAt INTEGER")
+            }
+        }
+
+        /** v3: OHE Visual AI Patrol capture flow (HLD v1.0) – sessions, photos, isolated notes. */
+        val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS `ohe_session` (`id` TEXT NOT NULL, `territory` TEXT NOT NULL, `inspectorId` TEXT NOT NULL, " +
+                    "`role` TEXT NOT NULL, `startedAt` INTEGER NOT NULL, `endedAt` INTEGER, `remoteId` TEXT, `reportId` TEXT, `summaryJson` TEXT, PRIMARY KEY(`id`))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `ohe_capture` (`id` TEXT NOT NULL, `sessionId` TEXT NOT NULL, `path` TEXT NOT NULL, " +
+                    "`sha256` TEXT NOT NULL, `capturedAt` INTEGER NOT NULL, `lat` REAL, `lon` REAL, `accuracyM` REAL, `localQualityOk` INTEGER NOT NULL, " +
+                    "`localReasons` TEXT NOT NULL, `uploaded` INTEGER NOT NULL, `imageState` TEXT, `prompt` TEXT, `findings` INTEGER NOT NULL, " +
+                    "`alert` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `ohe_note` (`id` TEXT NOT NULL, `sessionId` TEXT NOT NULL, `text` TEXT NOT NULL, " +
+                    "`createdAt` INTEGER NOT NULL, `uploaded` INTEGER NOT NULL, PRIMARY KEY(`id`))")
             }
         }
     }

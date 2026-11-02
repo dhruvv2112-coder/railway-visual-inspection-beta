@@ -28,6 +28,14 @@ import org.rvi.inspect.ui.screens.ReviewScreen
 import org.rvi.inspect.ui.screens.SettingsScreen
 import org.rvi.inspect.ui.screens.SettingsState
 import org.rvi.inspect.ui.screens.SummaryScreen
+import org.rvi.inspect.ui.screens.OheEndScreen
+import org.rvi.inspect.ui.screens.OheHomeScreen
+import org.rvi.inspect.ui.screens.OheHomeState
+import org.rvi.inspect.ui.screens.OheHud
+import org.rvi.inspect.ui.screens.OheHudState
+import org.rvi.inspect.ui.screens.OheNoteSheet
+import org.rvi.inspect.ui.OheSummary
+import org.rvi.inspect.data.Prompt
 import org.rvi.inspect.ui.theme.RviTheme
 import java.io.File
 
@@ -89,6 +97,23 @@ abstract class Shots(private val lang: String) {
         val l = { id: String -> tax.classes.first { it.id == id }.label.forLang(lang) }
         ReviewScreen(listOf(ReviewItem("a", "1205/12", l("EL-OH-004"), "B", "CP-0412", "", "SSE/TRD (OHE depot)"),
             ReviewItem("b", "1206/2", l("PW-RL-008"), "A", "CP-0412", "Mark faded; joggled plate absent", "SSE/P.Way")), mapOf("a" to "RF-P2"), { _, _ -> }, {}, {})
+    }
+
+    @Test fun s09_ohe_home() = shot("09_ohe_home") {
+        OheHomeScreen(OheHomeState("CP-0412", "SEC-DEMO-01", "https://rvi.example.in/", false, 0), {}, {}, {}, {}, {}, {}, null)
+    }
+
+    @Test fun s10_ohe_hud() = shot("10_ohe_patrol") {
+        OheHud(OheHudState(14, 12, 2, 1, 1, Prompt.ZOOM, false, null), {}, {}, {}, {}) { FakeFeed() }
+    }
+
+    @Test fun s11_ohe_note() = shot("11_ohe_note") {
+        Box { OheHud(OheHudState(14, 12, 2, 1, 1, null, false, null), {}, {}, {}, {}) { FakeFeed() }
+            OheNoteSheet(if (lang == "hi") "मस्त 1205/12 के पास पेड़ की शाखा" else "Tree branch near mast 1205/12", {}, {}, {}, {}) }
+    }
+
+    @Test fun s12_ohe_end() = shot("12_ohe_end") {
+        OheEndScreen(OheSummary(14, 14, 1, "a1b2c3d4", 6, 5, 1, 1, 1), {}, {})
     }
 
     @Test fun s08_settings() = shot("08_settings") { SettingsScreen(SettingsState(lang, true, true, false, true), {}, { _, _ -> }) }

@@ -31,6 +31,13 @@ import org.rvi.inspect.ui.screens.ClassifyState
 import org.rvi.inspect.ui.screens.DangerSheet
 import org.rvi.inspect.ui.screens.HomeScreen
 import org.rvi.inspect.ui.screens.HomeState
+import org.rvi.inspect.ui.screens.OheEndScreen
+import org.rvi.inspect.ui.screens.OheHomeScreen
+import org.rvi.inspect.ui.screens.OheHomeState
+import org.rvi.inspect.ui.screens.OheHud
+import org.rvi.inspect.ui.screens.OheHudState
+import org.rvi.inspect.ui.screens.OheNoteSheet
+import org.rvi.inspect.ui.screens.promptRes
 import org.rvi.inspect.ui.screens.KitCheckScreen
 import org.rvi.inspect.ui.screens.PatrolHud
 import org.rvi.inspect.ui.screens.ReviewItem
@@ -46,7 +53,7 @@ val SUGGESTED = listOf("PW-FS-001", "EL-OH-004", "PW-RL-008", "EL-OH-001", "PW-F
 fun currentLang(): String = AppCompatDelegate.getApplicationLocales().get(0)?.language ?: java.util.Locale.getDefault().language
 
 @Composable
-fun AppNav(vm: PatrolViewModel = viewModel()) {
+fun AppNav(vm: PatrolViewModel = viewModel(), ovm: OheViewModel = viewModel()) {
     val nav = rememberNavController()
     val context = LocalContext.current
     val view = LocalView.current
@@ -74,9 +81,22 @@ fun AppNav(vm: PatrolViewModel = viewModel()) {
 
     fun capture() = camera.take(context, onSaved = { f -> vm.onCaptured(f); nav.navigate("classify") }, onError = { })
 
+    fun oheCapture() = camera.take(context, onSaved = { f -> ovm.onCaptured(f) }, onError = { })
+    var noteOpen by remember { mutableStateOf(false) }
+    var noteText by remember { mutableStateOf("") }
+
     voice.onResult = { text ->
         heard = text
-        when (val c = CommandMatcher.match(text)) {
+        val route = nav.currentBackStackEntry?.destination?.route
+        if (route == "ohe_hud") {
+            // HLD finite command set: photo, note, end patrol. Nothing spoken can classify or confirm a defect.
+            when (val c = CommandMatcher.match(text)) {
+                Command.Capture -> oheCapture()
+                Command.EndPatrol -> { ovm.end(); nav.navigate("ohe_end") { popUpTo("ohe_home") } }
+                is Command.Note -> if (noteOpen) noteText = c.text else { ovm.note(c.text); confirm(R.string.saved_offline) }
+                else -> if (noteOpen) noteText = text else confirm(R.string.command_not_understood)
+            }
+        } else when (val c = CommandMatcher.match(text)) {
             Command.Capture -> capture()
             Command.EndPatrol -> { vm.endPatrol(); nav.navigate("summary") }
             Command.Danger -> { dangerKind = null; danger = true }
@@ -88,7 +108,42 @@ fun AppNav(vm: PatrolViewModel = viewModel()) {
         }
     }
 
-    NavHost(nav, startDestination = "home") {
+    NavHost(nav, startDestination = "ohe_home") {
+        composable("ohe_home") {
+            val s = settings
+            val active by ovm.active.collectAsState()
+            val latest by ovm.latest.collectAsState()
+            val opending by ovm.pending.collectAsState()
+            var territory by remember { mutableStateOf("SEC-DEMO-01") }
+            var server by remember(s?.serverUrl) { mutableStateOf(s?.serverUrl ?: "") }
+            var inspector by remember(s?.inspectorId) { mutableStateOf(s?.inspectorId ?: "") }
+            OheHomeScreen(OheHomeState(inspector, territory, server, active != null, opending),
+                onTerritory = { territory = it }, onServer = { server = it; ovm.setServer(it) }, onInspector = { inspector = it; ovm.setInspector(it) },
+                onStart = { ovm.start(territory); nav.navigate("ohe_hud") }, onResume = { nav.navigate("ohe_hud") },
+                onSettings = { nav.navigate("settings") },
+                onLastReport = if (active == null && latest?.endedAt != null) ({ nav.navigate("ohe_end") }) else null)
+        }
+        composable("ohe_hud") {
+            val caps by ovm.captures.collectAsState()
+            val notes by ovm.notes.collectAsState()
+            val local by ovm.prompt.collectAsState()
+            val last = caps.lastOrNull()
+            val prompt = if (last != null && !last.uploaded) local else ovm.serverPrompt(caps) ?: local.takeIf { last?.uploaded != true }
+            LaunchedEffect(prompt, caps.size) { prompt?.let { if (settings?.tts != false) voice.speak(context.getString(promptRes(it)), voiceTag) } }
+            OheHud(OheHudState(caps.size, caps.count { it.uploaded }, caps.count { it.findings > 0 }, caps.count { it.alert }, notes, prompt,
+                vstate is VoiceController.State.Listening, heard),
+                onCapture = { oheCapture() }, onVoice = { voice.listen(voiceTag) }, onNote = { noteText = ""; noteOpen = true },
+                onEnd = { ovm.end(); nav.navigate("ohe_end") { popUpTo("ohe_home") } }, background = { CameraPreview(camera) })
+            if (noteOpen) OheNoteSheet(noteText, { noteText = it }, { voice.listen(voiceTag) },
+                onSave = { ovm.note(noteText); noteOpen = false; confirm(R.string.saved_offline) }, onCancel = { noteOpen = false })
+        }
+        composable("ohe_end") {
+            val caps by ovm.captures.collectAsState()
+            val notes by ovm.notes.collectAsState()
+            val latest by ovm.latest.collectAsState()
+            OheEndScreen(summaryFrom(latest, caps, notes), onRetry = { ovm.retrySync() },
+                onHome = { nav.navigate("ohe_home") { popUpTo("ohe_home") { inclusive = true } } })
+        }
         composable("home") {
             HomeScreen(HomeState(settings?.inspectorId ?: "", patrol?.beatFromKm ?: "1204/0", patrol?.beatToKm ?: "1207/4",
                 patrol?.line ?: "UP", context.getString(R.string.role_keyman) + " · CP-01", patrol != null, pending, true),

@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 private val Context.prefs by preferencesDataStore("settings")
 
 data class UserSettings(val inspectorId: String, val role: String, val voice: Boolean, val tts: Boolean, val largeText: Boolean, val haptics: Boolean,
-                        val tpcNumber: String = "")
+                        val tpcNumber: String = "", val serverUrl: String = BuildConfig.API_BASE_URL)
 
 class Repository(private val context: Context, private val db: RviDatabase) {
 
@@ -44,15 +44,20 @@ class Repository(private val context: Context, private val db: RviDatabase) {
         val large = booleanPreferencesKey("large")
         val haptics = booleanPreferencesKey("haptics")
         val tpc = stringPreferencesKey("tpc_number")
+        val server = stringPreferencesKey("server_url")
     }
 
     val settings: Flow<UserSettings> = context.prefs.data.map {
         UserSettings(it[K.inspector] ?: "CP-0412", it[K.role] ?: "Patrol", it[K.voice] ?: true, it[K.tts] ?: true,
-            it[K.large] ?: false, it[K.haptics] ?: true, it[K.tpc] ?: "")
+            it[K.large] ?: false, it[K.haptics] ?: true, it[K.tpc] ?: "", it[K.server] ?: BuildConfig.API_BASE_URL)
     }
 
     suspend fun setToggle(key: String, value: Boolean) = context.prefs.edit {
         when (key) { "voice" -> it[K.voice] = value; "tts" -> it[K.tts] = value; "large" -> it[K.large] = value; "haptics" -> it[K.haptics] = value }
+    }
+
+    suspend fun setText(key: String, value: String) = context.prefs.edit {
+        when (key) { "server" -> it[K.server] = value.trim(); "inspector" -> it[K.inspector] = value.trim(); "role" -> it[K.role] = value.trim() }
     }
 
     val activePatrol = db.patrols().active()
