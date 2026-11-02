@@ -34,6 +34,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -97,10 +104,10 @@ fun OheHomeScreen(st: OheHomeState, onTerritory: (String) -> Unit, onServer: (St
                         GhostButton(stringResource(R.string.ohe_sign_out), onSignOut)
                     }
                 } else {
-                    var pin by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf("") }
+                    var pin by rememberSaveable { mutableStateOf("") }
                     OutlinedTextField(pin, { pin = it.filter(Char::isDigit).take(8) }, Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.ohe_pin)) },
-                        singleLine = true, visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
-                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.NumberPassword))
+                        singleLine = true, visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword))
                     Spacer(Modifier.height(8.dp))
                     GhostButton(stringResource(R.string.ohe_sign_in), { onSignIn(pin) }, Modifier.fillMaxWidth())
                     st.signMsg?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = Grey.G300) }
