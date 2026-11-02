@@ -1,1 +1,38 @@
-All checks passed!
+F541 [*] f-string without any placeholders
+   --> app/ohe/api.py:415:14
+    |
+413 |     act = "".join(row(a["finding"], a["primary"], a.get("action") or "", a["status"]) for a in c["RPT-08_actions"])
+414 |     nt = c.get("RPT-12_notes")
+415 |     notes = (f"<h2>Patrol notes (not used by the AI inspection)</h2><ul>"
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+416 |              + "".join(f"<li>{esc(n['at'])} · {esc(n['author'])}: {esc(n['text'])}</li>" for n in nt["notes"]) + "</ul>") if nt else …
+417 |     return (f"<!doctype html><html><head><meta charset='utf-8'><title>OHE patrol report {r.id}</title><style>{css}</style></head><bod…
+    |
+help: Remove extraneous `f` prefix
+    |
+414 |     nt = c.get("RPT-12_notes")
+    -     notes = (f"<h2>Patrol notes (not used by the AI inspection)</h2><ul>"
+415 +     notes = ("<h2>Patrol notes (not used by the AI inspection)</h2><ul>"
+416 |              + "".join(f"<li>{esc(n['at'])} · {esc(n['author'])}: {esc(n['text'])}</li>" for n in nt["notes"]) + "</ul>") if nt else ""
+    |
+
+RUF100 [*] Unused `noqa` directive (unused: `BLE001`)
+   --> app/ohe/api.py:503:29
+    |
+501 |     try:
+502 |         process(m, s)
+503 |     except Exception as e:  # noqa: BLE001 - still failing: stay visible as failed
+    |                             ^^^^^^^^^^^^^^
+504 |         m.analysis_json = json.dumps({"error": f"{type(e).__name__}: {str(e)[:300]}", "assessments": []})
+505 |         s.commit()
+    |
+help: Remove unused `noqa` directive
+    |
+502 |         process(m, s)
+    -     except Exception as e:  # noqa: BLE001 - still failing: stay visible as failed
+503 +     except Exception as e:
+504 |         m.analysis_json = json.dumps({"error": f"{type(e).__name__}: {str(e)[:300]}", "assessments": []})
+    |
+
+Found 2 errors.
+[*] 2 fixable with `--fix`.
