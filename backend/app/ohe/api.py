@@ -412,7 +412,7 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
     cov = c.get("RPT-03_coverage", {})
     act = "".join(row(a["finding"], a["primary"], a.get("action") or "", a["status"]) for a in c["RPT-08_actions"])
     nt = c.get("RPT-12_notes")
-    notes = (f"<h2>Patrol notes (not used by the AI inspection)</h2><ul>"
+    notes = ("<h2>Patrol notes (not used by the AI inspection)</h2><ul>"
              + "".join(f"<li>{esc(n['at'])} · {esc(n['author'])}: {esc(n['text'])}</li>" for n in nt["notes"]) + "</ul>") if nt else ""
     return (f"<!doctype html><html><head><meta charset='utf-8'><title>OHE patrol report {r.id}</title><style>{css}</style></head><body>"
             f"<h1>OHE visual patrol report · revision {r.revision} · {r.status}</h1><p>Session {c['RPT-01_document_control']['session']}"
@@ -500,7 +500,7 @@ def reprocess(mid: str, s: SessionDep, a: ActorDep):
         raise HTTPException(409, "Photo is already processed")
     try:
         process(m, s)
-    except Exception as e:  # noqa: BLE001 - still failing: stay visible as failed
+    except Exception as e:  # still failing: stay visible as failed
         m.analysis_json = json.dumps({"error": f"{type(e).__name__}: {str(e)[:300]}", "assessments": []})
         s.commit()
         raise HTTPException(503, "Processing still failing; try again later") from e
