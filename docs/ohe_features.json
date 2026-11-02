@@ -149,8 +149,8 @@
 "feature": "Read mast number plates (OCR)",
 "hld_ref": "Cascade stage 3",
 "status": "Partial",
-"built": "PP-OCRv5 adapter",
-"next": "Tune on real plates (needs pilot photos)"
+"built": "PP-OCR (RapidOCR) wired into the server, zero-shot; grammar + corridor check guard it",
+"next": "Fine-tune on Railway plates (pilot photos)"
 },
 {
 "id": "B07",
@@ -247,9 +247,9 @@
 "area": "Inspection service",
 "feature": "Cycle report RPT-01 to RPT-13 (JSON + HTML)",
 "hld_ref": "RPT-01–13",
-"status": "Partial",
-"built": "Report skeleton with core sections",
-"next": "Fill remaining sections"
+"status": "Built",
+"built": "All 13 report sections: coverage ledger, temporal 'not comparable', review record, notes annex added",
+"next": "—"
 },
 {
 "id": "B18",
@@ -301,9 +301,9 @@
 "area": "Inspection service",
 "feature": "Hosting, storage and deployment",
 "hld_ref": "—",
-"status": "Not started",
-"built": "—",
-"next": "Server and storage"
+"status": "Built",
+"built": "Docker image with model + OCR on GHCR, compose file, user script; release workflow with smoke test",
+"next": "Production host and HTTPS"
 },
 {
 "id": "C01",
@@ -445,9 +445,9 @@
 "area": "Testing and operations",
 "feature": "HLD scenario tests V01–V12",
 "hld_ref": "V01–V12",
-"status": "Partial",
-"built": "9 of 12 pass (V01–V07, V09, V11)",
-"next": "V08, V10, V12"
+"status": "Built",
+"built": "All 12 HLD scenarios V01–V12 pass (29 backend tests)",
+"next": "—"
 },
 {
 "id": "E02",
