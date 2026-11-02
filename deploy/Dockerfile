@@ -5,7 +5,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 libgli
 WORKDIR /srv
 COPY shared /srv/shared
 COPY backend /srv/backend
-RUN pip install "/srv/backend[ocr]" && mkdir -p /srv/models /data
+# rapidocr pulls the GUI build of OpenCV; swap it for the headless build (no X11 libraries on a server)
+RUN pip install "/srv/backend[ocr]" \
+ && pip uninstall -y opencv-python \
+ && pip install --force-reinstall --no-deps "opencv-python-headless>=4.10" \
+ && python -c "import cv2, rapidocr_onnxruntime, onnxruntime; print('cv2', cv2.__version__)" \
+ && mkdir -p /srv/models /data
 # Trained detector (ohe_detector.onnx + ohe_detector.names.json); placed in deploy/models by CI or by hand.
 COPY deploy/models/ /srv/models/
 WORKDIR /srv/backend
