@@ -17,6 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.7"]
+ocr = ["rapidocr_onnxruntime>=1.3"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

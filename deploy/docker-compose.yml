@@ -1,0 +1,9 @@
+# Run:  cp .env.example .env  (set RVI_SECRET_KEY)  →  docker compose up -d  →  open http://<server>:8000/ohe/review
+services:
+  rvi:
+    image: ${RVI_IMAGE:-ghcr.io/dhruvv2112-coder/rvi-ohe-server:latest}
+    build: {context: .., dockerfile: deploy/Dockerfile}
+    restart: unless-stopped
+    ports: ["${RVI_PORT:-8000}:8000"]
+    env_file: .env
+    volumes: ["./data:/data"]   # database, photos (evidence) and users.yaml live here – back this folder up

@@ -20,3 +20,7 @@ runs/
 ml/ohe/.venv/
 reports-ohe-gpu/
 logs-ohe-gpu/
+deploy/models/*.onnx
+deploy/models/*.json
+deploy/data/
+deploy/.env

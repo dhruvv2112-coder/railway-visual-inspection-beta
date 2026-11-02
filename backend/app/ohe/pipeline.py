@@ -61,6 +61,19 @@ class NullOCR:
         return []
 
 
+class RapidOcrAdapter:
+    """PP-OCR detection + recognition on ONNX Runtime (rapidocr_onnxruntime, Apache-2.0). Zero-shot on mast plates
+    until the plate fine-tune (needs pilot photos); the numbering grammar and corridor check guard its output."""
+    def __init__(self):
+        from rapidocr_onnxruntime import RapidOCR
+        self._ocr = RapidOCR()
+        self.version = "rapidocr-ppocr-zero-shot"
+
+    def read(self, img):
+        res, _ = self._ocr(img)
+        return [(str(t).replace(" ", ""), float(sc)) for _, t, sc in (res or [])]
+
+
 class OnnxYoloDetector:
     """Ultralytics-exported ONNX detector (output 1 x (4+nc) x N). Letterbox to imgsz, NMS with OpenCV."""
 

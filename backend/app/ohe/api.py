@@ -102,6 +102,10 @@ class Models:
         names = settings.model_dir / "ohe_detector.names.json"
         if p.exists() and names.exists():
             cls.detector = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
+        try:
+            cls.ocr = pipeline.RapidOcrAdapter()
+        except ImportError:  # optional dependency (installed in the server image)
+            cls.ocr = pipeline.NullOCR()
 
 
 actor = auth.actor  # bearer token, or X-Actor/X-Role headers in development (settings.auth_mode)

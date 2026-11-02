@@ -53,7 +53,8 @@ def require_supervisor(a: dict):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "detector_available": inference.available(), "taxonomy_version": taxonomy.load()["version"]}
+    return {"status": "ok", "detector_available": inference.available(), "taxonomy_version": taxonomy.load()["version"],
+            "ohe_detector": getattr(ohe_api.Models.detector, "version", "none"), "ohe_ocr": getattr(ohe_api.Models.ocr, "version", "none")}
 
 
 @app.get("/taxonomy")
