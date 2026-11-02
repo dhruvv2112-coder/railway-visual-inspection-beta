@@ -177,9 +177,9 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 72 warnings</span>
+      <span class="mdl-layout-title">Lint Report: 74 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Nov 01 12:28:03 UTC 2026 by AGP (8.7.3)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Mon Nov 02 19:47:48 UTC 2026 by AGP (8.7.3)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -191,7 +191,7 @@ document.getElementById(id).style.display = 'none';
       <a class="mdl-navigation__link" href="#AndroidGradlePluginVersion"><i class="material-icons warning-icon">warning</i>Obsolete Android Gradle Plugin Version (3)</a>
       <a class="mdl-navigation__link" href="#GradleDependency"><i class="material-icons warning-icon">warning</i>Obsolete Gradle Dependency (54)</a>
       <a class="mdl-navigation__link" href="#ModifierParameter"><i class="material-icons warning-icon">warning</i>Guidelines for Modifier parameters in a Composable function (1)</a>
-      <a class="mdl-navigation__link" href="#PluralsCandidate"><i class="material-icons warning-icon">warning</i>Potential Plurals (2)</a>
+      <a class="mdl-navigation__link" href="#PluralsCandidate"><i class="material-icons warning-icon">warning</i>Potential Plurals (4)</a>
       <a class="mdl-navigation__link" href="#DataExtractionRules"><i class="material-icons warning-icon">warning</i>Missing data extraction rules (1)</a>
       <a class="mdl-navigation__link" href="#ObsoleteSdkInt"><i class="material-icons warning-icon">warning</i>Obsolete SDK_INT Version Check (1)</a>
       <a class="mdl-navigation__link" href="#UnusedResources"><i class="material-icons warning-icon">warning</i>Unused resources (7)</a>
@@ -228,7 +228,7 @@ document.getElementById(id).style.display = 'none';
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Correctness:Messages">Correctness:Messages</a>
 </td></tr>
 <tr>
-<td class="countColumn">2</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">4</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#PluralsCandidate">PluralsCandidate</a>: Potential Plurals</td></tr>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Security">Security</a>
 </td></tr>
@@ -269,13 +269,13 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/org/rvi/inspect/ui/AppNav.kt">../../src/main/java/org/rvi/inspect/ui/AppNav.kt</a>:71</span>: <span class="message">Field requires API level 30 (current min is 26): <code>android.view.HapticFeedbackConstants#CONFIRM</code></span><br /><pre class="errorlines">
-<span class="lineno">  68 </span>  DisposableEffect(Unit) { onDispose { voice.release() } }
-<span class="lineno">  69 </span>
-<span class="lineno">  70 </span>  <span class="keyword">fun</span> confirm(msg: Int) {
-<span class="caretline"><span class="lineno">  71 </span>      <span class="keyword">if</span> (settings?.haptics != <span class="keyword">false</span>) view.performHapticFeedback(<span class="warning">HapticFeedbackConstants.CONFIRM</span>)&nbsp;</span>
-<span class="lineno">  72 </span>      <span class="keyword">if</span> (settings?.tts != <span class="keyword">false</span>) voice.speak(context.getString(msg), voiceTag)
-<span class="lineno">  73 </span>  }
+<span class="location"><a href="../../src/main/java/org/rvi/inspect/ui/AppNav.kt">../../src/main/java/org/rvi/inspect/ui/AppNav.kt</a>:78</span>: <span class="message">Field requires API level 30 (current min is 26): <code>android.view.HapticFeedbackConstants#CONFIRM</code></span><br /><pre class="errorlines">
+<span class="lineno">  75 </span>  DisposableEffect(Unit) { onDispose { voice.release() } }
+<span class="lineno">  76 </span>
+<span class="lineno">  77 </span>  <span class="keyword">fun</span> confirm(msg: Int) {
+<span class="caretline"><span class="lineno">  78 </span>      <span class="keyword">if</span> (settings?.haptics != <span class="keyword">false</span>) view.performHapticFeedback(<span class="warning">HapticFeedbackConstants.CONFIRM</span>)&nbsp;</span>
+<span class="lineno">  79 </span>      <span class="keyword">if</span> (settings?.tts != <span class="keyword">false</span>) voice.speak(context.getString(msg), voiceTag)
+<span class="lineno">  80 </span>  }
 </pre>
 
 </div>
@@ -1025,22 +1025,40 @@ Dismiss</button>            </div>
 <div class="issue">
 <div class="warningslist">
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:12</span>: <span class="message">Formatting %d followed by words ("findings"): This should probably be a plural rather than a string</span><br /><pre class="errorlines">
-<span class="lineno">  9 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"start_patrol"</span>>Start patrol<span class="tag">&lt;/string></span>
-<span class="lineno"> 10 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"resume_patrol"</span>>Resume patrol<span class="tag">&lt;/string></span>
-<span class="lineno"> 11 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"end_patrol"</span>>End patrol<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 12 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"sync_pending"</span>>%1$d findings waiting to sync<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 13 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"sync_done"</span>>All findings synced<span class="tag">&lt;/string></span>
-<span class="lineno"> 14 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"offline"</span>>Offline – saving on phone<span class="tag">&lt;/string></span>
-<span class="lineno"> 15 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_check"</span>>Kit check<span class="tag">&lt;/string></span></pre>
+<span class="lineno">   9 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"start_patrol"</span>>Start patrol<span class="tag">&lt;/string></span>
+<span class="lineno">  10 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"resume_patrol"</span>>Resume patrol<span class="tag">&lt;/string></span>
+<span class="lineno">  11 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"end_patrol"</span>>End patrol<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  12 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"sync_pending"</span>>%1$d findings waiting to sync<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  13 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"sync_done"</span>>All findings synced<span class="tag">&lt;/string></span>
+<span class="lineno">  14 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"offline"</span>>Offline – saving on phone<span class="tag">&lt;/string></span>
+<span class="lineno">  15 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_check"</span>>Kit check<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:26</span>: <span class="message">Formatting %d followed by words ("findings"): This should probably be a plural rather than a string</span><br /><pre class="errorlines">
-<span class="lineno"> 23 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_confirm"</span>>Kit complete – continue<span class="tag">&lt;/string></span>
-<span class="lineno"> 24 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"patrol_live"</span>>Patrol in progress<span class="tag">&lt;/string></span>
-<span class="lineno"> 25 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"km_now"</span>>km %1$s<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 26 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings_count"</span>>%1$d findings<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 27 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"capture"</span>>Capture<span class="tag">&lt;/string></span>
-<span class="lineno"> 28 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"voice"</span>>Voice<span class="tag">&lt;/string></span>
-<span class="lineno"> 29 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"listening"</span>>Listening…<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  23 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_confirm"</span>>Kit complete – continue<span class="tag">&lt;/string></span>
+<span class="lineno">  24 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"patrol_live"</span>>Patrol in progress<span class="tag">&lt;/string></span>
+<span class="lineno">  25 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"km_now"</span>>km %1$s<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  26 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings_count"</span>>%1$d findings<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  27 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"capture"</span>>Capture<span class="tag">&lt;/string></span>
+<span class="lineno">  28 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"voice"</span>>Voice<span class="tag">&lt;/string></span>
+<span class="lineno">  29 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"listening"</span>>Listening…<span class="tag">&lt;/string></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:100</span>: <span class="message">Formatting %d followed by words ("photos"): This should probably be a plural rather than a string</span><br /><pre class="errorlines">
+<span class="lineno">  97 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_section"</span>>Section<span class="tag">&lt;/string></span>
+<span class="lineno">  98 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_server"</span>>Server address<span class="tag">&lt;/string></span>
+<span class="lineno">  99 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_all_uploaded"</span>>All photos uploaded<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno"> 100 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_pending"</span>>%1$d photos waiting to upload<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 101 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_start"</span>>Start patrol<span class="tag">&lt;/string></span>
+<span class="lineno"> 102 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_resume"</span>>Resume patrol<span class="tag">&lt;/string></span>
+<span class="lineno"> 103 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_last_patrol"</span>>Last patrol report<span class="tag">&lt;/string></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:105</span>: <span class="message">Formatting %d followed by words ("uploaded"): This should probably be a plural rather than a string</span><br /><pre class="errorlines">
+<span class="lineno"> 102 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_resume"</span>>Resume patrol<span class="tag">&lt;/string></span>
+<span class="lineno"> 103 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_last_patrol"</span>>Last patrol report<span class="tag">&lt;/string></span>
+<span class="lineno"> 104 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_live"</span>>Patrol live<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno"> 105 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_uploaded_of"</span>>%1$d of %2$d uploaded<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 106 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_photos"</span>>Photos<span class="tag">&lt;/string></span>
+<span class="lineno"> 107 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_flagged"</span>>Flagged<span class="tag">&lt;/string></span>
+<span class="lineno"> 108 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ohe_urgent"</span>>Urgent<span class="tag">&lt;/string></span></pre>
 
 </div>
 <div class="metadata"><div class="explanation" id="explanationPluralsCandidate" style="display: none;">
@@ -1189,58 +1207,58 @@ Dismiss</button>            </div>
 <div class="issue">
 <div class="warningslist">
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:61</span>: <span class="message">The resource <code>R.string.close_with_evidence</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 58 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"confirm"</span>>Confirm<span class="tag">&lt;/string></span>
-<span class="lineno"> 59 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"reject"</span>>Reject<span class="tag">&lt;/string></span>
-<span class="lineno"> 60 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"severity"</span>>Severity<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 61 </span>    <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"close_with_evidence"</span></span>>Close with evidence<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 62 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"settings"</span>>Settings<span class="tag">&lt;/string></span>
-<span class="lineno"> 63 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"language"</span>>Language<span class="tag">&lt;/string></span>
-<span class="lineno"> 64 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"voice_commands"</span>>Voice commands<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  58 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"confirm"</span>>Confirm<span class="tag">&lt;/string></span>
+<span class="lineno">  59 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"reject"</span>>Reject<span class="tag">&lt;/string></span>
+<span class="lineno">  60 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"severity"</span>>Severity<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  61 </span>    <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"close_with_evidence"</span></span>>Close with evidence<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  62 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"settings"</span>>Settings<span class="tag">&lt;/string></span>
+<span class="lineno">  63 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"language"</span>>Language<span class="tag">&lt;/string></span>
+<span class="lineno">  64 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"voice_commands"</span>>Voice commands<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:69</span>: <span class="message">The resource <code>R.string.home</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 66 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"large_text"</span>>Large text<span class="tag">&lt;/string></span>
-<span class="lineno"> 67 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"haptics"</span>>Haptic confirmation<span class="tag">&lt;/string></span>
-<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 69 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"home"</span></span>>Home<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
-<span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
-<span class="lineno"> 72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  66 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"large_text"</span>>Large text<span class="tag">&lt;/string></span>
+<span class="lineno">  67 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"haptics"</span>>Haptic confirmation<span class="tag">&lt;/string></span>
+<span class="lineno">  68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  69 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"home"</span></span>>Home<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
+<span class="lineno">  71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
+<span class="lineno">  72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:70</span>: <span class="message">The resource <code>R.string.findings</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 67 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"haptics"</span>>Haptic confirmation<span class="tag">&lt;/string></span>
-<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
-<span class="lineno"> 69 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"findings"</span></span>>Findings<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
-<span class="lineno"> 72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
-<span class="lineno"> 73 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  67 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"haptics"</span>>Haptic confirmation<span class="tag">&lt;/string></span>
+<span class="lineno">  68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
+<span class="lineno">  69 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  70 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"findings"</span></span>>Findings<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
+<span class="lineno">  72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
+<span class="lineno">  73 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:71</span>: <span class="message">The resource <code>R.string.cat_a</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
-<span class="lineno"> 69 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
-<span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_a"</span></span>>Visible<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
-<span class="lineno"> 73 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span>
-<span class="lineno"> 74 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  68 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ai_disclaimer"</span>>Suggestions are not decisions. Only SSE/JE (P.Way or TRD) assign severity.<span class="tag">&lt;/string></span>
+<span class="lineno">  69 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
+<span class="lineno">  70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  71 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_a"</span></span>>Visible<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
+<span class="lineno">  73 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span>
+<span class="lineno">  74 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:72</span>: <span class="message">The resource <code>R.string.cat_b</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 69 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
-<span class="lineno"> 70 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
-<span class="lineno"> 71 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 72 </span>    <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_b"</span></span>>Needs close view<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 73 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span>
-<span class="lineno"> 74 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span>
-<span class="lineno"> 75 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  69 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"home"</span>>Home<span class="tag">&lt;/string></span>
+<span class="lineno">  70 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
+<span class="lineno">  71 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  72 </span>    <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_b"</span></span>>Needs close view<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  73 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_c"</span>>Needs measurement<span class="tag">&lt;/string></span>
+<span class="lineno">  74 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span>
+<span class="lineno">  75 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:73</span>: <span class="message">The resource <code>R.string.cat_c</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
-<span class="lineno"> 71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
-<span class="lineno"> 72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 73 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_c"</span></span>>Needs measurement<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 74 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span>
-<span class="lineno"> 75 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span>
-<span class="lineno"> 76 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_ohe_tools"</span>>OHE spanners, bond bolts and nuts, small chopper, spring balance<span class="tag">&lt;/string></span></pre>
+<span class="lineno">  70 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"findings"</span>>Findings<span class="tag">&lt;/string></span>
+<span class="lineno">  71 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_a"</span>>Visible<span class="tag">&lt;/string></span>
+<span class="lineno">  72 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"cat_b"</span>>Needs close view<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno">  73 </span>  <span class="tag">&lt;string</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"cat_c"</span></span>>Needs measurement<span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  74 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"saved_offline"</span>>Saved. Will sync when online.<span class="tag">&lt;/string></span>
+<span class="lineno">  75 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"command_not_understood"</span>>Command not understood<span class="tag">&lt;/string></span>
+<span class="lineno">  76 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"kit_ohe_tools"</span>>OHE spanners, bond bolts and nuts, small chopper, spring balance<span class="tag">&lt;/string></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/themes.xml">../../src/main/res/values/themes.xml</a>:9</span>: <span class="message">The resource <code>R.color.ink</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno">  6 </span>        <span class="tag">&lt;item</span><span class="attribute"> name</span>=<span class="value">"android:navigationBarColor"</span>>@android:color/transparent<span class="tag">&lt;/item></span>

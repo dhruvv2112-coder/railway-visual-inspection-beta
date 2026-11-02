@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.rvi.inspect.OheTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-02T19:47:39" hostname="runnervm48cm3" time="0.047">
+  <properties/>
+  <testcase name="uploadWithUrgentFinding" classname="org.rvi.inspect.OheTest" time="0.022"/>
+  <testcase name="localQualityPrompts" classname="org.rvi.inspect.OheTest" time="0.001"/>
+  <testcase name="sha256MatchesKnownVector" classname="org.rvi.inspect.OheTest" time="0.009"/>
+  <testcase name="promptsNeverAskToApproachLiveOhe" classname="org.rvi.inspect.OheTest" time="0.0"/>
+  <testcase name="summaryUsesServerCountsWhenReportExists" classname="org.rvi.inspect.OheTest" time="0.002"/>
+  <testcase name="duplicateUploadWithoutAnalysisIsHarmless" classname="org.rvi.inspect.OheTest" time="0.0"/>
+  <testcase name="oheVoiceSetIsPhotoNoteEnd" classname="org.rvi.inspect.OheTest" time="0.011"/>
+  <testcase name="uploadNotAssessableAsksForZoom" classname="org.rvi.inspect.OheTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

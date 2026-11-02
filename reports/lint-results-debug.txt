@@ -1,4 +1,4 @@
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/AppNav.kt:71: Warning: Field requires API level 30 (current min is 26): android.view.HapticFeedbackConstants#CONFIRM [InlinedApi]
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/AppNav.kt:78: Warning: Field requires API level 30 (current min is 26): android.view.HapticFeedbackConstants#CONFIRM [InlinedApi]
         if (settings?.haptics != false) view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -255,6 +255,12 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
 /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/strings.xml:26: Warning: Formatting %d followed by words ("findings"): This should probably be a plural rather than a string [PluralsCandidate]
     <string name="findings_count">%1$d findings</string>
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/strings.xml:100: Warning: Formatting %d followed by words ("photos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="ohe_pending">%1$d photos waiting to upload</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/strings.xml:105: Warning: Formatting %d followed by words ("uploaded"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="ohe_uploaded_of">%1$d of %2$d uploaded</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Explanation for issues of type "PluralsCandidate":
    This lint check looks for potential errors in internationalization where
@@ -360,4 +366,4 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
    application iconwill not show if your monochrome attribute is not also
    specified in android:roundIcon.
 
-0 errors, 72 warnings
+0 errors, 74 warnings
