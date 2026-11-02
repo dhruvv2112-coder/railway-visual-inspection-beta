@@ -121,8 +121,10 @@ def main():
         per[st] = {"n": len(idx), "accuracy": float((pred[idx] == yt[idx]).mean()),
                    "f1_distorted": float(f1_score(yt[idx], pred[idx], zero_division=0))}
     m.eval()
+    torch.save(m.state_dict(), REPORTS / "ohe_assess.pt")
     torch.onnx.export(m, torch.zeros(1, 3, SIZE, SIZE), str(REPORTS / "ohe_assess.onnx"), input_names=["image"],
-                      output_names=["logits"], opset_version=17, dynamic_axes={"image": {0: "n"}, "logits": {0: "n"}})
+                      output_names=["logits"], opset_version=17, dynamic_axes={"image": {0: "n"}, "logits": {0: "n"}},
+                      dynamo=False)
     rep = {"name": "ohe_assess", "title": f"Photo-angle check (MobileNetV3-small, {EPOCHS} ep, {SIZE}px, CPU)",
            "threshold": float(thr), "classes": ["valid", "perspective_distorted"],
            "summary": f"EPDCL perspective_validation; train {len(tr)}, val {len(va)}, test {len(te)}; "
