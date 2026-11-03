@@ -121,9 +121,9 @@
 "area": "Inspection service",
 "feature": "Assessability model (usable view or not)",
 "hld_ref": "Cascade stage 1",
-"status": "Not started",
-"built": "EPDCL perspective-validation data found",
-"next": "Train a small head"
+"status": "Built",
+"built": "Photo-angle check (MobileNetV3, EPDCL): test accuracy 0.86, F1 0.87; asks for a square-on retake",
+"next": "Validate on Railway mast photos"
 },
 {
 "id": "B04",

@@ -141,3 +141,26 @@ EBIST railway components (run 5): AUROC was below 0.5 on 5 of 6 parts, so the ba
 RailFOD23 is partly synthesised. Treat its high scores as optimistic.
 
 The next run is the full-data GPU run on the laptop (`ml/ohe/run_ohe_gpu.ps1`; results go to branch `local-ohe-gpu`).
+
+### Photo-angle check (CI ohe-assess 41540767070, 3 Nov 2026)
+
+The model is MobileNetV3-small at 224 px, 8 epochs on CPU, taking 16 minutes. It was trained on EPDCL PD-Defect perspective_validation (CC BY 4.0), which has three subtasks. Each image is labelled `accepted` (valid view) or `rejected_perspective_issue`.
+
+| Split | Images |
+|---|---|
+| Train | 3,594 |
+| Val | 677 |
+| Test | 679 |
+
+The threshold is 0.35, chosen on val for best F1.
+
+| Test subtask | n | Accuracy | F1 (distorted) |
+|---|---|---|---|
+| All | 679 | 0.86 | 0.87 (P 0.87, R 0.86) |
+| Full image (pole lean view) | 282 | 0.82 | 0.83 |
+| Pole-top crops | 262 | 0.94 | 0.94 |
+| DTR / plinth scenes | 135 | 0.80 | 0.82 |
+
+In the service, a flagged photo gets the retake request "Take the photo square-on to the mast". The check never changes an assessment; a test verifies this. The release workflow bundles `ohe_assess.onnx`, and the server loads it when the file is present.
+
+The training photos are distribution poles. Railway masts need their own validation set from the pilot.

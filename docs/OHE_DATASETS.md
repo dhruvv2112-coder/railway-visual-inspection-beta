@@ -29,7 +29,7 @@ Every candidate is listed below with whether it can be fetched without a person 
 | catenary / contact wire | Roboflow railway-monitor/catenary 🔑; OSDaR23 (no wire class) | 🔑 | |
 | number_plate (mast number) | Roboflow utility-pole-label 🔑; PLAD "tower plate" (drone) 🟡 | 🟡/🔑 | **Pilot capture needed**; OCR uses PP-OCRv5 zero-shot until then |
 | pantograph | Roboflow pantograph sets 🔑 | 🔑 | Not an on-foot patrol item |
-| perspective / assessability (quality gate) | EPDCL perspective_validation (4,950 phone images: valid vs perspective-distorted) | 🟡 | Next: assessability head (HLD stage 1) |
+| perspective / assessability (quality gate) | EPDCL perspective_validation (4,950 phone images: valid vs perspective-distorted) | ✅ photo-angle check, test F1 0.87 | Railway validation |
 | mast lean | EPDCL pole_lean_assessment (detection, classification and keypoints) | 🟡 | Next: lean is a condition; needs a railway validation set |
 
 ## Catalogue
