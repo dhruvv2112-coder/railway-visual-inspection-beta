@@ -1,0 +1,252 @@
+{
+ "target_names": [
+  "insulator",
+  "insulator_defect",
+  "bird_nest",
+  "vegetation",
+  "mast",
+  "foreign_object",
+  "corrosion"
+ ],
+ "sources": [
+  {
+   "source": "CPLID github.com/InsulatorData/InsulatorDataSet",
+   "licence": "undetermined (user: use for training)",
+   "source_names": [
+    "defect",
+    "insulator"
+   ]
+  },
+  {
+   "source": "hf:docmhvr/powerline-components-and-faults",
+   "licence": "MIT",
+   "source_names": [
+    "Broken Cable",
+    "Broken Insulator",
+    "Cable",
+    "Insulators",
+    "Tower",
+    "Vegetation"
+   ],
+   "bbox_column": "bboxes"
+  },
+  {
+   "source": "hf:silera/broken-insulators-synthetic-detection",
+   "licence": "CC BY 4.0",
+   "source_names": [],
+   "bbox_column": "objects"
+  },
+  {
+   "source": "roboflow railway catenary/panto sets",
+   "skipped": "no ROBOFLOW_API_KEY"
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/pole_detection",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Pole"
+   ],
+   "files_seen": 2252
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/vegetation_conductor",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Conductor",
+    "Vegetation"
+   ],
+   "files_seen": 1781
+  },
+  {
+   "source": "figshare:RailFOD23 (24180738)",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "niaocao",
+    "piaofuwu",
+    "qiqiu",
+    "suliaodai"
+   ],
+   "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"
+  },
+  {
+   "source": "github:phd-benel/VPMBGI",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "iso_broken_glass"
+   ],
+   "files_seen": 1010
+  },
+  {
+   "source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Slippage",
+    "corrosion",
+    "crack"
+   ],
+   "files_seen": 1249
+  }
+ ],
+ "stats": {
+  "cplid": {
+   "images": {
+    "train": 553,
+    "val": 159,
+    "test": 136
+   },
+   "instances": {
+    "insulator": 1321,
+    "insulator_defect": 248,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "powerline-co": {
+   "images": {
+    "train": 1794,
+    "val": 77,
+    "test": 41
+   },
+   "instances": {
+    "insulator": 7124,
+    "insulator_defect": 1232,
+    "bird_nest": 0,
+    "vegetation": 309,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "broken-insul": {
+   "images": {
+    "train": 162,
+    "val": 41,
+    "test": 0
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 203,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdclpole": {
+   "images": {
+    "train": 1665,
+    "val": 293,
+    "test": 294
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 2425,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdclvege": {
+   "images": {
+    "train": 1245,
+    "val": 253,
+    "test": 283
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 4587,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "railfod": {
+   "images": {
+    "train": 3000,
+    "val": 400,
+    "test": 400
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 2476,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 7995,
+    "corrosion": 0
+   }
+  },
+  "vpmbgi": {
+   "images": {
+    "train": 686,
+    "val": 163,
+    "test": 161
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 1188,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "corros": {
+   "images": {
+    "train": 840,
+    "val": 304,
+    "test": 105
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 1657
+   }
+  }
+ }
+}

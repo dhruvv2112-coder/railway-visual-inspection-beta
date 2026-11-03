@@ -1,0 +1,417 @@
+{
+ "name": "ohe_detector",
+ "title": "OHE component detector (yolo11n, 40 ep, 640px, cpu)",
+ "summary": "Held-out test split per class. Training 1598.9 min. Sources: CPLID github.com/InsulatorData/InsulatorDataSet (undetermined (user: use for training)); hf:docmhvr/powerline-components-and-faults (MIT); hf:silera/broken-insulators-synthetic-detection (CC BY 4.0); roboflow railway catenary/panto sets (no ROBOFLOW_API_KEY); hf:EPDCL/pd-defect/pole_detection (CC BY 4.0); hf:EPDCL/pd-defect/vegetation_conductor (CC BY 4.0); figshare:RailFOD23 (24180738) (CC BY 4.0); github:phd-benel/VPMBGI (CC BY 4.0); hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100) (CC BY 4.0). Images per source: {\"cplid\": {\"train\": 553, \"val\": 159, \"test\": 136}, \"powerline-co\": {\"train\": 1794, \"val\": 77, \"test\": 41}, \"broken-insul\": {\"train\": 162, \"val\": 41, \"test\": 0}, \"epdclpole\": {\"train\": 1665, \"val\": 293, \"test\": 294}, \"epdclvege\": {\"train\": 1245, \"val\": 253, \"test\": 283}, \"railfod\": {\"train\": 3000, \"val\": 400, \"test\": 400}, \"vpmbgi\": {\"train\": 686, \"val\": 163, \"test\": 161}, \"corros\": {\"train\": 840, \"val\": 304, \"test\": 105}}",
+ "results": [
+  {
+   "class": "insulator",
+   "precision": 0.8490080510149157,
+   "recall": 0.8392857142857143,
+   "AP50": 0.8859629154730118,
+   "AP50_95": 0.6928100852212453
+  },
+  {
+   "class": "insulator_defect",
+   "precision": 0.8291936324475864,
+   "recall": 0.7529602543448133,
+   "AP50": 0.8347203133136923,
+   "AP50_95": 0.5282003106751507
+  },
+  {
+   "class": "bird_nest",
+   "precision": 0.9885290969068425,
+   "recall": 0.9830122999793496,
+   "AP50": 0.9871200689039318,
+   "AP50_95": 0.8459303185653655
+  },
+  {
+   "class": "vegetation",
+   "precision": 0.6301086543594598,
+   "recall": 0.3989769820971867,
+   "AP50": 0.4917303880489915,
+   "AP50_95": 0.3176719327360868
+  },
+  {
+   "class": "mast",
+   "precision": 0.8312080611965362,
+   "recall": 0.799373040752351,
+   "AP50": 0.8620389584796869,
+   "AP50_95": 0.6781086963468362
+  },
+  {
+   "class": "foreign_object",
+   "precision": 0.9183966914377979,
+   "recall": 0.9031316582798907,
+   "AP50": 0.9529761975195866,
+   "AP50_95": 0.7794016601253221
+  },
+  {
+   "class": "corrosion",
+   "precision": 0.9859214063703827,
+   "recall": 0.6951219512195121,
+   "AP50": 0.7629364738591439,
+   "AP50_95": 0.4879366884982727
+  },
+  {
+   "class": "all",
+   "precision": 0.861766513390503,
+   "recall": 0.7674088429941168,
+   "AP50": 0.825355045085435,
+   "AP50_95": 0.6185799560240399
+  }
+ ],
+ "per_source_test": {
+  "corros": [
+   {
+    "class": "corrosion",
+    "precision": 0.9912958743627428,
+    "recall": 0.6944445908265702,
+    "AP50": 0.7640416763842596,
+    "AP50_95": 0.4887660206221578
+   }
+  ],
+  "cplid": [
+   {
+    "class": "insulator",
+    "precision": 0.9387953408010457,
+    "recall": 0.9605263157894737,
+    "AP50": 0.9783160927468385,
+    "AP50_95": 0.8316176188204029
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.9495190278818646,
+    "recall": 1.0,
+    "AP50": 0.9926190476190475,
+    "AP50_95": 0.6481813440889337
+   }
+  ],
+  "epdclpole": [
+   {
+    "class": "mast",
+    "precision": 0.9183608713251286,
+    "recall": 0.8815870813824735,
+    "AP50": 0.9452907517668098,
+    "AP50_95": 0.7410286978289913
+   }
+  ],
+  "epdclvege": [
+   {
+    "class": "vegetation",
+    "precision": 0.5794647979620391,
+    "recall": 0.5278858625162127,
+    "AP50": 0.5566228833501278,
+    "AP50_95": 0.35910641249720243
+   }
+  ],
+  "powerline-co": [
+   {
+    "class": "insulator",
+    "precision": 0.7259902568994735,
+    "recall": 0.6869224996646394,
+    "AP50": 0.7336483565974043,
+    "AP50_95": 0.3889406680717088
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.38990709793735584,
+    "recall": 0.55,
+    "AP50": 0.41219169463838085,
+    "AP50_95": 0.23282220844552243
+   },
+   {
+    "class": "vegetation",
+    "precision": 0.8728433016431439,
+    "recall": 0.625384081092369,
+    "AP50": 0.703975422832981,
+    "AP50_95": 0.311751589019881
+   }
+  ],
+  "railfod": [
+   {
+    "class": "bird_nest",
+    "precision": 0.9884748317784402,
+    "recall": 0.9783296381304827,
+    "AP50": 0.9874503586951471,
+    "AP50_95": 0.8478991944134033
+   },
+   {
+    "class": "foreign_object",
+    "precision": 0.9355833255543223,
+    "recall": 0.8888888888888888,
+    "AP50": 0.953376276180414,
+    "AP50_95": 0.7800183194441821
+   }
+  ],
+  "vpmbgi": [
+   {
+    "class": "insulator_defect",
+    "precision": 0.8710793287750171,
+    "recall": 0.7304589648053822,
+    "AP50": 0.8383544225729793,
+    "AP50_95": 0.5350082815616725
+   }
+  ]
+ },
+ "extra": {
+  "manifest": {
+   "target_names": [
+    "insulator",
+    "insulator_defect",
+    "bird_nest",
+    "vegetation",
+    "mast",
+    "foreign_object",
+    "corrosion"
+   ],
+   "sources": [
+    {
+     "source": "CPLID github.com/InsulatorData/InsulatorDataSet",
+     "licence": "undetermined (user: use for training)",
+     "source_names": [
+      "defect",
+      "insulator"
+     ]
+    },
+    {
+     "source": "hf:docmhvr/powerline-components-and-faults",
+     "licence": "MIT",
+     "source_names": [
+      "Broken Cable",
+      "Broken Insulator",
+      "Cable",
+      "Insulators",
+      "Tower",
+      "Vegetation"
+     ],
+     "bbox_column": "bboxes"
+    },
+    {
+     "source": "hf:silera/broken-insulators-synthetic-detection",
+     "licence": "CC BY 4.0",
+     "source_names": [],
+     "bbox_column": "objects"
+    },
+    {
+     "source": "roboflow railway catenary/panto sets",
+     "skipped": "no ROBOFLOW_API_KEY"
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/pole_detection",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Pole"
+     ],
+     "files_seen": 2252
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/vegetation_conductor",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Conductor",
+      "Vegetation"
+     ],
+     "files_seen": 1781
+    },
+    {
+     "source": "figshare:RailFOD23 (24180738)",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "niaocao",
+      "piaofuwu",
+      "qiqiu",
+      "suliaodai"
+     ],
+     "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"
+    },
+    {
+     "source": "github:phd-benel/VPMBGI",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "iso_broken_glass"
+     ],
+     "files_seen": 1010
+    },
+    {
+     "source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Slippage",
+      "corrosion",
+      "crack"
+     ],
+     "files_seen": 1249
+    }
+   ],
+   "stats": {
+    "cplid": {
+     "images": {
+      "train": 553,
+      "val": 159,
+      "test": 136
+     },
+     "instances": {
+      "insulator": 1321,
+      "insulator_defect": 248,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "powerline-co": {
+     "images": {
+      "train": 1794,
+      "val": 77,
+      "test": 41
+     },
+     "instances": {
+      "insulator": 7124,
+      "insulator_defect": 1232,
+      "bird_nest": 0,
+      "vegetation": 309,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "broken-insul": {
+     "images": {
+      "train": 162,
+      "val": 41,
+      "test": 0
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 203,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdclpole": {
+     "images": {
+      "train": 1665,
+      "val": 293,
+      "test": 294
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 2425,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdclvege": {
+     "images": {
+      "train": 1245,
+      "val": 253,
+      "test": 283
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 4587,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "railfod": {
+     "images": {
+      "train": 3000,
+      "val": 400,
+      "test": 400
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 2476,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 7995,
+      "corrosion": 0
+     }
+    },
+    "vpmbgi": {
+     "images": {
+      "train": 686,
+      "val": 163,
+      "test": 161
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 1188,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "corros": {
+     "images": {
+      "train": 840,
+      "val": 304,
+      "test": 105
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 1657
+     }
+    }
+   }
+  },
+  "onnx_mb": 10.6,
+  "imgsz": 640
+ },
+ "notes": [
+  "Public data are drone views of transmission lines, not ground-level 25 kV railway OHE: results show the pipeline works and give starting weights; they are not field performance (HLD \u00a712.1).",
+  "Per-class results only; overall mAP does not certify any defect family (HLD \u00a715.1).",
+  "yolo11n is AGPL-3.0 (Ultralytics). The HLD core baseline is RT-DETRv2-R18 (Apache-2.0)."
+ ]
+}

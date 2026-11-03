@@ -1,0 +1,571 @@
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/home/runner/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+resuming from /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/resume.pt
+New https://pypi.org/project/ultralytics/8.4.200 available 😃 Update with 'pip install -U ultralytics'
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mengine/trainer: [0magnostic_nms=False, amp=True, augment=False, auto_augment=randaugment, batch=16, bgr=0.0, box=7.5, cache=False, cfg=None, classes=None, close_mosaic=10, cls=0.5, compile=False, conf=None, copy_paste=0.0, copy_paste_mode=flip, cos_lr=False, cutmix=0.0, data=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/data.yaml, degrees=0.0, deterministic=True, device=cpu, dfl=1.5, dnn=False, dropout=0.0, dynamic=False, embed=None, epochs=40, erasing=0.4, exist_ok=True, fliplr=0.5, flipud=0.0, format=torchscript, fraction=1.0, freeze=None, half=False, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, imgsz=640, int8=False, iou=0.7, keras=False, kobj=1.0, line_width=None, lr0=0.01, lrf=0.01, mask_ratio=4, max_det=300, mixup=0.0, mode=train, model=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/resume.pt, momentum=0.937, mosaic=1.0, multi_scale=False, name=det, nbs=64, nms=False, opset=None, optimize=False, optimizer=auto, overlap_mask=True, patience=100, perspective=0.0, plots=False, pose=12.0, pretrained=True, profile=False, project=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs, rect=False, resume=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/resume.pt, retina_masks=False, save=True, save_conf=False, save_crop=False, save_dir=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det, save_frames=False, save_json=False, save_period=-1, save_txt=False, scale=0.5, seed=0, shear=0.0, show=False, show_boxes=True, show_conf=True, show_labels=True, simplify=True, single_cls=False, source=None, split=val, stream_buffer=False, task=detect, time=None, tracker=botsort.yaml, translate=0.1, val=True, verbose=False, vid_stride=1, visualize=False, warmup_bias_lr=0.0, warmup_epochs=3.0, warmup_momentum=0.8, weight_decay=0.0005, workers=0, workspace=None
+Downloading https://ultralytics.com/assets/Arial.ttf to '/home/runner/.config/Ultralytics/Arial.ttf': 100% ━━━━━━━━━━━━ 755.1KB 105.1MB/s 0.0s
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1       464  ultralytics.nn.modules.conv.Conv             [3, 16, 3, 2]                 
+  1                  -1  1      4672  ultralytics.nn.modules.conv.Conv             [16, 32, 3, 2]                
+  2                  -1  1      6640  ultralytics.nn.modules.block.C3k2            [32, 64, 1, False, 0.25]      
+  3                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+  4                  -1  1     26080  ultralytics.nn.modules.block.C3k2            [64, 128, 1, False, 0.25]     
+  5                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+  6                  -1  1     87040  ultralytics.nn.modules.block.C3k2            [128, 128, 1, True]           
+  7                  -1  1    295424  ultralytics.nn.modules.conv.Conv             [128, 256, 3, 2]              
+  8                  -1  1    346112  ultralytics.nn.modules.block.C3k2            [256, 256, 1, True]           
+  9                  -1  1    164608  ultralytics.nn.modules.block.SPPF            [256, 256, 5]                 
+ 10                  -1  1    249728  ultralytics.nn.modules.block.C2PSA           [256, 256, 1]                 
+ 11                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 12             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 13                  -1  1    111296  ultralytics.nn.modules.block.C3k2            [384, 128, 1, False]          
+ 14                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 15             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 16                  -1  1     32096  ultralytics.nn.modules.block.C3k2            [256, 64, 1, False]           
+ 17                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+ 18            [-1, 13]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 19                  -1  1     86720  ultralytics.nn.modules.block.C3k2            [192, 128, 1, False]          
+ 20                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+ 21            [-1, 10]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 22                  -1  1    378880  ultralytics.nn.modules.block.C3k2            [384, 256, 1, True]           
+ 23        [16, 19, 22]  1    432037  ultralytics.nn.modules.head.Detect           [7, [64, 128, 256]]           
+YOLO11n summary: 181 layers, 2,591,205 parameters, 2,591,189 gradients, 6.4 GFLOPs
+
+Transferred 499/499 items from pretrained weights
+Freezing layer 'model.23.dfl.conv.weight'
+[34m[1mtrain: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 5127.5±2710.7 MB/s, size: 197.0 KB)
+
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 6214.6±3563.3 MB/s, size: 271.1 KB)
+
+[34m[1moptimizer:[0m 'optimizer=auto' found, ignoring 'lr0=0.01' and 'momentum=0.937' and determining best 'optimizer', 'lr0' and 'momentum' automatically... 
+[34m[1moptimizer:[0m AdamW(lr=0.000909, momentum=0.9) with parameter groups 81 weight(decay=0.0), 88 weight(decay=0.0005), 87 bias(decay=0.0)
+Resuming training /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/resume.pt from epoch 37 to 40 total epochs
+Closing dataloader mosaic
+Image sizes 640 train, 640 val
+Using 0 dataloader workers
+Logging results to [1m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det[0m
+Starting training for 40 epochs...
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+      37/40         0G      0.951     0.7975      1.136         17        640: 100% ━━━━━━━━━━━━ 622/622 2.4s/it 24:37
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 1.4s/it 1:15
+                   all       1690       3192       0.84      0.732      0.774      0.582
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+      38/40         0G     0.9413     0.7904      1.131         12        640: 100% ━━━━━━━━━━━━ 622/622 2.3s/it 23:48
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 1.3s/it 1:11
+                   all       1690       3192      0.847      0.728      0.775      0.585
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+      39/40         0G     0.9391     0.7826      1.136         30        640: 100% ━━━━━━━━━━━━ 622/622 2.4s/it 24:24
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 1.6s/it 1:22
+                   all       1690       3192      0.843      0.726      0.775      0.583
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+      40/40         0G     0.9302     0.7721      1.128         21        640: 100% ━━━━━━━━━━━━ 622/622 2.4s/it 25:22
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 1.5s/it 1:22
+                   all       1690       3192      0.847      0.724      0.777      0.585
+
+4 epochs completed in 1.723 hours.
+Optimizer stripped from /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/last.pt, 5.4MB
+Optimizer stripped from /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.pt, 5.4MB
+
+Validating /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.pt...
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+YOLO11n summary (fused): 100 layers, 2,583,517 parameters, 0 gradients, 6.3 GFLOPs
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 1.3s/it 1:07
+                   all       1690       3192      0.853      0.725      0.775      0.585
+Speed: 0.5ms preprocess, 35.6ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+YOLO11n summary (fused): 100 layers, 2,583,517 parameters, 0 gradients, 6.3 GFLOPs
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 7499.5±2331.3 MB/s, size: 342.4 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 1420 images, 58 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 1420/1420 4.3Kit/s 0.3s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 89/89 1.8it/s 50.8s
+                   all       1420       2919      0.862      0.767      0.825      0.619
+Speed: 0.4ms preprocess, 31.5ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4320.6±1012.6 MB/s, size: 63.6 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 105 images, 47 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 105/105 4.8Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 7/7 1.6it/s 4.3s
+                   all        105        164      0.991      0.694      0.764      0.489
+Speed: 0.4ms preprocess, 38.5ms inference, 0.0ms loss, 0.1ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 10378.7±1719.3 MB/s, size: 569.5 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 136 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 136/136 3.4Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 9/9 1.9it/s 4.7s
+                   all        136        268      0.944       0.98      0.985       0.74
+Speed: 0.3ms preprocess, 28.7ms inference, 0.0ms loss, 0.1ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 7243.3±1662.8 MB/s, size: 197.0 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 294 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 294/294 4.6Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 19/19 2.1it/s 8.9s
+                   all        294        319      0.918      0.882      0.945      0.741
+Speed: 0.3ms preprocess, 26.2ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4737.5±3738.4 MB/s, size: 355.5 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 283 images, 4 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 283/283 2.8Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 18/18 1.8it/s 10.0s
+                   all        283        771      0.579      0.528      0.557      0.359
+Speed: 0.3ms preprocess, 29.7ms inference, 0.0ms loss, 0.3ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 5710.4±1202.3 MB/s, size: 83.5 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 41 images, 3 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 41/41 4.2Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 3/3 1.8it/s 1.7s
+                   all         41        139      0.663      0.621      0.617      0.311
+Speed: 0.4ms preprocess, 38.8ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 8591.7±403.1 MB/s, size: 229.8 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 400 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 400/400 4.7Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 25/25 1.9it/s 13.1s
+                   all        400       1073      0.962      0.934       0.97      0.814
+Speed: 0.3ms preprocess, 28.8ms inference, 0.0ms loss, 0.1ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4677.2±1981.0 MB/s, size: 98.2 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 161 images, 4 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 161/161 4.5Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 11/11 1.7it/s 6.6s
+                   all        161        185      0.871       0.73      0.838      0.535
+Speed: 0.4ms preprocess, 38.4ms inference, 0.0ms loss, 0.1ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+
+[34m[1mPyTorch:[0m starting from '/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.pt' with input shape (1, 3, 640, 640) BCHW and output shape(s) (1, 11, 8400) (5.2 MB)
+
+[34m[1mONNX:[0m starting export with onnx 1.23.2 opset 22...
+/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/torch/onnx/_internal/torchscript_exporter/utils.py:550: OnnxExporterWarning: Exporting to ONNX opset version 22 is not supported. by 'torch.onnx.export()'. The highest opset version supported is 20. To use a newer opset version, consider 'torch.onnx.export(..., dynamo=True)'. 
+  _export(
+[34m[1mONNX:[0m slimming with onnxslim 0.1.98...
+[0;93m2026-11-03 14:08:56.230158796 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[34m[1mONNX:[0m export success ✅ 0.8s, saved as '/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.onnx' (10.1 MB)
+
+Export complete (0.9s)
+Results saved to [1m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights[0m
+Predict:         yolo predict task=detect model=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.onnx imgsz=640  
+Validate:        yolo val task=detect model=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.onnx imgsz=640 data=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/data.yaml  
+Visualize:       https://netron.app
+{
+ "name": "ohe_detector",
+ "title": "OHE component detector (yolo11n, 40 ep, 640px, cpu)",
+ "summary": "Held-out test split per class. Training 1598.9 min. Sources: CPLID github.com/InsulatorData/InsulatorDataSet (undetermined (user: use for training)); hf:docmhvr/powerline-components-and-faults (MIT); hf:silera/broken-insulators-synthetic-detection (CC BY 4.0); roboflow railway catenary/panto sets (no ROBOFLOW_API_KEY); hf:EPDCL/pd-defect/pole_detection (CC BY 4.0); hf:EPDCL/pd-defect/vegetation_conductor (CC BY 4.0); figshare:RailFOD23 (24180738) (CC BY 4.0); github:phd-benel/VPMBGI (CC BY 4.0); hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100) (CC BY 4.0). Images per source: {\"cplid\": {\"train\": 553, \"val\": 159, \"test\": 136}, \"powerline-co\": {\"train\": 1794, \"val\": 77, \"test\": 41}, \"broken-insul\": {\"train\": 162, \"val\": 41, \"test\": 0}, \"epdclpole\": {\"train\": 1665, \"val\": 293, \"test\": 294}, \"epdclvege\": {\"train\": 1245, \"val\": 253, \"test\": 283}, \"railfod\": {\"train\": 3000, \"val\": 400, \"test\": 400}, \"vpmbgi\": {\"train\": 686, \"val\": 163, \"test\": 161}, \"corros\": {\"train\": 840, \"val\": 304, \"test\": 105}}",
+ "results": [
+  {
+   "class": "insulator",
+   "precision": 0.8490080510149157,
+   "recall": 0.8392857142857143,
+   "AP50": 0.8859629154730118,
+   "AP50_95": 0.6928100852212453
+  },
+  {
+   "class": "insulator_defect",
+   "precision": 0.8291936324475864,
+   "recall": 0.7529602543448133,
+   "AP50": 0.8347203133136923,
+   "AP50_95": 0.5282003106751507
+  },
+  {
+   "class": "bird_nest",
+   "precision": 0.9885290969068425,
+   "recall": 0.9830122999793496,
+   "AP50": 0.9871200689039318,
+   "AP50_95": 0.8459303185653655
+  },
+  {
+   "class": "vegetation",
+   "precision": 0.6301086543594598,
+   "recall": 0.3989769820971867,
+   "AP50": 0.4917303880489915,
+   "AP50_95": 0.3176719327360868
+  },
+  {
+   "class": "mast",
+   "precision": 0.8312080611965362,
+   "recall": 0.799373040752351,
+   "AP50": 0.8620389584796869,
+   "AP50_95": 0.6781086963468362
+  },
+  {
+   "class": "foreign_object",
+   "precision": 0.9183966914377979,
+   "recall": 0.9031316582798907,
+   "AP50": 0.9529761975195866,
+   "AP50_95": 0.7794016601253221
+  },
+  {
+   "class": "corrosion",
+   "precision": 0.9859214063703827,
+   "recall": 0.6951219512195121,
+   "AP50": 0.7629364738591439,
+   "AP50_95": 0.4879366884982727
+  },
+  {
+   "class": "all",
+   "precision": 0.861766513390503,
+   "recall": 0.7674088429941168,
+   "AP50": 0.825355045085435,
+   "AP50_95": 0.6185799560240399
+  }
+ ],
+ "per_source_test": {
+  "corros": [
+   {
+    "class": "corrosion",
+    "precision": 0.9912958743627428,
+    "recall": 0.6944445908265702,
+    "AP50": 0.7640416763842596,
+    "AP50_95": 0.4887660206221578
+   }
+  ],
+  "cplid": [
+   {
+    "class": "insulator",
+    "precision": 0.9387953408010457,
+    "recall": 0.9605263157894737,
+    "AP50": 0.9783160927468385,
+    "AP50_95": 0.8316176188204029
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.9495190278818646,
+    "recall": 1.0,
+    "AP50": 0.9926190476190475,
+    "AP50_95": 0.6481813440889337
+   }
+  ],
+  "epdclpole": [
+   {
+    "class": "mast",
+    "precision": 0.9183608713251286,
+    "recall": 0.8815870813824735,
+    "AP50": 0.9452907517668098,
+    "AP50_95": 0.7410286978289913
+   }
+  ],
+  "epdclvege": [
+   {
+    "class": "vegetation",
+    "precision": 0.5794647979620391,
+    "recall": 0.5278858625162127,
+    "AP50": 0.5566228833501278,
+    "AP50_95": 0.35910641249720243
+   }
+  ],
+  "powerline-co": [
+   {
+    "class": "insulator",
+    "precision": 0.7259902568994735,
+    "recall": 0.6869224996646394,
+    "AP50": 0.7336483565974043,
+    "AP50_95": 0.3889406680717088
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.38990709793735584,
+    "recall": 0.55,
+    "AP50": 0.41219169463838085,
+    "AP50_95": 0.23282220844552243
+   },
+   {
+    "class": "vegetation",
+    "precision": 0.8728433016431439,
+    "recall": 0.625384081092369,
+    "AP50": 0.703975422832981,
+    "AP50_95": 0.311751589019881
+   }
+  ],
+  "railfod": [
+   {
+    "class": "bird_nest",
+    "precision": 0.9884748317784402,
+    "recall": 0.9783296381304827,
+    "AP50": 0.9874503586951471,
+    "AP50_95": 0.8478991944134033
+   },
+   {
+    "class": "foreign_object",
+    "precision": 0.9355833255543223,
+    "recall": 0.8888888888888888,
+    "AP50": 0.953376276180414,
+    "AP50_95": 0.7800183194441821
+   }
+  ],
+  "vpmbgi": [
+   {
+    "class": "insulator_defect",
+    "precision": 0.8710793287750171,
+    "recall": 0.7304589648053822,
+    "AP50": 0.8383544225729793,
+    "AP50_95": 0.5350082815616725
+   }
+  ]
+ },
+ "extra": {
+  "manifest": {
+   "target_names": [
+    "insulator",
+    "insulator_defect",
+    "bird_nest",
+    "vegetation",
+    "mast",
+    "foreign_object",
+    "corrosion"
+   ],
+   "sources": [
+    {
+     "source": "CPLID github.com/InsulatorData/InsulatorDataSet",
+     "licence": "undetermined (user: use for training)",
+     "source_names": [
+      "defect",
+      "insulator"
+     ]
+    },
+    {
+     "source": "hf:docmhvr/powerline-components-and-faults",
+     "licence": "MIT",
+     "source_names": [
+      "Broken Cable",
+      "Broken Insulator",
+      "Cable",
+      "Insulators",
+      "Tower",
+      "Vegetation"
+     ],
+     "bbox_column": "bboxes"
+    },
+    {
+     "source": "hf:silera/broken-insulators-synthetic-detection",
+     "licence": "CC BY 4.0",
+     "source_names": [],
+     "bbox_column": "objects"
+    },
+    {
+     "source": "roboflow railway catenary/panto sets",
+     "skipped": "no ROBOFLOW_API_KEY"
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/pole_detection",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Pole"
+     ],
+     "files_seen": 2252
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/vegetation_conductor",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Conductor",
+      "Vegetation"
+     ],
+     "files_seen": 1781
+    },
+    {
+     "source": "figshare:RailFOD23 (24180738)",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "niaocao",
+      "piaofuwu",
+      "qiqiu",
+      "suliaodai"
+     ],
+     "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"
+    },
+    {
+     "source": "github:phd-benel/VPMBGI",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "iso_broken_glass"
+     ],
+     "files_seen": 1010
+    },
+    {
+     "source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Slippage",
+      "corrosion",
+      "crack"
+     ],
+     "files_seen": 1249
+    }
+   ],
+   "stats": {
+    "cplid": {
+     "images": {
+      "train": 553,
+      "val": 159,
+      "test": 136
+     },
+     "instances": {
+      "insulator": 1321,
+      "insulator_defect": 248,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "powerline-co": {
+     "images": {
+      "train": 1794,
+      "val": 77,
+      "test": 41
+     },
+     "instances": {
+      "insulator": 7124,
+      "insulator_defect": 1232,
+      "bird_nest": 0,
+      "vegetation": 309,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "broken-insul": {
+     "images": {
+      "train": 162,
+      "val": 41,
+      "test": 0
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 203,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdclpole": {
+     "images": {
+      "train": 1665,
+      "val": 293,
+      "test": 294
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 2425,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdclvege": {
+     "images": {
+      "train": 1245,
+      "val": 253,
+      "test": 283
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 4587,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "railfod": {
+     "images": {
+      "train": 3000,
+      "val": 400,
+      "test": 400
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 2476,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 7995,
+      "corrosion": 0
+     }
+    },
+    "vpmbgi": {
+     "images": {
+      "train": 686,
+      "val": 163,
+      "test": 161
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 1188,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "corros": {
+     "images": {
+      "train": 840,
+      "val": 304,
+      "test": 105
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 1657
+     }
+    }
+   }
+  },
+  "onnx_mb": 10.6,
+  "imgsz": 640
+ },
+ "notes": [
+  "Public data are drone views of transmission lines, not ground-level 25 kV railway OHE: results show the pipeline works and give starting weights; they are not field performance (HLD \u00a712.1).",
+  "Per-class results only; overall mAP does not certify any defect family (HLD \u00a715.1).",
+  "yolo11n is AGPL-3.0 (Ultralytics). The HLD core baseline is RT-DETRv2-R18 (Apache-2.0)."
+ ]
+}

@@ -1,0 +1,93 @@
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/home/runner/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+Downloading https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt to 'yolo11n.pt': 100% ━━━━━━━━━━━━ 5.4MB 86.3MB/s 0.1s
+New https://pypi.org/project/ultralytics/8.4.198 available 😃 Update with 'pip install -U ultralytics'
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 7763 64-Core Processor)
+[34m[1mengine/trainer: [0magnostic_nms=False, amp=True, augment=False, auto_augment=randaugment, batch=16, bgr=0.0, box=7.5, cache=False, cfg=None, classes=None, close_mosaic=10, cls=0.5, compile=False, conf=None, copy_paste=0.0, copy_paste_mode=flip, cos_lr=False, cutmix=0.0, data=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/data.yaml, degrees=0.0, deterministic=True, device=cpu, dfl=1.5, dnn=False, dropout=0.0, dynamic=False, embed=None, epochs=40, erasing=0.4, exist_ok=True, fliplr=0.5, flipud=0.0, format=torchscript, fraction=1.0, freeze=None, half=False, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, imgsz=640, int8=False, iou=0.7, keras=False, kobj=1.0, line_width=None, lr0=0.01, lrf=0.01, mask_ratio=4, max_det=300, mixup=0.0, mode=train, model=yolo11n.pt, momentum=0.937, mosaic=1.0, multi_scale=False, name=det, nbs=64, nms=False, opset=None, optimize=False, optimizer=auto, overlap_mask=True, patience=100, perspective=0.0, plots=False, pose=12.0, pretrained=True, profile=False, project=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs, rect=False, resume=False, retina_masks=False, save=True, save_conf=False, save_crop=False, save_dir=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det, save_frames=False, save_json=False, save_period=-1, save_txt=False, scale=0.5, seed=0, shear=0.0, show=False, show_boxes=True, show_conf=True, show_labels=True, simplify=True, single_cls=False, source=None, split=val, stream_buffer=False, task=detect, time=None, tracker=botsort.yaml, translate=0.1, val=True, verbose=False, vid_stride=1, visualize=False, warmup_bias_lr=0.1, warmup_epochs=3.0, warmup_momentum=0.8, weight_decay=0.0005, workers=2, workspace=None
+Downloading https://ultralytics.com/assets/Arial.ttf to '/home/runner/.config/Ultralytics/Arial.ttf': 100% ━━━━━━━━━━━━ 755.1KB 20.9MB/s 0.0s
+Overriding model.yaml nc=80 with nc=7
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1       464  ultralytics.nn.modules.conv.Conv             [3, 16, 3, 2]                 
+  1                  -1  1      4672  ultralytics.nn.modules.conv.Conv             [16, 32, 3, 2]                
+  2                  -1  1      6640  ultralytics.nn.modules.block.C3k2            [32, 64, 1, False, 0.25]      
+  3                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+  4                  -1  1     26080  ultralytics.nn.modules.block.C3k2            [64, 128, 1, False, 0.25]     
+  5                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+  6                  -1  1     87040  ultralytics.nn.modules.block.C3k2            [128, 128, 1, True]           
+  7                  -1  1    295424  ultralytics.nn.modules.conv.Conv             [128, 256, 3, 2]              
+  8                  -1  1    346112  ultralytics.nn.modules.block.C3k2            [256, 256, 1, True]           
+  9                  -1  1    164608  ultralytics.nn.modules.block.SPPF            [256, 256, 5]                 
+ 10                  -1  1    249728  ultralytics.nn.modules.block.C2PSA           [256, 256, 1]                 
+ 11                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 12             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 13                  -1  1    111296  ultralytics.nn.modules.block.C3k2            [384, 128, 1, False]          
+ 14                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 15             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 16                  -1  1     32096  ultralytics.nn.modules.block.C3k2            [256, 64, 1, False]           
+ 17                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+ 18            [-1, 13]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 19                  -1  1     86720  ultralytics.nn.modules.block.C3k2            [192, 128, 1, False]          
+ 20                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+ 21            [-1, 10]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 22                  -1  1    378880  ultralytics.nn.modules.block.C3k2            [384, 256, 1, True]           
+ 23        [16, 19, 22]  1    432037  ultralytics.nn.modules.head.Detect           [7, [64, 128, 256]]           
+YOLO11n summary: 181 layers, 2,591,205 parameters, 2,591,189 gradients, 6.4 GFLOPs
+
+Transferred 448/499 items from pretrained weights
+Freezing layer 'model.23.dfl.conv.weight'
+[34m[1mtrain: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 3883.9±2001.4 MB/s, size: 197.0 KB)
+[34m[1mtrain: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/train/labels... 9945 images, 856 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 9945/9945 2.0Kit/s 4.9s
+[34m[1mtrain: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/train/labels.cache
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4625.0±2517.6 MB/s, size: 271.1 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/val/labels... 1690 images, 221 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 1690/1690 2.1Kit/s 0.8s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/val/labels.cache
+[34m[1moptimizer:[0m 'optimizer=auto' found, ignoring 'lr0=0.01' and 'momentum=0.937' and determining best 'optimizer', 'lr0' and 'momentum' automatically... 
+[34m[1moptimizer:[0m AdamW(lr=0.000909, momentum=0.9) with parameter groups 81 weight(decay=0.0), 88 weight(decay=0.0005), 87 bias(decay=0.0)
+Image sizes 640 train, 640 val
+Using 0 dataloader workers
+Logging results to [1m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det[0m
+Starting training for 40 epochs...
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+       1/40         0G      1.558      2.709      1.498         41        640: 100% ━━━━━━━━━━━━ 622/622 4.7s/it 48:15
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.9s/it 2:32
+                   all       1690       3192      0.539      0.468      0.437       0.27
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+       2/40         0G      1.548      1.959        1.5         31        640: 100% ━━━━━━━━━━━━ 622/622 4.6s/it 47:49
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.7s/it 2:22
+                   all       1690       3192      0.543      0.492      0.453       0.28
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+       3/40         0G      1.533      1.774      1.492         36        640: 100% ━━━━━━━━━━━━ 622/622 4.6s/it 47:60
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.7s/it 2:23
+                   all       1690       3192      0.633      0.494      0.513      0.321
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+       4/40         0G      1.493       1.68      1.477         47        640: 100% ━━━━━━━━━━━━ 622/622 4.7s/it 48:47
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.7s/it 2:24
+                   all       1690       3192      0.625      0.532      0.553      0.351
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+       5/40         0G      1.432      1.573      1.427         40        640: 100% ━━━━━━━━━━━━ 622/622 4.7s/it 48:36
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.7s/it 2:24
+                   all       1690       3192      0.673       0.59      0.593      0.387
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+       6/40         0G      1.413      1.532       1.42         28        640: 100% ━━━━━━━━━━━━ 622/622 4.7s/it 48:29
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.7s/it 2:24
+                   all       1690       3192      0.678      0.601      0.633       0.41
+
+6 epochs completed in 5.074 hours.
+Optimizer stripped from /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/last.pt, 5.4MB
+Optimizer stripped from /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.pt, 5.4MB
+
+Validating /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.pt...
+Ultralytics 8.3.253 🚀 Python-3.11.17 torch-2.15.0+cpu CPU (AMD EPYC 7763 64-Core Processor)
+YOLO11n summary (fused): 100 layers, 2,583,517 parameters, 0 gradients, 6.3 GFLOPs
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 53/53 2.4s/it 2:09
+                   all       1690       3192      0.677      0.601      0.633       0.41
+Speed: 0.7ms preprocess, 70.0ms inference, 0.0ms loss, 0.5ms postprocess per image
+PAUSED after epoch 6 of 40; resume in the next job
