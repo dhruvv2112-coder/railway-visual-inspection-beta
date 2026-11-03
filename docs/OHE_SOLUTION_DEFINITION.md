@@ -164,3 +164,30 @@ The threshold is 0.35, chosen on val for best F1.
 In the service, a flagged photo gets the retake request "Take the photo square-on to the mast". The check never changes an assessment; a test verifies this. The release workflow bundles `ohe_assess.onnx`, and the server loads it when the file is present.
 
 The training photos are distribution poles. Railway masts need their own validation set from the pilot.
+
+### Full-data run (CI ohe-train-long 41418986799, finished 3 Nov 2026): the model in release beta-1-rc1
+
+Configuration:
+- YOLO11n, 40 epochs, 640 px, on CPU.
+- 1,599 min of training over 6 chained jobs, each resuming from the last checkpoint.
+- About 9,900 training photos from all 8 sources (up to 3,000 each), with val/test capped at 400 per source.
+- The ONNX model works in the backend adapter: detections on 20/20 test photos.
+
+AP50 per test source (precision / recall in brackets), compared with run 6 (300–800 photos per source, 18 epochs):
+
+| Test source | Class | Run 6 | Full run |
+|---|---|---|---|
+| CPLID | insulator / defect | 0.96 / 0.995 | 0.98 / 0.99 |
+| Powerline | insulator | 0.66 | 0.73 (0.73 / 0.69) |
+| Powerline | broken insulator | 0.54 | **0.41** (0.39 / 0.55) – the one regression |
+| Powerline | vegetation | 0.26 | 0.70 (0.87 / 0.63) |
+| EPDCL phone photos | mast | 0.87 | 0.945 (0.92 / 0.88) |
+| EPDCL phone photos | vegetation | 0.55 | 0.56 |
+| RailFOD23 (partly synthetic) | bird nest | 0.975 | 0.99 |
+| RailFOD23 (partly synthetic) | foreign object | 0.875 | 0.95 |
+| VPMBGI | broken glass insulator | 0.51 | 0.84 (0.87 / 0.73) |
+| Corrosion RF100 | corrosion | 0.27 | 0.76 (0.99 / 0.69) |
+
+The anomaly branch is unchanged: AUROC 0.62, and below 0.5 on 5 of 6 EBIST railway parts. It stays review-only.
+
+All of these are public-data scores; they are not field accuracy on ground-level 25 kV railway OHE.

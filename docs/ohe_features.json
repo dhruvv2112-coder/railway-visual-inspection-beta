@@ -311,7 +311,7 @@
 "feature": "Detector: insulator + insulator defect",
 "hld_ref": "§6",
 "status": "Built",
-"built": "CPLID AP50 0.96/0.995; powerline 0.66/0.54",
+"built": "Full run AP50: CPLID 0.98/0.99; powerline insulator 0.73, broken 0.41; VPMBGI broken glass 0.84",
 "next": "Railway validation"
 },
 {
@@ -320,7 +320,7 @@
 "feature": "Detector: bird nest + foreign object",
 "hld_ref": "§6",
 "status": "Built",
-"built": "RailFOD23 AP50 0.975/0.875 (partly synthetic)",
+"built": "Full run AP50: RailFOD23 bird nest 0.99, foreign object 0.95 (partly synthetic)",
 "next": "Railway validation"
 },
 {
@@ -329,7 +329,7 @@
 "feature": "Detector: mast",
 "hld_ref": "§6",
 "status": "Built",
-"built": "EPDCL phone photos AP50 0.87",
+"built": "Full run AP50: EPDCL mast 0.945 (phone, ground level)",
 "next": "Railway mast photos"
 },
 {
@@ -337,18 +337,18 @@
 "area": "AI models",
 "feature": "Detector: vegetation",
 "hld_ref": "§6",
-"status": "Partial",
-"built": "EPDCL AP50 0.55; powerline 0.26",
-"next": "More data / full run"
+"status": "Built",
+"built": "Full run AP50: powerline 0.70, EPDCL 0.56",
+"next": "Railway validation"
 },
 {
 "id": "C05",
 "area": "AI models",
 "feature": "Detector: corrosion",
 "hld_ref": "§6",
-"status": "Partial",
-"built": "AP50 0.27",
-"next": "More data / full run"
+"status": "Built",
+"built": "Full run AP50: 0.76",
+"next": "Railway validation"
 },
 {
 "id": "C06",
@@ -364,9 +364,9 @@
 "area": "AI models",
 "feature": "Full-data training run",
 "hld_ref": "§6.5",
-"status": "In progress",
-"built": "Cloud run 41418986799: ~9,900 photos, 40 epochs",
-"next": "Finishes ~4 Nov"
+"status": "Built",
+"built": "Done 3 Nov: 40 epochs, ~9,900 photos, 6 chained CI jobs; model in release beta-1-rc1",
+"next": "—"
 },
 {
 "id": "C08",
