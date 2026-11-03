@@ -1,0 +1,69 @@
+{
+ "name": "ohe_assess",
+ "title": "Photo-angle check (MobileNetV3-small, 8 ep, 224px, CPU)",
+ "threshold": 0.35,
+ "classes": [
+  "valid",
+  "perspective_distorted"
+ ],
+ "summary": "EPDCL perspective_validation; train 3594, val 677, test 679; 16.1 min.",
+ "results": [
+  {
+   "metric": "accuracy (test)",
+   "value": 0.8645066273932254
+  },
+  {
+   "metric": "precision, distorted",
+   "value": 0.869942196531792
+  },
+  {
+   "metric": "recall, distorted",
+   "value": 0.8649425287356322
+  },
+  {
+   "metric": "F1, distorted",
+   "value": 0.8674351585014409
+  }
+ ],
+ "per_subtask_test": {
+  "full_image": {
+   "n": 282,
+   "accuracy": 0.8226950354609929,
+   "f1_distorted": 0.8333333333333334
+  },
+  "plinth_dtr": {
+   "n": 135,
+   "accuracy": 0.8,
+   "f1_distorted": 0.8211920529801324
+  },
+  "pole_top_crops": {
+   "n": 262,
+   "accuracy": 0.9427480916030534,
+   "f1_distorted": 0.9382716049382716
+  }
+ },
+ "counts": {
+  "full_image/test/valid": 132,
+  "full_image/test/distorted": 150,
+  "full_image/train/valid": 753,
+  "full_image/train/distorted": 852,
+  "full_image/val/valid": 133,
+  "full_image/val/distorted": 149,
+  "plinth_dtr/test/valid": 57,
+  "plinth_dtr/test/distorted": 78,
+  "plinth_dtr/train/valid": 324,
+  "plinth_dtr/train/distorted": 444,
+  "plinth_dtr/val/valid": 57,
+  "plinth_dtr/val/distorted": 78,
+  "pole_top_crops/test/valid": 142,
+  "pole_top_crops/test/distorted": 120,
+  "pole_top_crops/train/valid": 662,
+  "pole_top_crops/train/distorted": 559,
+  "pole_top_crops/val/valid": 141,
+  "pole_top_crops/val/distorted": 119
+ },
+ "notes": [
+  "Distribution poles photographed by APEPDCL linemen; railway masts need their own validation.",
+  "Used only to ask for a retake ('square-on'); it never changes an assessment."
+ ]
+}
