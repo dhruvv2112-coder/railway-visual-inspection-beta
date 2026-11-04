@@ -32,9 +32,9 @@ async def lifespan(_app: FastAPI):
     ohe_api.Models.load()
     if settings.app_import_dir and settings.app_import_dir.exists():
         lan.install_app_from(settings.app_import_dir)
-    lan.start_mdns()
+    await lan.start_mdns()
     yield
-    lan.stop_mdns()
+    await lan.stop_mdns()
 
 
 app = FastAPI(title="RVI Beta API", version="0.1.0", lifespan=lifespan)

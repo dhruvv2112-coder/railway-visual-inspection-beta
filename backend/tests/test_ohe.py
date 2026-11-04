@@ -313,3 +313,14 @@ def test_connect_page_and_public_apk(tmp_path, monkeypatch):
     assert "OnTrack.AI server is running" in page and "app.apk" in page
     monkeypatch.setattr(settings, "public_apk", False)
     assert c.get("/ohe/connect/app.apk").status_code == 404
+
+
+def test_server_starts_with_mdns_on(monkeypatch):
+    """Laptop mode: startup with discovery enabled must not block or crash (Windows EventLoopBlocked regression)."""
+    from app.config import settings
+    from app.main import app
+    from fastapi.testclient import TestClient
+    monkeypatch.setattr(settings, "mdns", True)
+    with TestClient(app) as c:
+        assert c.get("/health").status_code == 200
+        assert "mdns" in c.get("/ohe/connect/info").json()

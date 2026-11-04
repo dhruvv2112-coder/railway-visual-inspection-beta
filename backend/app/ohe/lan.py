@@ -43,12 +43,13 @@ def urls() -> list[str]:
     return [f"http://{ip}:{settings.port}/" for ip in lan_ips()]
 
 
-def start_mdns() -> bool:
-    """Advertise this server on the local network. Returns False when zeroconf is not installed or no LAN address."""
+async def start_mdns() -> bool:
+    """Advertise this server on the local network. Never stops the server: any failure only disables discovery."""
     if not settings.mdns:
         return False
     try:
-        from zeroconf import ServiceInfo, Zeroconf
+        from zeroconf import ServiceInfo
+        from zeroconf.asyncio import AsyncZeroconf
     except ImportError:
         print("mDNS: zeroconf not installed; phones must enter the address by hand")
         return False
@@ -56,12 +57,16 @@ def start_mdns() -> bool:
     if not ips:
         return False
     name = f"{settings.server_name} ({socket.gethostname()})"[:60]
-    info = ServiceInfo(SERVICE, f"{name}.{SERVICE}", addresses=[socket.inet_aton(ip) for ip in ips], port=settings.port,
-                       properties={"path": "/", "app": "ontrack", "v": "1"}, server=f"{socket.gethostname()}.local.")
-    zc = Zeroconf()
-    zc.register_service(info, allow_name_change=True)
+    try:
+        info = ServiceInfo(SERVICE, f"{name}.{SERVICE}", addresses=[socket.inet_aton(ip) for ip in ips], port=settings.port,
+                           properties={"path": "/", "app": "ontrack", "v": "1"}, server=f"{socket.gethostname()}.local.")
+        azc = AsyncZeroconf()
+        await azc.async_register_service(info, allow_name_change=True)
+    except Exception as e:  # noqa: BLE001 - discovery is optional
+        print("mDNS: advertising failed, phones must enter the address by hand:", e)
+        return False
+    _zc.update(zc=azc, info=info)
     keep_awake()
-    _zc.update(zc=zc, info=info)
     print("mDNS: advertising", name, "on", ", ".join(ips))
     return True
 
@@ -73,14 +78,16 @@ def keep_awake() -> None:
         ctypes.windll.kernel32.SetThreadExecutionState(0x80000000 | 0x00000001)  # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
 
 
-def stop_mdns() -> None:
-    zc, info = _zc.pop("zc", None), _zc.pop("info", None)
-    if zc:
+async def stop_mdns() -> None:
+    azc, info = _zc.pop("zc", None), _zc.pop("info", None)
+    if azc:
         try:
             if info:
-                zc.unregister_service(info)
+                await azc.async_unregister_service(info)
+        except Exception:  # noqa: BLE001
+            pass
         finally:
-            zc.close()
+            await azc.async_close()
 
 
 def _qr_svg(text: str) -> str:
