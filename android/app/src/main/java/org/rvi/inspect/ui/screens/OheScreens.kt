@@ -580,11 +580,6 @@ fun OheNoteSheet(text: String, onText: (String) -> Unit, onDictate: () -> Unit, 
             }
             Text(stringResource(R.string.ohe_note_isolated), style = MaterialTheme.typography.bodyMedium, color = Ink.Body)
             Spacer(Modifier.height(12.dp))
-            if (text.isNotBlank()) {
-                Text(text, Modifier.align(Alignment.End).clip(RoundedCornerShape(22.dp, 22.dp, 6.dp, 22.dp)).background(Ink.ElectricTint).padding(12.dp),
-                    style = MaterialTheme.typography.bodyLarge, color = Ink.Ink)
-                Spacer(Modifier.height(10.dp))
-            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(text, onText, Modifier.weight(1f), shape = RoundedCornerShape(28.dp), maxLines = 4,
                     colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = Ink.White, unfocusedContainerColor = Color(0xD9FFFFFF)))
@@ -692,7 +687,7 @@ fun PatrolsScreen(rows: List<PatrolRow>, offline: Boolean, onOpen: (PatrolRow) -
                         Box(Modifier.size(56.dp).clip(CircleShape).background(if (r.fresh) Brush.sweepGradient(listOf(Ink.Electric, Ink.Aqua, Ink.Amber, Color(0xFFFF5A36), Ink.Electric))
                             else Brush.linearGradient(listOf(Color(0x1A0E1020), Color(0x1A0E1020)))).padding(3.dp)) {
                             Box(Modifier.fillMaxSize().clip(CircleShape).background(Ink.White).border(2.dp, Ink.White, CircleShape), contentAlignment = Alignment.Center) {
-                                Mono(r.title.filter { it.isDigit() }.takeLast(4).ifBlank { r.title.take(3) }, size = 12)
+                                Mono(r.title.substringBefore(" · ").filter { it.isDigit() }.takeLast(4).ifBlank { r.title.take(3) }, size = 12)
                             }
                         }
                         Spacer(Modifier.width(12.dp))
@@ -761,7 +756,7 @@ fun ReportScreen(r: ReportUi, onBack: () -> Unit, onRefresh: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Pill("Refresh", onRefresh, Modifier.padding(horizontal = 12.dp).fillMaxWidth(), PillKind.Glass, Icons.Outlined.Refresh)
+            Pill(stringResource(R.string.g_refresh), onRefresh, Modifier.padding(horizontal = 12.dp).fillMaxWidth(), PillKind.Glass, Icons.Outlined.Refresh)
             Spacer(Modifier.height(24.dp))
         }
     }
