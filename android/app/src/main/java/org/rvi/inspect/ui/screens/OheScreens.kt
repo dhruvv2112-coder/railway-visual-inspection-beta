@@ -500,8 +500,14 @@ private data class Quad(val a: Color, val b: androidx.compose.ui.graphics.vector
 /** Retake request: one plain instruction, never "move closer". Spoken aloud by the caller. */
 @Composable
 private fun RetakeCard(p: Prompt, onDismiss: () -> Unit) {
-    val icon = when (p) { Prompt.ZOOM, Prompt.PLATE -> Icons.Outlined.ZoomIn; Prompt.WHOLE -> Icons.Outlined.CropFree; Prompt.SQUARE -> Icons.Outlined.CenterFocusStrong
-        Prompt.BLUR -> Icons.Outlined.BlurOn; Prompt.DARK -> Icons.Outlined.Lightbulb; Prompt.BRIGHT -> Icons.Outlined.WbSunny }
+    val icon = when (p) {
+        Prompt.ZOOM, Prompt.PLATE -> Icons.Outlined.ZoomIn
+        Prompt.WHOLE -> Icons.Outlined.CropFree
+        Prompt.SQUARE -> Icons.Outlined.CenterFocusStrong
+        Prompt.BLUR -> Icons.Outlined.BlurOn
+        Prompt.DARK -> Icons.Outlined.Lightbulb
+        Prompt.BRIGHT -> Icons.Outlined.WbSunny
+    }
     Column(Modifier.padding(horizontal = 12.dp, vertical = 6.dp).fillMaxWidth().glass(RoundedCornerShape(30.dp), strong = true).padding(16.dp)) {
         Row(verticalAlignment = Alignment.Top) {
             Box(Modifier.size(48.dp).clip(RoundedCornerShape(16.dp)).background(Ink.Signal), contentAlignment = Alignment.Center) { Icon(icon, null, tint = Ink.Ink) }
