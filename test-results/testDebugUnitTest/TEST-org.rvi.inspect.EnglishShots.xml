@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.EnglishShots" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-04T07:03:45" hostname="runnervm48cm3" time="34.806">
+<testsuite name="org.rvi.inspect.EnglishShots" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-04T07:06:15" hostname="runnervm48cm3" time="34.61">
   <properties/>
-  <testcase name="s03_patrol" classname="org.rvi.inspect.EnglishShots" time="24.198"/>
-  <testcase name="s10_ohe_hud" classname="org.rvi.inspect.EnglishShots" time="0.696"/>
-  <testcase name="s12_ohe_end" classname="org.rvi.inspect.EnglishShots" time="1.055"/>
-  <testcase name="s04b_ohe_danger" classname="org.rvi.inspect.EnglishShots" time="0.788"/>
-  <testcase name="s01_home" classname="org.rvi.inspect.EnglishShots" time="0.784"/>
-  <testcase name="s04_danger" classname="org.rvi.inspect.EnglishShots" time="0.633"/>
-  <testcase name="s11_ohe_note" classname="org.rvi.inspect.EnglishShots" time="0.947"/>
-  <testcase name="s09_ohe_home" classname="org.rvi.inspect.EnglishShots" time="0.996"/>
-  <testcase name="s06_summary" classname="org.rvi.inspect.EnglishShots" time="0.889"/>
-  <testcase name="s02_kit" classname="org.rvi.inspect.EnglishShots" time="0.756"/>
-  <testcase name="s05_classify" classname="org.rvi.inspect.EnglishShots" time="0.934"/>
-  <testcase name="s08_settings" classname="org.rvi.inspect.EnglishShots" time="0.755"/>
-  <testcase name="s04c_danger_choice" classname="org.rvi.inspect.EnglishShots" time="0.662"/>
-  <testcase name="s07_review" classname="org.rvi.inspect.EnglishShots" time="0.709"/>
+  <testcase name="s03_patrol" classname="org.rvi.inspect.EnglishShots" time="24.04"/>
+  <testcase name="s10_ohe_hud" classname="org.rvi.inspect.EnglishShots" time="0.861"/>
+  <testcase name="s12_ohe_end" classname="org.rvi.inspect.EnglishShots" time="1.118"/>
+  <testcase name="s04b_ohe_danger" classname="org.rvi.inspect.EnglishShots" time="0.65"/>
+  <testcase name="s01_home" classname="org.rvi.inspect.EnglishShots" time="0.714"/>
+  <testcase name="s04_danger" classname="org.rvi.inspect.EnglishShots" time="0.608"/>
+  <testcase name="s11_ohe_note" classname="org.rvi.inspect.EnglishShots" time="0.778"/>
+  <testcase name="s09_ohe_home" classname="org.rvi.inspect.EnglishShots" time="0.933"/>
+  <testcase name="s06_summary" classname="org.rvi.inspect.EnglishShots" time="1.011"/>
+  <testcase name="s02_kit" classname="org.rvi.inspect.EnglishShots" time="0.816"/>
+  <testcase name="s05_classify" classname="org.rvi.inspect.EnglishShots" time="1.01"/>
+  <testcase name="s08_settings" classname="org.rvi.inspect.EnglishShots" time="0.731"/>
+  <testcase name="s04c_danger_choice" classname="org.rvi.inspect.EnglishShots" time="0.537"/>
+  <testcase name="s07_review" classname="org.rvi.inspect.EnglishShots" time="0.792"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
