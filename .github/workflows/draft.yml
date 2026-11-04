@@ -132,8 +132,10 @@ jobs:
           if (-not $pair.relay.topic) { throw "pairing over the internet failed" }
           $hidden = try { (Invoke-WebRequest "${pub}ohe/connect" -TimeoutSec 15).StatusCode } catch { $_.Exception.Response.StatusCode.value__ }
           if ($hidden -ne 404) { throw "connect page must be hidden over the internet (got $hidden)" }
-          $bad = try { for ($k = 0; $k -lt 6; $k++) { Invoke-RestMethod -Method Post "${pub}ohe/auth/login" -ContentType application/json -Body '{"id":"PT-0001","pin":"0000"}' } } catch { $_.Exception.Response.StatusCode.value__ }
-          Write-Host "after wrong PINs: $bad"
+          $codes = @()
+          for ($k = 0; $k -lt 6; $k++) { try { Invoke-RestMethod -Method Post "${pub}ohe/auth/login" -ContentType application/json -Body '{"id":"PT-0002","pin":"0000"}' | Out-Null; $codes += 200 } catch { $codes += $_.Exception.Response.StatusCode.value__ } }
+          Write-Host "wrong PIN responses: $codes"
+          if ($codes[-1] -ne 429) { throw "lockout after repeated wrong PINs not active over the internet" }
           # relay: newest message on the topic carries the current address with a valid signature
           $relayOk = $false
           for ($i = 0; $i -lt 12; $i++) {
@@ -146,7 +148,11 @@ jobs:
             } catch {}
             Start-Sleep 5
           }
-          if (-not $relayOk) { throw "relay did not carry a correctly signed current address" }
+          if (-not $relayOk) {
+            Write-Host "relay topic: $($pair.relay.server)/$($pair.relay.topic)"; Write-Host "last lines: $lines"; Write-Host "parsed: $($m | ConvertTo-Json -Compress) sig=$sig"
+            Get-Content srv.out.txt -Tail 30; Get-Content srv.err.txt -Tail 30
+            throw "relay did not carry a correctly signed current address"
+          }
           Write-Host "internet path OK: tunnel, sign-in, pairing, hidden laptop pages, signed relay"
           Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
           Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force
