@@ -44,8 +44,23 @@ jobs:
           cd .. && printf 'OnTrack.AI draft %s\n' "$RVI_VERSION_NAME" > notes.txt
           VCODE=$RVI_VERSION_CODE VNAME=$RVI_VERSION_NAME python3 .github/scripts/app_manifest.py OnTrack.AI.apk notes.txt > latest.json
           cat latest.json
+      - name: Trained models (detector + photo-angle check)
+        run: |
+          set -e; mkdir -p models
+          for b in ci-ohe-train-long ci-ohe-train; do
+            if git fetch -q --depth 1 origin $b 2>/dev/null && git cat-file -e FETCH_HEAD:reports/ohe_detector.onnx 2>/dev/null; then
+              git show FETCH_HEAD:reports/ohe_detector.onnx > models/ohe_detector.onnx
+              git show FETCH_HEAD:reports/ohe_detector.names.json > models/ohe_detector.names.json; echo "detector from $b"; break
+            fi
+          done
+          git fetch -q --depth 1 origin ci-ohe-assess
+          git show FETCH_HEAD:reports/ohe_assess.onnx > models/ohe_assess.onnx
+          git show FETCH_HEAD:reports/ohe_assess.json > models/ohe_assess.json
+          ls -la models
       - uses: actions/upload-artifact@v4
         with: {name: app, path: "OnTrack.AI.apk\nlatest.json"}
+      - uses: actions/upload-artifact@v4
+        with: {name: models, path: models}
 
   windows:
     needs: apk
@@ -56,6 +71,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: {name: app, path: app-build}
+      - uses: actions/download-artifact@v4
+        with: {name: models, path: model-build}
       - name: Assemble OnTrack-Server folder (server, models, app)
         run: |
           set -e
@@ -64,16 +81,7 @@ jobs:
           cp deploy/windows/OnTrack-Server.ps1 deploy/windows/ontrack.ico $P/setup/
           cp -r backend shared $P/server/
           rm -rf $P/server/backend/tests $P/server/backend/.pytest_cache
-          for b in ci-ohe-train-long ci-ohe-train; do
-            if git fetch -q --depth 1 origin $b 2>/dev/null && git cat-file -e FETCH_HEAD:reports/ohe_detector.onnx 2>/dev/null; then
-              git show FETCH_HEAD:reports/ohe_detector.onnx > $P/models/ohe_detector.onnx
-              git show FETCH_HEAD:reports/ohe_detector.names.json > $P/models/ohe_detector.names.json; echo "detector from $b"; break
-            fi
-          done
-          if git fetch -q --depth 1 origin ci-ohe-assess 2>/dev/null && git cat-file -e FETCH_HEAD:reports/ohe_assess.onnx 2>/dev/null; then
-            git show FETCH_HEAD:reports/ohe_assess.onnx > $P/models/ohe_assess.onnx
-            git show FETCH_HEAD:reports/ohe_assess.json > $P/models/ohe_assess.json
-          fi
+          cp model-build/* $P/models/
           cp app-build/OnTrack.AI.apk app-build/latest.json $P/app/
           echo "${{ needs.apk.outputs.vname }} ${GITHUB_SHA::7}" > $P/VERSION.txt
           find $P -maxdepth 2 | sort; ls -la $P/models
@@ -95,6 +103,7 @@ jobs:
           if (-not $up) { throw "server did not start" }
           $h | ConvertTo-Json
           if ($h.ohe_detector -eq "none") { throw "detector not loaded" }
+          if (-not (Test-Path OnTrack-Server\models\ohe_assess.onnx)) { throw "photo-angle model missing" }
           $info = Invoke-RestMethod http://127.0.0.1:8000/ohe/connect/info; $info | ConvertTo-Json -Depth 5
           if (-not $info.app) { throw "app not offered on connect page" }
           $tok = (Invoke-RestMethod -Method Post http://127.0.0.1:8000/ohe/auth/login -ContentType application/json -Body '{"id":"PT-0001","pin":"1234"}').token
