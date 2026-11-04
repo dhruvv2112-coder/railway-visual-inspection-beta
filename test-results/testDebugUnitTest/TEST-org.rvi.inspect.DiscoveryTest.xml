@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.DiscoveryTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-04T22:08:47" hostname="runnervm7aw5e" time="0.378">
+<testsuite name="org.rvi.inspect.DiscoveryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-04T23:19:01" hostname="runnervm7aw5e" time="0.513">
   <properties/>
-  <testcase name="normalisesTypedAddresses" classname="org.rvi.inspect.DiscoveryTest" time="0.351"/>
-  <testcase name="parsesReportsAndAlertsFromServer" classname="org.rvi.inspect.DiscoveryTest" time="0.027"/>
+  <testcase name="normalisesTypedAddresses" classname="org.rvi.inspect.DiscoveryTest" time="0.452"/>
+  <testcase name="parsesReportsAndAlertsFromServer" classname="org.rvi.inspect.DiscoveryTest" time="0.034"/>
+  <testcase name="relaySignatureMatchesServer" classname="org.rvi.inspect.DiscoveryTest" time="0.022"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
