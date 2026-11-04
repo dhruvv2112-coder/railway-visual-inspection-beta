@@ -29,7 +29,7 @@ def render(C,fx,fy,fs,bg=None,glass_edge=False,SS=4):
     Cs=C*SS; out=Image.new('RGBA',(Cs,Cs),(0,0,0,0))
     if bg is not None: out.alpha_composite(bg.resize((Cs,Cs),Image.LANCZOS))
     F=fs*SS; X0,Y0=fx*SS,fy*SS
-    R=0.225*F; dc=0.115*F; w=thick/S*0.70*F; arm=0.36*F; sc=0.76
+    R=0.225*F; dc=0.15*F; w=thick/S*0.70*F; arm=0.37*F; sc=0.68
     a=int(F*sc); ox=int(X0+(F-a)/2); oy=int(Y0+(F-a)/2); f=a/S
     # wire extension to bracket centerline
     ext=Image.new('RGBA',(Cs,Cs),(0,0,0,0)); de=ImageDraw.Draw(ext)
