@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RVI Inspect</string>
+    <string name="app_name">OnTrack.AI</string>
     <string name="greeting">Good morning, %1$s</string>
     <string name="role_keyman">Combined foot patrol · Track + OHE</string>
     <string name="today_beat">Today\'s beat</string>

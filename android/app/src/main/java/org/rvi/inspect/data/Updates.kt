@@ -39,7 +39,7 @@ class Updater(private val context: Context) {
         val dm = context.getSystemService(DownloadManager::class.java)
         val url = (if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/") + "ohe/app/apk"
         val req = DownloadManager.Request(Uri.parse(url))
-            .setTitle("RVI OHE Patrol ${release.versionName}")
+            .setTitle("OnTrack.AI ${release.versionName}")
             .setMimeType("application/vnd.android.package-archive")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalFilesDir(context, null, "rvi-ohe-${release.versionCode}.apk")

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RVI निरीक्षण</string>
+    <string name="app_name">OnTrack.AI</string>
     <string name="greeting">सुप्रभात, %1$s</string>
     <string name="role_keyman">संयुक्त पैदल गश्त · ट्रैक + OHE</string>
     <string name="today_beat">आज की बीट</string>
