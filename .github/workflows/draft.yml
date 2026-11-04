@@ -140,7 +140,9 @@ jobs:
           $relayOk = $false
           for ($i = 0; $i -lt 12; $i++) {
             try {
-              $lines = (Invoke-WebRequest "$($pair.relay.server)/$($pair.relay.topic)/json?poll=1&since=1h" -TimeoutSec 20).Content -split "`n" | Where-Object { $_ }
+              $raw = (Invoke-WebRequest "$($pair.relay.server)/$($pair.relay.topic)/json?poll=1&since=1h" -TimeoutSec 20).Content
+              if ($raw -is [byte[]]) { $raw = [Text.Encoding]::UTF8.GetString($raw) }
+              $lines = $raw -split "`n" | Where-Object { $_.Trim() }
               $m = ($lines | ForEach-Object { $_ | ConvertFrom-Json } | Where-Object { $_.event -eq "message" } | Select-Object -Last 1).message | ConvertFrom-Json
               $mac = New-Object System.Security.Cryptography.HMACSHA256 (,[Text.Encoding]::UTF8.GetBytes($pair.relay.key))
               $sig = -join ($mac.ComputeHash([Text.Encoding]::UTF8.GetBytes("$($m.url)|$($m.ts)")) | ForEach-Object { $_.ToString("x2") })
