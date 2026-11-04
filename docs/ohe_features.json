@@ -1,470 +1,497 @@
 [
-{
-"id": "A01",
-"area": "Field capture app",
-"feature": "Start patrol session (section, expected assets)",
-"hld_ref": "Field flow",
-"status": "Built",
-"built": "Capture app: start/resume patrol with section and ID",
-"next": "Test on a phone against the server"
-},
-{
-"id": "A02",
-"area": "Field capture app",
-"feature": "Capture original photo with time, GPS and SHA-256",
-"hld_ref": "§1.1, field flow",
-"status": "Built",
-"built": "Capture app: photo + GPS + SHA-256, uploaded to /ohe media",
-"next": "Test on a phone"
-},
-{
-"id": "A03",
-"area": "Field capture app",
-"feature": "Offline queue and resumable upload",
-"hld_ref": "Field flow",
-"status": "Built",
-"built": "Room queue + WorkManager upload in capture order; duplicate-safe",
-"next": "Test offline/online switch on a phone"
-},
-{
-"id": "A04",
-"area": "Field capture app",
-"feature": "On-phone photo quality check before upload",
-"hld_ref": "Cascade stage 1",
-"status": "Built",
-"built": "On-phone blur/dark/bright check gives an instant retake request",
-"next": "—"
-},
-{
-"id": "A05",
-"area": "Field capture app",
-"feature": "Targeted recapture prompt (optical zoom, never move closer)",
-"hld_ref": "§8.4",
-"status": "Built",
-"built": "Server retake requests shown and spoken in Hindi/English; never 'move closer'",
-"next": "—"
-},
-{
-"id": "A06",
-"area": "Field capture app",
-"feature": "Finite voice command set, Hindi and English",
-"hld_ref": "§1.1, I-06",
-"status": "Built",
-"built": "Voice in patrol: photo, note, end patrol only",
-"next": "Field check of recognition"
-},
-{
-"id": "A07",
-"area": "Field capture app",
-"feature": "Dictated notes kept apart from inspection",
-"hld_ref": "I-06",
-"status": "Built",
-"built": "Note sheet (typed or dictated), sent to the separate notes channel",
-"next": "—"
-},
-{
-"id": "A08",
-"area": "Field capture app",
-"feature": "End patrol and sync",
-"hld_ref": "Field flow",
-"status": "Built",
-"built": "End patrol uploads the rest, closes the cycle, shows the report summary",
-"next": "—"
-},
-{
-"id": "A09",
-"area": "Field capture app",
-"feature": "No per-asset confirmation in the flow",
-"hld_ref": "Core principle",
-"status": "Built",
-"built": "No classify or confirm step anywhere in the capture flow",
-"next": "—"
-},
-{
-"id": "A10",
-"area": "Field capture app",
-"feature": "Hindi + English UI, greyscale, JetBrains Mono",
-"hld_ref": "Brief",
-"status": "Built",
-"built": "Earlier app, 20 screenshots EN/HI",
-"next": "Reuse in the capture app"
-},
-{
-"id": "A11",
-"area": "Field capture app",
-"feature": "Live-OHE safety: Call TPC, never approach",
-"hld_ref": "RDSO TI/MI/0060 6.1",
-"status": "Built",
-"built": "Call TPC sheet in the earlier app",
-"next": "Carry over"
-},
-{
-"id": "B01",
-"area": "Inspection service",
-"feature": "Session and photo ingest, duplicate-safe",
-"hld_ref": "Field flow",
-"status": "Built",
-"built": "Checksum mismatch refused; same bytes accepted once (tests)",
-"next": "—"
-},
-{
-"id": "B02",
-"area": "Inspection service",
-"feature": "Photo quality / assessability rules",
-"hld_ref": "Cascade stage 1, §2.2",
-"status": "Built",
-"built": "Sharpness, exposure, clipping, target size",
-"next": "—"
-},
-{
-"id": "B03",
-"area": "Inspection service",
-"feature": "Assessability model (usable view or not)",
-"hld_ref": "Cascade stage 1",
-"status": "Built",
-"built": "Photo-angle check (MobileNetV3, EPDCL): test accuracy 0.86, F1 0.87; asks for a square-on retake",
-"next": "Validate on Railway mast photos"
-},
-{
-"id": "B04",
-"area": "Inspection service",
-"feature": "Detector plugged into the service (ONNX)",
-"hld_ref": "Cascade stage 2",
-"status": "Built",
-"built": "OnnxYoloDetector; 20/20 test photos detected",
-"next": "—"
-},
-{
-"id": "B05",
-"area": "Inspection service",
-"feature": "Mast identity: location corridor + numbering format, explicit unknown",
-"hld_ref": "Cascade stage 3",
-"status": "Built",
-"built": "Never picks the nearest mast; tested",
-"next": "—"
-},
-{
-"id": "B06",
-"area": "Inspection service",
-"feature": "Read mast number plates (OCR)",
-"hld_ref": "Cascade stage 3",
-"status": "Partial",
-"built": "PP-OCR (RapidOCR) wired into the server, zero-shot; grammar + corridor check guard it",
-"next": "Fine-tune on Railway plates (pilot photos)"
-},
-{
-"id": "B07",
-"area": "Inspection service",
-"feature": "Insulator visible damage finding",
-"hld_ref": "Stage 4, R-INS-01",
-"status": "Built",
-"built": "Detector defect class → urgent finding",
-"next": "Validate on railway photos"
-},
-{
-"id": "B08",
-"area": "Inspection service",
-"feature": "Nest / foreign object finding",
-"hld_ref": "Stage 4, R-NEST-01",
-"status": "Built",
-"built": "Presence is the finding",
-"next": "Validate on railway photos"
-},
-{
-"id": "B09",
-"area": "Inspection service",
-"feature": "Mast lean, corrosion, vegetation clearance findings",
-"hld_ref": "Cascade stage 4",
-"status": "Not started",
-"built": "Detected only, reported as unsupported",
-"next": "EPDCL lean labels; railway validation"
-},
-{
-"id": "B10",
-"area": "Inspection service",
-"feature": "Dropper, contact wire, cantilever fitting findings",
-"hld_ref": "Cascade stage 4",
-"status": "Not started",
-"built": "—",
-"next": "Needs data (pilot or Roboflow)"
-},
-{
-"id": "B11",
-"area": "Inspection service",
-"feature": "Unknown-defect (anomaly) check",
-"hld_ref": "Cascade stage 5, §6.2",
-"status": "Partial",
-"built": "AUROC 0.63; fails on railway parts; review-only",
-"next": "Railway normal photo bank"
-},
-{
-"id": "B12",
-"area": "Inspection service",
-"feature": "Decision matrix, assessability states, three-part claims",
-"hld_ref": "§2.1, §8.4",
-"status": "Built",
-"built": "All states and claims implemented; tests",
-"next": "—"
-},
-{
-"id": "B13",
-"area": "Inspection service",
-"feature": "Rule registry with authority and routing",
-"hld_ref": "Rule registry",
-"status": "Built",
-"built": "R-INS-01, R-NEST-01, R-ANOM-01 cite RDSO/CAMTECH",
-"next": "Add rules as classes are validated"
-},
-{
-"id": "B14",
-"area": "Inspection service",
-"feature": "Immediate alert for urgent findings",
-"hld_ref": "§8.4",
-"status": "Built",
-"built": "Alert feed /ohe/alerts + optional webhook, raised on upload",
-"next": "Connect SMS/push gateway"
-},
-{
-"id": "B15",
-"area": "Inspection service",
-"feature": "One finding per issue across repeated photos",
-"hld_ref": "§8.4",
-"status": "Built",
-"built": "Observation count, no frame inflation",
-"next": "—"
-},
-{
-"id": "B16",
-"area": "Inspection service",
-"feature": "Cycle reconciliation: every expected mast gets a state",
-"hld_ref": "RPT-01–13",
-"status": "Built",
-"built": "End-of-patrol reconcile",
-"next": "—"
-},
-{
-"id": "B17",
-"area": "Inspection service",
-"feature": "Cycle report RPT-01 to RPT-13 (JSON + HTML)",
-"hld_ref": "RPT-01–13",
-"status": "Built",
-"built": "All 13 report sections: coverage ledger, temporal 'not comparable', review record, notes annex added",
-"next": "—"
-},
-{
-"id": "B18",
-"area": "Inspection service",
-"feature": "Sign-off by SSE/ADEE/DEE/Sr DEE, immutable revisions",
-"hld_ref": "RPT-01–13",
-"status": "Built",
-"built": "Sign once; amendments become new revisions",
-"next": "—"
-},
-{
-"id": "B19",
-"area": "Inspection service",
-"feature": "Calibrated confidence scores",
-"hld_ref": "Confidence vector",
-"status": "Not started",
-"built": "Scores marked uncalibrated",
-"next": "Calibrate on pilot set"
-},
-{
-"id": "B20",
-"area": "Inspection service",
-"feature": "Compare with previous cycles (new / persistent)",
-"hld_ref": "§11 (Release C)",
-"status": "Deferred",
-"built": "—",
-"next": "After identity is stable"
-},
-{
-"id": "B21",
-"area": "Inspection service",
-"feature": "AI-written report narrative",
-"hld_ref": "§14.1",
-"status": "Deferred",
-"built": "—",
-"next": "Not a first milestone"
-},
-{
-"id": "B22",
-"area": "Inspection service",
-"feature": "User accounts and roles",
-"hld_ref": "—",
-"status": "Built",
-"built": "ID + PIN sign-in, signed tokens, roles (Patrol, SSE, ADEE, DEE, Sr DEE)",
-"next": "Railway identity system later"
-},
-{
-"id": "B23",
-"area": "Inspection service",
-"feature": "Hosting, storage and deployment",
-"hld_ref": "—",
-"status": "Built",
-"built": "Docker image with model + OCR on GHCR, compose file, user script; release workflow with smoke test",
-"next": "Production host and HTTPS"
-},
-{
-"id": "C01",
-"area": "AI models",
-"feature": "Detector: insulator + insulator defect",
-"hld_ref": "§6",
-"status": "Built",
-"built": "Full run AP50: CPLID 0.98/0.99; powerline insulator 0.73, broken 0.41; VPMBGI broken glass 0.84",
-"next": "Railway validation"
-},
-{
-"id": "C02",
-"area": "AI models",
-"feature": "Detector: bird nest + foreign object",
-"hld_ref": "§6",
-"status": "Built",
-"built": "Full run AP50: RailFOD23 bird nest 0.99, foreign object 0.95 (partly synthetic)",
-"next": "Railway validation"
-},
-{
-"id": "C03",
-"area": "AI models",
-"feature": "Detector: mast",
-"hld_ref": "§6",
-"status": "Built",
-"built": "Full run AP50: EPDCL mast 0.945 (phone, ground level)",
-"next": "Railway mast photos"
-},
-{
-"id": "C04",
-"area": "AI models",
-"feature": "Detector: vegetation",
-"hld_ref": "§6",
-"status": "Built",
-"built": "Full run AP50: powerline 0.70, EPDCL 0.56",
-"next": "Railway validation"
-},
-{
-"id": "C05",
-"area": "AI models",
-"feature": "Detector: corrosion",
-"hld_ref": "§6",
-"status": "Built",
-"built": "Full run AP50: 0.76",
-"next": "Railway validation"
-},
-{
-"id": "C06",
-"area": "AI models",
-"feature": "Detector: dropper, contact wire, number plate, fittings",
-"hld_ref": "§6",
-"status": "Not started",
-"built": "No open data",
-"next": "Pilot photos or Roboflow key"
-},
-{
-"id": "C07",
-"area": "AI models",
-"feature": "Full-data training run",
-"hld_ref": "§6.5",
-"status": "Built",
-"built": "Done 3 Nov: 40 epochs, ~9,900 photos, 6 chained CI jobs; model in release beta-1-rc1",
-"next": "—"
-},
-{
-"id": "C08",
-"area": "AI models",
-"feature": "RT-DETRv2-R18 baseline comparison",
-"hld_ref": "§6.2",
-"status": "Not started",
-"built": "—",
-"next": "After full run"
-},
-{
-"id": "C09",
-"area": "AI models",
-"feature": "Railway pilot dataset (capture + labels)",
-"hld_ref": "§12.1",
-"status": "Not started",
-"built": "You said not yet",
-"next": "One section, a few hundred photos"
-},
-{
-"id": "C10",
-"area": "AI models",
-"feature": "Per-class field validation and acceptance thresholds",
-"hld_ref": "§15.1",
-"status": "Not started",
-"built": "—",
-"next": "Needs pilot set"
-},
-{
-"id": "C11",
-"area": "AI models",
-"feature": "Dataset catalogue with licences",
-"hld_ref": "§12.1",
-"status": "Built",
-"built": "31 sources logged",
-"next": "Clear CPLID licence"
-},
-{
-"id": "D01",
-"area": "Review and reporting",
-"feature": "Reviewer screens: report, sign-off",
-"hld_ref": "RPT-01–13",
-"status": "Built",
-"built": "Reviewer web /ohe/review: reports, findings with photos and boxes, sign-off",
-"next": "—"
-},
-{
-"id": "D02",
-"area": "Review and reporting",
-"feature": "Exception queue (anomalous, unsupported, uncertain identity)",
-"hld_ref": "§8.4",
-"status": "Built",
-"built": "Exception queue: unresolved mast, anomaly, not assessable, no evidence",
-"next": "—"
-},
-{
-"id": "D03",
-"area": "Review and reporting",
-"feature": "Routing to departments and coordination queue",
-"hld_ref": "Rule registry",
-"status": "Built",
-"built": "Configured in rule registry",
-"next": "—"
-},
-{
-"id": "D04",
-"area": "Review and reporting",
-"feature": "Print / PDF export of signed report",
-"hld_ref": "RPT-01–13",
-"status": "Built",
-"built": "Print view of the frozen revision (browser print to PDF)",
-"next": "—"
-},
-{
-"id": "E01",
-"area": "Testing and operations",
-"feature": "HLD scenario tests V01–V12",
-"hld_ref": "V01–V12",
-"status": "Built",
-"built": "All 12 HLD scenarios V01–V12 pass (29 backend tests)",
-"next": "—"
-},
-{
-"id": "E02",
-"area": "Testing and operations",
-"feature": "CI for backend, Android and training",
-"hld_ref": "—",
-"status": "Built",
-"built": "GitHub Actions on every push",
-"next": "—"
-},
-{
-"id": "E03",
-"area": "Testing and operations",
-"feature": "Hindi terminology review",
-"hld_ref": "Brief",
-"status": "Not started",
-"built": "—",
-"next": "Rajbhasha / TRD review"
-}
+ {
+  "id": "A01",
+  "area": "Field capture app",
+  "feature": "Start patrol session (section, expected assets)",
+  "hld_ref": "Field flow",
+  "status": "Built",
+  "built": "Capture app: start/resume patrol with section and ID",
+  "next": "Test on a phone against the server"
+ },
+ {
+  "id": "A02",
+  "area": "Field capture app",
+  "feature": "Capture original photo with time, GPS and SHA-256",
+  "hld_ref": "§1.1, field flow",
+  "status": "Built",
+  "built": "Capture app: photo + GPS + SHA-256, uploaded to /ohe media",
+  "next": "Test on a phone"
+ },
+ {
+  "id": "A03",
+  "area": "Field capture app",
+  "feature": "Offline queue and resumable upload",
+  "hld_ref": "Field flow",
+  "status": "Built",
+  "built": "Room queue + WorkManager upload in capture order; duplicate-safe",
+  "next": "Test offline/online switch on a phone"
+ },
+ {
+  "id": "A04",
+  "area": "Field capture app",
+  "feature": "On-phone photo quality check before upload",
+  "hld_ref": "Cascade stage 1",
+  "status": "Built",
+  "built": "On-phone blur/dark/bright check gives an instant retake request",
+  "next": "—"
+ },
+ {
+  "id": "A05",
+  "area": "Field capture app",
+  "feature": "Targeted recapture prompt (optical zoom, never move closer)",
+  "hld_ref": "§8.4",
+  "status": "Built",
+  "built": "Server retake requests shown and spoken in Hindi/English; never 'move closer'",
+  "next": "—"
+ },
+ {
+  "id": "A06",
+  "area": "Field capture app",
+  "feature": "Finite voice command set, Hindi and English",
+  "hld_ref": "§1.1, I-06",
+  "status": "Built",
+  "built": "Voice in patrol: photo, note, end patrol only",
+  "next": "Field check of recognition"
+ },
+ {
+  "id": "A07",
+  "area": "Field capture app",
+  "feature": "Dictated notes kept apart from inspection",
+  "hld_ref": "I-06",
+  "status": "Built",
+  "built": "Note sheet (typed or dictated), sent to the separate notes channel",
+  "next": "—"
+ },
+ {
+  "id": "A08",
+  "area": "Field capture app",
+  "feature": "End patrol and sync",
+  "hld_ref": "Field flow",
+  "status": "Built",
+  "built": "End patrol uploads the rest, closes the cycle, shows the report summary",
+  "next": "—"
+ },
+ {
+  "id": "A09",
+  "area": "Field capture app",
+  "feature": "No per-asset confirmation in the flow",
+  "hld_ref": "Core principle",
+  "status": "Built",
+  "built": "No classify or confirm step anywhere in the capture flow",
+  "next": "—"
+ },
+ {
+  "id": "A10",
+  "area": "Field capture app",
+  "feature": "Hindi + English UI, glass design",
+  "hld_ref": "Brief",
+  "status": "Built",
+  "built": "Inter Tight + Geist Mono glass UI, Hindi and English",
+  "next": "Reuse in the capture app"
+ },
+ {
+  "id": "A11",
+  "area": "Field capture app",
+  "feature": "Live-OHE safety: Call TPC, never approach",
+  "hld_ref": "RDSO TI/MI/0060 6.1",
+  "status": "Built",
+  "built": "Call TPC sheet in the earlier app",
+  "next": "Carry over"
+ },
+ {
+  "id": "B01",
+  "area": "Inspection service",
+  "feature": "Session and photo ingest, duplicate-safe",
+  "hld_ref": "Field flow",
+  "status": "Built",
+  "built": "Checksum mismatch refused; same bytes accepted once (tests)",
+  "next": "—"
+ },
+ {
+  "id": "B02",
+  "area": "Inspection service",
+  "feature": "Photo quality / assessability rules",
+  "hld_ref": "Cascade stage 1, §2.2",
+  "status": "Built",
+  "built": "Sharpness, exposure, clipping, target size",
+  "next": "—"
+ },
+ {
+  "id": "B03",
+  "area": "Inspection service",
+  "feature": "Assessability model (usable view or not)",
+  "hld_ref": "Cascade stage 1",
+  "status": "Built",
+  "built": "Photo-angle check (MobileNetV3, EPDCL): test accuracy 0.86, F1 0.87; asks for a square-on retake",
+  "next": "Validate on Railway mast photos"
+ },
+ {
+  "id": "B04",
+  "area": "Inspection service",
+  "feature": "Detector plugged into the service (ONNX)",
+  "hld_ref": "Cascade stage 2",
+  "status": "Built",
+  "built": "OnnxYoloDetector; 20/20 test photos detected",
+  "next": "—"
+ },
+ {
+  "id": "B05",
+  "area": "Inspection service",
+  "feature": "Mast identity: location corridor + numbering format, explicit unknown",
+  "hld_ref": "Cascade stage 3",
+  "status": "Built",
+  "built": "Never picks the nearest mast; tested",
+  "next": "—"
+ },
+ {
+  "id": "B06",
+  "area": "Inspection service",
+  "feature": "Read mast number plates (OCR)",
+  "hld_ref": "Cascade stage 3",
+  "status": "Partial",
+  "built": "PP-OCR (RapidOCR) wired into the server, zero-shot; grammar + corridor check guard it",
+  "next": "Fine-tune on Railway plates (pilot photos)"
+ },
+ {
+  "id": "B07",
+  "area": "Inspection service",
+  "feature": "Insulator visible damage finding",
+  "hld_ref": "Stage 4, R-INS-01",
+  "status": "Built",
+  "built": "Detector defect class → urgent finding",
+  "next": "Validate on railway photos"
+ },
+ {
+  "id": "B08",
+  "area": "Inspection service",
+  "feature": "Nest / foreign object finding",
+  "hld_ref": "Stage 4, R-NEST-01",
+  "status": "Built",
+  "built": "Presence is the finding",
+  "next": "Validate on railway photos"
+ },
+ {
+  "id": "B09",
+  "area": "Inspection service",
+  "feature": "Mast lean, corrosion, vegetation clearance findings",
+  "hld_ref": "Cascade stage 4",
+  "status": "Not started",
+  "built": "Detected only, reported as unsupported",
+  "next": "EPDCL lean labels; railway validation"
+ },
+ {
+  "id": "B10",
+  "area": "Inspection service",
+  "feature": "Dropper, contact wire, cantilever fitting findings",
+  "hld_ref": "Cascade stage 4",
+  "status": "Not started",
+  "built": "—",
+  "next": "Needs data (pilot or Roboflow)"
+ },
+ {
+  "id": "B11",
+  "area": "Inspection service",
+  "feature": "Unknown-defect (anomaly) check",
+  "hld_ref": "Cascade stage 5, §6.2",
+  "status": "Partial",
+  "built": "AUROC 0.63; fails on railway parts; review-only",
+  "next": "Railway normal photo bank"
+ },
+ {
+  "id": "B12",
+  "area": "Inspection service",
+  "feature": "Decision matrix, assessability states, three-part claims",
+  "hld_ref": "§2.1, §8.4",
+  "status": "Built",
+  "built": "All states and claims implemented; tests",
+  "next": "—"
+ },
+ {
+  "id": "B13",
+  "area": "Inspection service",
+  "feature": "Rule registry with authority and routing",
+  "hld_ref": "Rule registry",
+  "status": "Built",
+  "built": "R-INS-01, R-NEST-01, R-ANOM-01 cite RDSO/CAMTECH",
+  "next": "Add rules as classes are validated"
+ },
+ {
+  "id": "B14",
+  "area": "Inspection service",
+  "feature": "Immediate alert for urgent findings",
+  "hld_ref": "§8.4",
+  "status": "Built",
+  "built": "Alert feed /ohe/alerts + optional webhook, raised on upload",
+  "next": "Connect SMS/push gateway"
+ },
+ {
+  "id": "B15",
+  "area": "Inspection service",
+  "feature": "One finding per issue across repeated photos",
+  "hld_ref": "§8.4",
+  "status": "Built",
+  "built": "Observation count, no frame inflation",
+  "next": "—"
+ },
+ {
+  "id": "B16",
+  "area": "Inspection service",
+  "feature": "Cycle reconciliation: every expected mast gets a state",
+  "hld_ref": "RPT-01–13",
+  "status": "Built",
+  "built": "End-of-patrol reconcile",
+  "next": "—"
+ },
+ {
+  "id": "B17",
+  "area": "Inspection service",
+  "feature": "Cycle report RPT-01 to RPT-13 (JSON + HTML)",
+  "hld_ref": "RPT-01–13",
+  "status": "Built",
+  "built": "All 13 report sections: coverage ledger, temporal 'not comparable', review record, notes annex added",
+  "next": "—"
+ },
+ {
+  "id": "B18",
+  "area": "Inspection service",
+  "feature": "Sign-off by SSE/ADEE/DEE/Sr DEE, immutable revisions",
+  "hld_ref": "RPT-01–13",
+  "status": "Built",
+  "built": "Sign once; amendments become new revisions",
+  "next": "—"
+ },
+ {
+  "id": "B19",
+  "area": "Inspection service",
+  "feature": "Calibrated confidence scores",
+  "hld_ref": "Confidence vector",
+  "status": "Not started",
+  "built": "Scores marked uncalibrated",
+  "next": "Calibrate on pilot set"
+ },
+ {
+  "id": "B20",
+  "area": "Inspection service",
+  "feature": "Compare with previous cycles (new / persistent)",
+  "hld_ref": "§11 (Release C)",
+  "status": "Deferred",
+  "built": "—",
+  "next": "After identity is stable"
+ },
+ {
+  "id": "B21",
+  "area": "Inspection service",
+  "feature": "AI-written report narrative",
+  "hld_ref": "§14.1",
+  "status": "Deferred",
+  "built": "—",
+  "next": "Not a first milestone"
+ },
+ {
+  "id": "B22",
+  "area": "Inspection service",
+  "feature": "User accounts and roles",
+  "hld_ref": "—",
+  "status": "Built",
+  "built": "ID + PIN sign-in, signed tokens, roles (Patrol, SSE, ADEE, DEE, Sr DEE)",
+  "next": "Railway identity system later"
+ },
+ {
+  "id": "B23",
+  "area": "Inspection service",
+  "feature": "Hosting, storage and deployment",
+  "hld_ref": "—",
+  "status": "Built",
+  "built": "Docker image with model + OCR on GHCR, compose file, user script; release workflow with smoke test",
+  "next": "Production host and HTTPS"
+ },
+ {
+  "id": "C01",
+  "area": "AI models",
+  "feature": "Detector: insulator + insulator defect",
+  "hld_ref": "§6",
+  "status": "Built",
+  "built": "Full run AP50: CPLID 0.98/0.99; powerline insulator 0.73, broken 0.41; VPMBGI broken glass 0.84",
+  "next": "Railway validation"
+ },
+ {
+  "id": "C02",
+  "area": "AI models",
+  "feature": "Detector: bird nest + foreign object",
+  "hld_ref": "§6",
+  "status": "Built",
+  "built": "Full run AP50: RailFOD23 bird nest 0.99, foreign object 0.95 (partly synthetic)",
+  "next": "Railway validation"
+ },
+ {
+  "id": "C03",
+  "area": "AI models",
+  "feature": "Detector: mast",
+  "hld_ref": "§6",
+  "status": "Built",
+  "built": "Full run AP50: EPDCL mast 0.945 (phone, ground level)",
+  "next": "Railway mast photos"
+ },
+ {
+  "id": "C04",
+  "area": "AI models",
+  "feature": "Detector: vegetation",
+  "hld_ref": "§6",
+  "status": "Built",
+  "built": "Full run AP50: powerline 0.70, EPDCL 0.56",
+  "next": "Railway validation"
+ },
+ {
+  "id": "C05",
+  "area": "AI models",
+  "feature": "Detector: corrosion",
+  "hld_ref": "§6",
+  "status": "Built",
+  "built": "Full run AP50: 0.76",
+  "next": "Railway validation"
+ },
+ {
+  "id": "C06",
+  "area": "AI models",
+  "feature": "Detector: dropper, contact wire, number plate, fittings",
+  "hld_ref": "§6",
+  "status": "Not started",
+  "built": "No open data",
+  "next": "Pilot photos or Roboflow key"
+ },
+ {
+  "id": "C07",
+  "area": "AI models",
+  "feature": "Full-data training run",
+  "hld_ref": "§6.5",
+  "status": "Built",
+  "built": "Done 3 Nov: 40 epochs, ~9,900 photos, 6 chained CI jobs; model in release beta-1-rc1",
+  "next": "—"
+ },
+ {
+  "id": "C08",
+  "area": "AI models",
+  "feature": "RT-DETRv2-R18 baseline comparison",
+  "hld_ref": "§6.2",
+  "status": "Not started",
+  "built": "—",
+  "next": "After full run"
+ },
+ {
+  "id": "C09",
+  "area": "AI models",
+  "feature": "Railway pilot dataset (capture + labels)",
+  "hld_ref": "§12.1",
+  "status": "Not started",
+  "built": "You said not yet",
+  "next": "One section, a few hundred photos"
+ },
+ {
+  "id": "C10",
+  "area": "AI models",
+  "feature": "Per-class field validation and acceptance thresholds",
+  "hld_ref": "§15.1",
+  "status": "Not started",
+  "built": "—",
+  "next": "Needs pilot set"
+ },
+ {
+  "id": "C11",
+  "area": "AI models",
+  "feature": "Dataset catalogue with licences",
+  "hld_ref": "§12.1",
+  "status": "Built",
+  "built": "31 sources logged",
+  "next": "Clear CPLID licence"
+ },
+ {
+  "id": "D01",
+  "area": "Review and reporting",
+  "feature": "Reviewer screens: report, sign-off",
+  "hld_ref": "RPT-01–13",
+  "status": "Built",
+  "built": "Reviewer web /ohe/review: reports, findings with photos and boxes, sign-off",
+  "next": "—"
+ },
+ {
+  "id": "D02",
+  "area": "Review and reporting",
+  "feature": "Exception queue (anomalous, unsupported, uncertain identity)",
+  "hld_ref": "§8.4",
+  "status": "Built",
+  "built": "Exception queue: unresolved mast, anomaly, not assessable, no evidence",
+  "next": "—"
+ },
+ {
+  "id": "D03",
+  "area": "Review and reporting",
+  "feature": "Routing to departments and coordination queue",
+  "hld_ref": "Rule registry",
+  "status": "Built",
+  "built": "Configured in rule registry",
+  "next": "—"
+ },
+ {
+  "id": "D04",
+  "area": "Review and reporting",
+  "feature": "Print / PDF export of signed report",
+  "hld_ref": "RPT-01–13",
+  "status": "Built",
+  "built": "Print view of the frozen revision (browser print to PDF)",
+  "next": "—"
+ },
+ {
+  "id": "E01",
+  "area": "Testing and operations",
+  "feature": "HLD scenario tests V01–V12",
+  "hld_ref": "V01–V12",
+  "status": "Built",
+  "built": "All 12 HLD scenarios V01–V12 pass (29 backend tests)",
+  "next": "—"
+ },
+ {
+  "id": "E02",
+  "area": "Testing and operations",
+  "feature": "CI for backend, Android and training",
+  "hld_ref": "—",
+  "status": "Built",
+  "built": "GitHub Actions on every push",
+  "next": "—"
+ },
+ {
+  "id": "E03",
+  "area": "Testing and operations",
+  "feature": "Hindi terminology review",
+  "hld_ref": "Brief",
+  "status": "Not started",
+  "built": "—",
+  "next": "Rajbhasha / TRD review"
+ },
+ {
+  "id": "A12",
+  "area": "Field capture app",
+  "feature": "Glass UI draft 1 (sign-in, home, camera, retake, urgent, summary, patrols, tracker, alerts, profile)",
+  "hld_ref": "Brief",
+  "status": "Partial",
+  "built": "Built in the app from the approved canvas; screenshots EN/HI in CI",
+  "next": "Test on a phone"
+ },
+ {
+  "id": "A13",
+  "area": "Field capture app",
+  "feature": "Find the laptop server on Wi-Fi",
+  "hld_ref": "—",
+  "status": "Built",
+  "built": "Android network service discovery (_ontrack._tcp) + typed address",
+  "next": "Test on the ProArt + phone"
+ },
+ {
+  "id": "B24",
+  "area": "Inspection service",
+  "feature": "Windows laptop server, one click",
+  "hld_ref": "—",
+  "status": "Partial",
+  "built": "Start-OnTrack.bat: Python 3.11, server, models, accounts, firewall, connect page with QR + app download; smoke-tested on a Windows runner",
+  "next": "Run on the ProArt"
+ }
 ]

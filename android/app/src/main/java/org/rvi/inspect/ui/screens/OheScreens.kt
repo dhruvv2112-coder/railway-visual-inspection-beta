@@ -297,8 +297,10 @@ fun OheHomeScreen(st: OheHomeState, onStart: () -> Unit, onResume: () -> Unit, o
 /** Stylised section map: the line, the masts (done, urgent, next, to do) and a pulsing "you are here". */
 @Composable
 private fun RouteMap(modifier: Modifier) {
-    val t = rememberInfiniteTransition(label = "pulse")
-    val p by t.animateFloat(0f, 1f, infiniteRepeatable(tween(2000), RepeatMode.Restart), label = "p")
+    val p = if (LocalMotion.current) {
+        val t = rememberInfiniteTransition(label = "pulse")
+        t.animateFloat(0f, 1f, infiniteRepeatable(tween(2000), RepeatMode.Restart), label = "p").value
+    } else 0.4f
     Canvas(modifier) {
         val w = size.width; val h = size.height
         fun pt(fx: Float, fy: Float) = Offset(fx * w, fy * h)
@@ -457,8 +459,10 @@ fun OheHud(st: OheHudState, onCapture: () -> Unit, onVoice: () -> Unit, onNote: 
 
 @Composable
 private fun LiveDot() {
-    val t = rememberInfiniteTransition(label = "live")
-    val a by t.animateFloat(1f, 0.25f, infiniteRepeatable(tween(700), RepeatMode.Reverse), label = "a")
+    val a = if (LocalMotion.current) {
+        val t = rememberInfiniteTransition(label = "live")
+        t.animateFloat(1f, 0.25f, infiniteRepeatable(tween(700), RepeatMode.Reverse), label = "a").value
+    } else 1f
     Box(Modifier.size(8.dp).clip(CircleShape).background(Color(0xFFFF5A36).copy(alpha = a)))
 }
 

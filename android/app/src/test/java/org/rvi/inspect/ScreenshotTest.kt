@@ -34,7 +34,9 @@ import org.rvi.inspect.ui.theme.RviTheme
 abstract class Shots(private val lang: String) {
     private val hi = lang == "hi"
     private fun shot(name: String, content: @Composable () -> Unit) =
-        captureRoboImage("build/outputs/roborazzi/${lang}_$name.png") { RviTheme { content() } }
+        captureRoboImage("build/outputs/roborazzi/${lang}_$name.png") {
+            androidx.compose.runtime.CompositionLocalProvider(org.rvi.inspect.ui.components.LocalMotion provides false) { RviTheme { content() } }
+        }
 
     /** Stand-in for the live camera: a dusk sky so the dark glass is visible. */
     @Composable

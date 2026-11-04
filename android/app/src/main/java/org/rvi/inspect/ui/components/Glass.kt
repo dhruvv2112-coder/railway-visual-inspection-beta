@@ -65,6 +65,9 @@ import org.rvi.inspect.ui.theme.GeistMono
 import org.rvi.inspect.ui.theme.Ink
 import kotlin.math.roundToInt
 
+/** False in screenshot tests: looping animations never let the test settle. */
+val LocalMotion = androidx.compose.runtime.staticCompositionLocalOf { true }
+
 val GlassShape = RoundedCornerShape(28.dp)
 val SheetShape = RoundedCornerShape(38.dp)
 
