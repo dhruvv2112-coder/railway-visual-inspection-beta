@@ -13,7 +13,7 @@ $Root = Split-Path -Parent $PSScriptRoot          # the unzipped OnTrack-Server 
 $Data = Join-Path $env:LOCALAPPDATA "OnTrack"     # database, photos, accounts, Python environment
 $Venv = Join-Path $Data "venv"
 New-Item -ItemType Directory -Force -Path $Data, (Join-Path $Data "evidence") | Out-Null
-Start-Transcript -Path (Join-Path $Data "server-setup.log") -Append | Out-Null
+try { Start-Transcript -Path (Join-Path $Data "server-setup.log") -Append | Out-Null } catch {}
 
 function Say($msg) { Write-Host ""; Write-Host "  $msg" -ForegroundColor Cyan }
 function Ok($msg) { Write-Host "  OK  $msg" -ForegroundColor Green }
@@ -51,15 +51,20 @@ Ok "Python: $Py"
 # ---- 2. Server environment (re-installed only when the server version changes) ---------------------------------------
 $Backend = Join-Path $Root "server\backend"
 $Stamp = Join-Path $Data "installed.txt"
-$Want = (Get-FileHash (Join-Path $Backend "pyproject.toml")).Hash + (Get-Content (Join-Path $Root "VERSION.txt") -ErrorAction SilentlyContinue)
+function Get-Sha([string]$path) {
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try { return ([BitConverter]::ToString($sha.ComputeHash([IO.File]::ReadAllBytes($path))) -replace "-", "") } finally { $sha.Dispose() }
+}
+$ver = Join-Path $Root "VERSION.txt"
+$Want = (Get-Sha (Join-Path $Backend "pyproject.toml")) + $(if (Test-Path $ver) { [IO.File]::ReadAllText($ver).Trim() } else { "" })
 $VPy = Join-Path $Venv "Scripts\python.exe"
-if (-not (Test-Path $VPy) -or -not (Test-Path $Stamp) -or (Get-Content $Stamp -Raw).Trim() -ne $Want) {
+if (-not (Test-Path $VPy) -or -not (Test-Path $Stamp) -or [IO.File]::ReadAllText($Stamp).Trim() -ne $Want) {
     Say "Installing the inspection server (first run takes 3-6 minutes)..."
     if (-not (Test-Path $VPy)) { & $Py -m venv $Venv }
     & $VPy -m pip install --disable-pip-version-check -q --upgrade pip
     & $VPy -m pip install --disable-pip-version-check -q "$Backend[ocr,lan]"
     if ($LASTEXITCODE -ne 0) { throw "Server install failed. Check the internet connection and run again. Log: $Data\server-setup.log" }
-    Set-Content -Path $Stamp -Value $Want
+    [IO.File]::WriteAllText($Stamp, $Want)
 }
 Ok "Server installed"
 
@@ -136,13 +141,16 @@ if (-not $NonInteractive) {
 }
 
 # ---- 5. Start ----------------------------------------------------------------------------------------------------------
-$ips = (Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {
-    $_.IPAddress -notmatch '^(127\.|169\.254\.)' -and $_.PrefixOrigin -ne "WellKnown" }).IPAddress
+$ips = @()
+try {
+    $ips = [System.Net.Dns]::GetHostAddresses([System.Net.Dns]::GetHostName()) | Where-Object {
+        $_.AddressFamily -eq "InterNetwork" -and $_.IPAddressToString -notmatch '^(127\.|169\.254\.)' } | ForEach-Object { $_.IPAddressToString }
+} catch {}
 Say "Starting. Phones on the same Wi-Fi find this laptop automatically."
 foreach ($ip in $ips) { Write-Host "     http://${ip}:$Port/" -ForegroundColor White }
 Write-Host "  Connect page: http://localhost:$Port/ohe/connect     Reviewer: http://localhost:$Port/ohe/review"
 Write-Host "  Keep this window open. Close it (or press Ctrl+C) to stop the server."
-Stop-Transcript | Out-Null
+try { Stop-Transcript | Out-Null } catch {}
 if (-not $NoBrowser) {
     Start-Job -ScriptBlock { param($p) Start-Sleep 6; Start-Process "http://localhost:$p/ohe/connect" } -ArgumentList $Port | Out-Null
 }

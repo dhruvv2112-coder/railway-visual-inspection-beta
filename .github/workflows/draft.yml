@@ -81,6 +81,8 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
+          # Windows PowerShell 5.1 (what the .bat uses) must not inherit PowerShell 7 module paths
+          $env:PSModulePath = [Environment]::GetEnvironmentVariable("PSModulePath", "Machine")
           $p = Start-Process powershell -PassThru -NoNewWindow -RedirectStandardOutput srv.out.txt -RedirectStandardError srv.err.txt `
                -ArgumentList "-NoProfile","-ExecutionPolicy","Bypass","-File","OnTrack-Server\setup\OnTrack-Server.ps1","-NonInteractive","-NoBrowser"
           $up = $false
