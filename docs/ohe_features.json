@@ -490,8 +490,8 @@
   "area": "Inspection service",
   "feature": "Windows laptop server, one click",
   "hld_ref": "—",
-  "status": "Partial",
-  "built": "Start-OnTrack.bat: Python 3.11, server, models, accounts, firewall, connect page with QR + app download; smoke-tested on a Windows runner",
+  "status": "Built",
+  "built": "Start-OnTrack.bat: Python 3.11, server, detector + photo-angle model, accounts, firewall, connect page with QR + app download; smoke-tested on Windows in CI (release draft-1)",
   "next": "Run on the ProArt"
  }
 ]

@@ -120,3 +120,19 @@ python3 demo.py --server https://rvi.example.in --id PT-0412 --pin 4826 photos/*
 7. Field trial, then go / no-go.
 
 See `docs/OHE_Patrol_Project_Plan.xlsx`.
+
+
+## Draft 1: laptop server + phone app (5 Nov 2026)
+
+Release **draft-1** (GitHub pre-release) holds `OnTrack-Server-Windows.zip` and `OnTrack.AI.apk` (0.3.3004-draft).
+
+1. On the Windows laptop: unzip, double-click `Start-OnTrack.bat`. First run installs Python 3.11 and the server
+   (3-6 min), asks for a patroller and an SSE account, asks Windows once to allow port 8000 on private networks,
+   and adds a desktop shortcut. Data lives in `%LOCALAPPDATA%\OnTrack`.
+2. The connect page opens (`http://localhost:8000/ohe/connect`): scan the first QR code with the phone to install the app.
+3. The app finds the laptop on the same Wi-Fi by itself (mDNS `_ontrack._tcp`); otherwise type the address shown.
+4. Reviewer page on the laptop: `http://localhost:8000/ohe/review`.
+
+The Windows package is smoke-tested on every draft build (CI workflow `draft`): first-run install, sign-in, photo
+upload, end of patrol and app download. Draft APKs are signed with the CI debug key: when the Beta signing key is
+added to CI secrets, uninstall the draft once before installing a signed Beta.
