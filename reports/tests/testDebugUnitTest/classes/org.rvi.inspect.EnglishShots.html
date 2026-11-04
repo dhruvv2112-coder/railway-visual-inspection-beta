@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class org.rvi.inspect.EnglishShots</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class org.rvi.inspect.EnglishShots</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/org.rvi.inspect.html">org.rvi.inspect</a> &gt; EnglishShots</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">13</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">4</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1m3.40s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox failures" id="successRate">
+<div class="percent">69%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Failed tests</a>
+</li>
+<li>
+<a href="#tab1">Tests</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Failed tests</h2>
+<div class="test">
+<a name="s01_signin"></a>
+<h3 class="failures">s01_signin</h3>
+<span class="code">
+<pre>java.lang.IllegalArgumentException: Cannot perform operation for Em and Sp
+	at androidx.compose.ui.unit.TextUnitKt.checkArithmetic-NB67dxo(TextUnit.kt:355)
+	at androidx.compose.ui.unit.TextUnitKt.lerp-C3pnCVY(TextUnit.kt:386)
+	at androidx.compose.ui.text.SpanStyleKt.lerpTextUnitInheritable-C3pnCVY(SpanStyle.kt:730)
+	at androidx.compose.ui.text.SpanStyleKt.lerp(SpanStyle.kt:781)
+	at androidx.compose.ui.text.TextStyleKt.lerp(TextStyle.kt:1572)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:141)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:139)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextFieldLayout(OutlinedTextField.kt:571)
+	at androidx.compose.material3.internal.TextFieldImplKt.CommonDecorationBox(TextFieldImpl.kt:265)
+	at androidx.compose.material3.OutlinedTextFieldDefaults.DecorationBox(TextFieldDefaults.kt:886)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:242)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:241)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:696)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:695)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.contextmenu.ContextMenuArea_androidKt.ContextMenuArea(ContextMenuArea.android.kt:48)
+	at androidx.compose.foundation.text.ContextMenu_androidKt.ContextMenuArea(ContextMenu.android.kt:38)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextFieldRootBox(CoreTextField.kt:804)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextField(CoreTextField.kt:695)
+	at androidx.compose.foundation.text.BasicTextFieldKt.BasicTextField(BasicTextField.kt:631)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:208)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:207)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.CompositionLocalKt.CompositionLocalProvider(CompositionLocal.kt:401)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextField(OutlinedTextField.kt:207)
+	at org.rvi.inspect.ui.screens.OheScreensKt$SignInScreen$1.invoke(OheScreens.kt:178)
+	at org.rvi.inspect.ui.screens.OheScreensKt$SignInScreen$1.invoke(OheScreens.kt:155)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:94)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:85)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:1017)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:493)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.ActualJvm_jvmKt.invokeComposable(ActualJvm.jvm.kt:97)
+	at androidx.compose.runtime.ComposerImpl.doCompose(Composer.kt:3595)
+	at androidx.compose.runtime.ComposerImpl.composeContent$runtime_release(Composer.kt:3522)
+	at androidx.compose.runtime.CompositionImpl.composeContent(Composition.kt:743)
+	at androidx.compose.runtime.Recomposer.composeInitial$runtime_release(Recomposer.kt:1122)
+	at androidx.compose.runtime.ComposerImpl$CompositionContextImpl.composeInitial$runtime_release(Composer.kt:3876)
+	at androidx.compose.runtime.CompositionImpl.composeInitial(Composition.kt:649)
+	at androidx.compose.runtime.CompositionImpl.setContent(Composition.kt:635)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcomposeInto(SubcomposeLayout.kt:516)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:488)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:479)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:463)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$Scope.subcompose(SubcomposeLayout.kt:895)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke-0kLqBqw(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke(BoxWithConstraints.kt:67)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$createMeasurePolicy$1.measure-3p2s80s(SubcomposeLayout.kt:725)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.foundation.layout.FillNode.measure-3p2s80s(Size.kt:699)
+	at androidx.compose.ui.node.LayoutModifierNodeCoordinator.measure-BRTryo0(LayoutModifierNodeCoordinator.kt:188)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:503)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.measure-BRTryo0(LayoutNodeLayoutDelegate.kt:672)
+	at androidx.compose.ui.layout.RootMeasurePolicy.measure-3p2s80s(RootMeasurePolicy.kt:38)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:2441)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNode.remeasure-_Sx5XlM$ui_release(LayoutNode.kt:1222)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.doRemeasure-sdFAvZA(MeasureAndLayoutDelegate.kt:367)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.remeasureOnly(MeasureAndLayoutDelegate.kt:622)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.measureOnly(MeasureAndLayoutDelegate.kt:420)
+	at androidx.compose.ui.platform.AndroidComposeView.onMeasure(AndroidComposeView.android.kt:1370)
+	at android.view.View.measure(View.java:27122)
+	at androidx.compose.ui.platform.AbstractComposeView.internalOnMeasure$ui_release(ComposeView.android.kt:309)
+	at androidx.compose.ui.platform.AbstractComposeView.onMeasure(ComposeView.android.kt:296)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.LinearLayout.measureChildBeforeLayout(LinearLayout.java:1608)
+	at android.widget.LinearLayout.measureVertical(LinearLayout.java:878)
+	at android.widget.LinearLayout.onMeasure(LinearLayout.java:721)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at com.android.internal.policy.DecorView.onMeasure(DecorView.java:750)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewRootImpl.performMeasure(ViewRootImpl.java:4182)
+	at android.view.ViewRootImpl.measureHierarchy(ViewRootImpl.java:2759)
+	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:3086)
+	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:2465)
+	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:9305)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1339)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+	at android.view.Choreographer.doFrame(Choreographer.java:882)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowChoreographer$ChoreographerReflector$$Reflector33.doFrame(Unknown Source)
+	at org.robolectric.shadows.ShadowChoreographer.lambda$doFrame$1(ShadowChoreographer.java:197)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+	at org.robolectric.shadows.ShadowChoreographer.doFrame(ShadowChoreographer.java:197)
+	at android.view.Choreographer.doFrame(Choreographer.java)
+	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.android.internal.LocalControlledLooper.drainMainThreadUntilIdle(LocalControlledLooper.java:18)
+	at androidx.test.espresso.ViewInteraction.waitForAndHandleInteractionResults(ViewInteraction.java:1)
+	at androidx.test.espresso.ViewInteraction.desugaredPerform(ViewInteraction.java:11)
+	at androidx.test.espresso.ViewInteraction.perform(ViewInteraction.java:8)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:51)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:80)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$lambda$1$lambda$0(RoborazziCompose.kt:42)
+	at androidx.test.core.app.ActivityScenario.lambda$onActivity$2(ActivityScenario.java:794)
+	at androidx.test.core.app.ActivityScenario.onActivity(ActivityScenario.java:804)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:36)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:20)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$default(RoborazziCompose.kt:15)
+	at org.rvi.inspect.Shots.shot(ScreenshotTest.kt:37)
+	at org.rvi.inspect.Shots.s01_signin(ScreenshotTest.kt:55)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="s01b_signin_server"></a>
+<h3 class="failures">s01b_signin_server</h3>
+<span class="code">
+<pre>java.lang.IllegalArgumentException: Cannot perform operation for Em and Sp
+	at androidx.compose.ui.unit.TextUnitKt.checkArithmetic-NB67dxo(TextUnit.kt:355)
+	at androidx.compose.ui.unit.TextUnitKt.lerp-C3pnCVY(TextUnit.kt:386)
+	at androidx.compose.ui.text.SpanStyleKt.lerpTextUnitInheritable-C3pnCVY(SpanStyle.kt:730)
+	at androidx.compose.ui.text.SpanStyleKt.lerp(SpanStyle.kt:781)
+	at androidx.compose.ui.text.TextStyleKt.lerp(TextStyle.kt:1572)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:141)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:139)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextFieldLayout(OutlinedTextField.kt:571)
+	at androidx.compose.material3.internal.TextFieldImplKt.CommonDecorationBox(TextFieldImpl.kt:265)
+	at androidx.compose.material3.OutlinedTextFieldDefaults.DecorationBox(TextFieldDefaults.kt:886)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:242)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:241)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:696)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:695)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.contextmenu.ContextMenuArea_androidKt.ContextMenuArea(ContextMenuArea.android.kt:48)
+	at androidx.compose.foundation.text.ContextMenu_androidKt.ContextMenuArea(ContextMenu.android.kt:38)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextFieldRootBox(CoreTextField.kt:804)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextField(CoreTextField.kt:695)
+	at androidx.compose.foundation.text.BasicTextFieldKt.BasicTextField(BasicTextField.kt:631)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:208)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:207)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.CompositionLocalKt.CompositionLocalProvider(CompositionLocal.kt:401)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextField(OutlinedTextField.kt:207)
+	at org.rvi.inspect.ui.screens.OheScreensKt$SignInScreen$1.invoke(OheScreens.kt:178)
+	at org.rvi.inspect.ui.screens.OheScreensKt$SignInScreen$1.invoke(OheScreens.kt:155)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:94)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:85)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:1017)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:493)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.ActualJvm_jvmKt.invokeComposable(ActualJvm.jvm.kt:97)
+	at androidx.compose.runtime.ComposerImpl.doCompose(Composer.kt:3595)
+	at androidx.compose.runtime.ComposerImpl.composeContent$runtime_release(Composer.kt:3522)
+	at androidx.compose.runtime.CompositionImpl.composeContent(Composition.kt:743)
+	at androidx.compose.runtime.Recomposer.composeInitial$runtime_release(Recomposer.kt:1122)
+	at androidx.compose.runtime.ComposerImpl$CompositionContextImpl.composeInitial$runtime_release(Composer.kt:3876)
+	at androidx.compose.runtime.CompositionImpl.composeInitial(Composition.kt:649)
+	at androidx.compose.runtime.CompositionImpl.setContent(Composition.kt:635)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcomposeInto(SubcomposeLayout.kt:516)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:488)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:479)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:463)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$Scope.subcompose(SubcomposeLayout.kt:895)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke-0kLqBqw(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke(BoxWithConstraints.kt:67)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$createMeasurePolicy$1.measure-3p2s80s(SubcomposeLayout.kt:725)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.foundation.layout.FillNode.measure-3p2s80s(Size.kt:699)
+	at androidx.compose.ui.node.LayoutModifierNodeCoordinator.measure-BRTryo0(LayoutModifierNodeCoordinator.kt:188)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:503)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.measure-BRTryo0(LayoutNodeLayoutDelegate.kt:672)
+	at androidx.compose.ui.layout.RootMeasurePolicy.measure-3p2s80s(RootMeasurePolicy.kt:38)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:2441)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNode.remeasure-_Sx5XlM$ui_release(LayoutNode.kt:1222)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.doRemeasure-sdFAvZA(MeasureAndLayoutDelegate.kt:367)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.remeasureOnly(MeasureAndLayoutDelegate.kt:622)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.measureOnly(MeasureAndLayoutDelegate.kt:420)
+	at androidx.compose.ui.platform.AndroidComposeView.onMeasure(AndroidComposeView.android.kt:1370)
+	at android.view.View.measure(View.java:27122)
+	at androidx.compose.ui.platform.AbstractComposeView.internalOnMeasure$ui_release(ComposeView.android.kt:309)
+	at androidx.compose.ui.platform.AbstractComposeView.onMeasure(ComposeView.android.kt:296)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.LinearLayout.measureChildBeforeLayout(LinearLayout.java:1608)
+	at android.widget.LinearLayout.measureVertical(LinearLayout.java:878)
+	at android.widget.LinearLayout.onMeasure(LinearLayout.java:721)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at com.android.internal.policy.DecorView.onMeasure(DecorView.java:750)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewRootImpl.performMeasure(ViewRootImpl.java:4182)
+	at android.view.ViewRootImpl.measureHierarchy(ViewRootImpl.java:2759)
+	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:3086)
+	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:2465)
+	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:9305)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1339)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+	at android.view.Choreographer.doFrame(Choreographer.java:882)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowChoreographer$ChoreographerReflector$$Reflector33.doFrame(Unknown Source)
+	at org.robolectric.shadows.ShadowChoreographer.lambda$doFrame$1(ShadowChoreographer.java:197)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+	at org.robolectric.shadows.ShadowChoreographer.doFrame(ShadowChoreographer.java:197)
+	at android.view.Choreographer.doFrame(Choreographer.java)
+	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.android.internal.LocalControlledLooper.drainMainThreadUntilIdle(LocalControlledLooper.java:18)
+	at androidx.test.espresso.ViewInteraction.waitForAndHandleInteractionResults(ViewInteraction.java:1)
+	at androidx.test.espresso.ViewInteraction.desugaredPerform(ViewInteraction.java:11)
+	at androidx.test.espresso.ViewInteraction.perform(ViewInteraction.java:8)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:51)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:80)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$lambda$1$lambda$0(RoborazziCompose.kt:42)
+	at androidx.test.core.app.ActivityScenario.lambda$onActivity$2(ActivityScenario.java:794)
+	at androidx.test.core.app.ActivityScenario.onActivity(ActivityScenario.java:804)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:36)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:20)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$default(RoborazziCompose.kt:15)
+	at org.rvi.inspect.Shots.shot(ScreenshotTest.kt:37)
+	at org.rvi.inspect.Shots.s01b_signin_server(ScreenshotTest.kt:58)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="s03_start"></a>
+<h3 class="failures">s03_start</h3>
+<span class="code">
+<pre>java.lang.IllegalArgumentException: Cannot perform operation for Em and Sp
+	at androidx.compose.ui.unit.TextUnitKt.checkArithmetic-NB67dxo(TextUnit.kt:355)
+	at androidx.compose.ui.unit.TextUnitKt.lerp-C3pnCVY(TextUnit.kt:386)
+	at androidx.compose.ui.text.SpanStyleKt.lerpTextUnitInheritable-C3pnCVY(SpanStyle.kt:730)
+	at androidx.compose.ui.text.SpanStyleKt.lerp(SpanStyle.kt:781)
+	at androidx.compose.ui.text.TextStyleKt.lerp(TextStyle.kt:1572)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:141)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:139)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextFieldLayout(OutlinedTextField.kt:571)
+	at androidx.compose.material3.internal.TextFieldImplKt.CommonDecorationBox(TextFieldImpl.kt:265)
+	at androidx.compose.material3.OutlinedTextFieldDefaults.DecorationBox(TextFieldDefaults.kt:886)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:242)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:241)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:696)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:695)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.contextmenu.ContextMenuArea_androidKt.ContextMenuArea(ContextMenuArea.android.kt:48)
+	at androidx.compose.foundation.text.ContextMenu_androidKt.ContextMenuArea(ContextMenu.android.kt:38)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextFieldRootBox(CoreTextField.kt:804)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextField(CoreTextField.kt:695)
+	at androidx.compose.foundation.text.BasicTextFieldKt.BasicTextField(BasicTextField.kt:631)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:208)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:207)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.CompositionLocalKt.CompositionLocalProvider(CompositionLocal.kt:401)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextField(OutlinedTextField.kt:207)
+	at org.rvi.inspect.ui.screens.OheScreensKt$StartSheet$1.invoke(OheScreens.kt:348)
+	at org.rvi.inspect.ui.screens.OheScreensKt$StartSheet$1.invoke(OheScreens.kt:339)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:94)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:85)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:1017)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:493)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.ActualJvm_jvmKt.invokeComposable(ActualJvm.jvm.kt:97)
+	at androidx.compose.runtime.ComposerImpl.doCompose(Composer.kt:3595)
+	at androidx.compose.runtime.ComposerImpl.composeContent$runtime_release(Composer.kt:3522)
+	at androidx.compose.runtime.CompositionImpl.composeContent(Composition.kt:743)
+	at androidx.compose.runtime.Recomposer.composeInitial$runtime_release(Recomposer.kt:1122)
+	at androidx.compose.runtime.ComposerImpl$CompositionContextImpl.composeInitial$runtime_release(Composer.kt:3876)
+	at androidx.compose.runtime.CompositionImpl.composeInitial(Composition.kt:649)
+	at androidx.compose.runtime.CompositionImpl.setContent(Composition.kt:635)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcomposeInto(SubcomposeLayout.kt:516)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:488)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:479)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:463)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$Scope.subcompose(SubcomposeLayout.kt:895)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke-0kLqBqw(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke(BoxWithConstraints.kt:67)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$createMeasurePolicy$1.measure-3p2s80s(SubcomposeLayout.kt:725)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.foundation.layout.FillNode.measure-3p2s80s(Size.kt:699)
+	at androidx.compose.ui.node.LayoutModifierNodeCoordinator.measure-BRTryo0(LayoutModifierNodeCoordinator.kt:188)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:503)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.measure-BRTryo0(LayoutNodeLayoutDelegate.kt:672)
+	at androidx.compose.ui.layout.RootMeasurePolicy.measure-3p2s80s(RootMeasurePolicy.kt:38)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:2441)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNode.remeasure-_Sx5XlM$ui_release(LayoutNode.kt:1222)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.doRemeasure-sdFAvZA(MeasureAndLayoutDelegate.kt:367)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.remeasureOnly(MeasureAndLayoutDelegate.kt:622)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.measureOnly(MeasureAndLayoutDelegate.kt:420)
+	at androidx.compose.ui.platform.AndroidComposeView.onMeasure(AndroidComposeView.android.kt:1370)
+	at android.view.View.measure(View.java:27122)
+	at androidx.compose.ui.platform.AbstractComposeView.internalOnMeasure$ui_release(ComposeView.android.kt:309)
+	at androidx.compose.ui.platform.AbstractComposeView.onMeasure(ComposeView.android.kt:296)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.LinearLayout.measureChildBeforeLayout(LinearLayout.java:1608)
+	at android.widget.LinearLayout.measureVertical(LinearLayout.java:878)
+	at android.widget.LinearLayout.onMeasure(LinearLayout.java:721)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at com.android.internal.policy.DecorView.onMeasure(DecorView.java:750)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewRootImpl.performMeasure(ViewRootImpl.java:4182)
+	at android.view.ViewRootImpl.measureHierarchy(ViewRootImpl.java:2759)
+	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:3086)
+	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:2465)
+	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:9305)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1339)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+	at android.view.Choreographer.doFrame(Choreographer.java:882)
+	at jdk.internal.reflect.GeneratedMethodAccessor21.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowChoreographer$ChoreographerReflector$$Reflector33.doFrame(Unknown Source)
+	at org.robolectric.shadows.ShadowChoreographer.lambda$doFrame$1(ShadowChoreographer.java:197)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+	at org.robolectric.shadows.ShadowChoreographer.doFrame(ShadowChoreographer.java:197)
+	at android.view.Choreographer.doFrame(Choreographer.java)
+	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.android.internal.LocalControlledLooper.drainMainThreadUntilIdle(LocalControlledLooper.java:18)
+	at androidx.test.espresso.ViewInteraction.waitForAndHandleInteractionResults(ViewInteraction.java:1)
+	at androidx.test.espresso.ViewInteraction.desugaredPerform(ViewInteraction.java:11)
+	at androidx.test.espresso.ViewInteraction.perform(ViewInteraction.java:8)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:51)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:80)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$lambda$1$lambda$0(RoborazziCompose.kt:42)
+	at androidx.test.core.app.ActivityScenario.lambda$onActivity$2(ActivityScenario.java:794)
+	at androidx.test.core.app.ActivityScenario.onActivity(ActivityScenario.java:804)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:36)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:20)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$default(RoborazziCompose.kt:15)
+	at org.rvi.inspect.Shots.shot(ScreenshotTest.kt:37)
+	at org.rvi.inspect.Shots.s03_start(ScreenshotTest.kt:66)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="s12_profile"></a>
+<h3 class="failures">s12_profile</h3>
+<span class="code">
+<pre>java.lang.IllegalArgumentException: Cannot perform operation for Em and Sp
+	at androidx.compose.ui.unit.TextUnitKt.checkArithmetic-NB67dxo(TextUnit.kt:355)
+	at androidx.compose.ui.unit.TextUnitKt.lerp-C3pnCVY(TextUnit.kt:386)
+	at androidx.compose.ui.text.SpanStyleKt.lerpTextUnitInheritable-C3pnCVY(SpanStyle.kt:730)
+	at androidx.compose.ui.text.SpanStyleKt.lerp(SpanStyle.kt:781)
+	at androidx.compose.ui.text.TextStyleKt.lerp(TextStyle.kt:1572)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:141)
+	at androidx.compose.material3.internal.TextFieldImplKt$CommonDecorationBox$3$decoratedLabel$1$1.invoke(TextFieldImpl.kt:139)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextFieldLayout(OutlinedTextField.kt:571)
+	at androidx.compose.material3.internal.TextFieldImplKt.CommonDecorationBox(TextFieldImpl.kt:265)
+	at androidx.compose.material3.OutlinedTextFieldDefaults.DecorationBox(TextFieldDefaults.kt:886)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:242)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1$3.invoke(OutlinedTextField.kt:241)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:696)
+	at androidx.compose.foundation.text.CoreTextFieldKt$CoreTextField$5.invoke(CoreTextField.kt:695)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.contextmenu.ContextMenuArea_androidKt.ContextMenuArea(ContextMenuArea.android.kt:48)
+	at androidx.compose.foundation.text.ContextMenu_androidKt.ContextMenuArea(ContextMenu.android.kt:38)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextFieldRootBox(CoreTextField.kt:804)
+	at androidx.compose.foundation.text.CoreTextFieldKt.CoreTextField(CoreTextField.kt:695)
+	at androidx.compose.foundation.text.BasicTextFieldKt.BasicTextField(BasicTextField.kt:631)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:208)
+	at androidx.compose.material3.OutlinedTextFieldKt$OutlinedTextField$1.invoke(OutlinedTextField.kt:207)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.CompositionLocalKt.CompositionLocalProvider(CompositionLocal.kt:401)
+	at androidx.compose.material3.OutlinedTextFieldKt.OutlinedTextField(OutlinedTextField.kt:207)
+	at org.rvi.inspect.ui.screens.OheScreensKt$ProfileScreen$1$1$4.invoke(OheScreens.kt:875)
+	at org.rvi.inspect.ui.screens.OheScreensKt$ProfileScreen$1$1$4.invoke(OheScreens.kt:870)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at org.rvi.inspect.ui.components.GlassKt.GlassCard-osbwsH8(Glass.kt:298)
+	at org.rvi.inspect.ui.screens.OheScreensKt$ProfileScreen$1.invoke(OheScreens.kt:870)
+	at org.rvi.inspect.ui.screens.OheScreensKt$ProfileScreen$1.invoke(OheScreens.kt:824)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:94)
+	at org.rvi.inspect.ui.components.GlassKt$Aura$1.invoke(Glass.kt:85)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:118)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1$measurables$1.invoke(BoxWithConstraints.kt:69)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:1017)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$subcompose$3$1$1.invoke(SubcomposeLayout.kt:493)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:109)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.jvm.kt:35)
+	at androidx.compose.runtime.ActualJvm_jvmKt.invokeComposable(ActualJvm.jvm.kt:97)
+	at androidx.compose.runtime.ComposerImpl.doCompose(Composer.kt:3595)
+	at androidx.compose.runtime.ComposerImpl.composeContent$runtime_release(Composer.kt:3522)
+	at androidx.compose.runtime.CompositionImpl.composeContent(Composition.kt:743)
+	at androidx.compose.runtime.Recomposer.composeInitial$runtime_release(Recomposer.kt:1122)
+	at androidx.compose.runtime.ComposerImpl$CompositionContextImpl.composeInitial$runtime_release(Composer.kt:3876)
+	at androidx.compose.runtime.CompositionImpl.composeInitial(Composition.kt:649)
+	at androidx.compose.runtime.CompositionImpl.setContent(Composition.kt:635)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcomposeInto(SubcomposeLayout.kt:516)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:488)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:479)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState.subcompose(SubcomposeLayout.kt:463)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$Scope.subcompose(SubcomposeLayout.kt:895)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke-0kLqBqw(BoxWithConstraints.kt:69)
+	at androidx.compose.foundation.layout.BoxWithConstraintsKt$BoxWithConstraints$1$1.invoke(BoxWithConstraints.kt:67)
+	at androidx.compose.ui.layout.LayoutNodeSubcompositionsState$createMeasurePolicy$1.measure-3p2s80s(SubcomposeLayout.kt:725)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.foundation.layout.FillNode.measure-3p2s80s(Size.kt:699)
+	at androidx.compose.ui.node.LayoutModifierNodeCoordinator.measure-BRTryo0(LayoutModifierNodeCoordinator.kt:188)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:503)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.measure-BRTryo0(LayoutNodeLayoutDelegate.kt:672)
+	at androidx.compose.foundation.layout.BoxMeasurePolicy.measure-3p2s80s(Box.kt:173)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.foundation.layout.FillNode.measure-3p2s80s(Size.kt:699)
+	at androidx.compose.ui.node.LayoutModifierNodeCoordinator.measure-BRTryo0(LayoutModifierNodeCoordinator.kt:188)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:503)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.measure-BRTryo0(LayoutNodeLayoutDelegate.kt:672)
+	at androidx.compose.ui.layout.RootMeasurePolicy.measure-3p2s80s(RootMeasurePolicy.kt:38)
+	at androidx.compose.ui.node.InnerNodeCoordinator.measure-BRTryo0(InnerNodeCoordinator.kt:135)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:316)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$performMeasureBlock$1.invoke(LayoutNodeLayoutDelegate.kt:315)
+	at androidx.compose.runtime.snapshots.Snapshot$Companion.observe(Snapshot.kt:2441)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver$ObservedScopeMap.observe(SnapshotStateObserver.kt:502)
+	at androidx.compose.runtime.snapshots.SnapshotStateObserver.observeReads(SnapshotStateObserver.kt:258)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeReads$ui_release(OwnerSnapshotObserver.kt:133)
+	at androidx.compose.ui.node.OwnerSnapshotObserver.observeMeasureSnapshotReads$ui_release(OwnerSnapshotObserver.kt:113)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:1782)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate.access$performMeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:40)
+	at androidx.compose.ui.node.LayoutNodeLayoutDelegate$MeasurePassDelegate.remeasure-BRTryo0(LayoutNodeLayoutDelegate.kt:696)
+	at androidx.compose.ui.node.LayoutNode.remeasure-_Sx5XlM$ui_release(LayoutNode.kt:1222)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.doRemeasure-sdFAvZA(MeasureAndLayoutDelegate.kt:367)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.remeasureOnly(MeasureAndLayoutDelegate.kt:622)
+	at androidx.compose.ui.node.MeasureAndLayoutDelegate.measureOnly(MeasureAndLayoutDelegate.kt:420)
+	at androidx.compose.ui.platform.AndroidComposeView.onMeasure(AndroidComposeView.android.kt:1370)
+	at android.view.View.measure(View.java:27122)
+	at androidx.compose.ui.platform.AbstractComposeView.internalOnMeasure$ui_release(ComposeView.android.kt:309)
+	at androidx.compose.ui.platform.AbstractComposeView.onMeasure(ComposeView.android.kt:296)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.LinearLayout.measureChildBeforeLayout(LinearLayout.java:1608)
+	at android.widget.LinearLayout.measureVertical(LinearLayout.java:878)
+	at android.widget.LinearLayout.onMeasure(LinearLayout.java:721)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewGroup.measureChildWithMargins(ViewGroup.java:7008)
+	at android.widget.FrameLayout.onMeasure(FrameLayout.java:194)
+	at com.android.internal.policy.DecorView.onMeasure(DecorView.java:750)
+	at android.view.View.measure(View.java:27122)
+	at android.view.ViewRootImpl.performMeasure(ViewRootImpl.java:4182)
+	at android.view.ViewRootImpl.measureHierarchy(ViewRootImpl.java:2759)
+	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:3086)
+	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:2465)
+	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:9305)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1339)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+	at android.view.Choreographer.doFrame(Choreographer.java:882)
+	at jdk.internal.reflect.GeneratedMethodAccessor21.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowChoreographer$ChoreographerReflector$$Reflector33.doFrame(Unknown Source)
+	at org.robolectric.shadows.ShadowChoreographer.lambda$doFrame$1(ShadowChoreographer.java:197)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+	at org.robolectric.shadows.ShadowChoreographer.doFrame(ShadowChoreographer.java:197)
+	at android.view.Choreographer.doFrame(Choreographer.java)
+	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.android.internal.LocalControlledLooper.drainMainThreadUntilIdle(LocalControlledLooper.java:18)
+	at androidx.test.espresso.ViewInteraction.waitForAndHandleInteractionResults(ViewInteraction.java:1)
+	at androidx.test.espresso.ViewInteraction.desugaredPerform(ViewInteraction.java:11)
+	at androidx.test.espresso.ViewInteraction.perform(ViewInteraction.java:8)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:51)
+	at com.github.takahirom.roborazzi.RoborazziKt.captureRoboImage(Roborazzi.kt:80)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$lambda$1$lambda$0(RoborazziCompose.kt:42)
+	at androidx.test.core.app.ActivityScenario.lambda$onActivity$2(ActivityScenario.java:794)
+	at androidx.test.core.app.ActivityScenario.onActivity(ActivityScenario.java:804)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:36)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage(RoborazziCompose.kt:20)
+	at com.github.takahirom.roborazzi.RoborazziComposeKt.captureRoboImage$default(RoborazziCompose.kt:15)
+	at org.rvi.inspect.Shots.shot(ScreenshotTest.kt:37)
+	at org.rvi.inspect.Shots.s12_profile(ScreenshotTest.kt:97)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</pre>
+</span>
+</div>
+</div>
+<div id="tab1" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="failures">s01_signin</td>
+<td class="failures">27.887s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">s01b_signin_server</td>
+<td class="failures">10.321s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="success">s02_home</td>
+<td class="success">0.744s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="failures">s03_start</td>
+<td class="failures">10.087s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="success">s04_hud</td>
+<td class="success">0.314s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s05_retake</td>
+<td class="success">0.235s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s06_urgent</td>
+<td class="success">1.503s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s07_note</td>
+<td class="success">0.520s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s08_end</td>
+<td class="success">0.294s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s09_patrols</td>
+<td class="success">0.608s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s10_report</td>
+<td class="success">0.412s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">s11_alerts</td>
+<td class="success">0.320s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="failures">s12_profile</td>
+<td class="failures">10.151s</td>
+<td class="failures">failed</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at Nov 4, 2026, 10:02:57 PM</p>
+</div>
+</div>
+</body>
+</html>
