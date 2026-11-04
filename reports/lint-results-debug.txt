@@ -332,7 +332,7 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
 /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/strings.xml:73: Warning: The resource R.string.cat_c appears to be unused [UnusedResources]
     <string name="cat_c">Needs measurement</string>
             ~~~~~~~~~~~~
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/themes.xml:10: Warning: The resource R.color.ink appears to be unused [UnusedResources]
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/themes.xml:9: Warning: The resource R.color.ink appears to be unused [UnusedResources]
     <color name="ink">#FFFFFFFF</color>
            ~~~~~~~~~~
 
@@ -350,23 +350,4 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
    lint.unused-resources.exclude-tests =true.
    ,
 
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml:2: Warning: The application adaptive icon is missing a monochrome tag [MonochromeLauncherIcon]
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-^
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml:2: Warning: The application adaptive roundIcon is missing a monochrome tag [MonochromeLauncherIcon]
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-^
-
-   Explanation for issues of type "MonochromeLauncherIcon":
-   If android:roundIcon and android:icon are both in your manifest, you must
-   either remove the reference to android:roundIcon if it is not needed; or,
-   supply the monochrome icon in the drawable defined by the android:roundIcon
-   and android:icon attribute.
-
-   For example, if android:roundIcon and android:icon are both in the
-   manifest, a launcher might choose to use android:roundIcon over
-   android:icon to display the adaptive app icon. Therefore, your themed
-   application iconwill not show if your monochrome attribute is not also
-   specified in android:roundIcon.
-
-0 errors, 75 warnings
+0 errors, 73 warnings

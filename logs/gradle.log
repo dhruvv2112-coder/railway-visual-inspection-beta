@@ -10,10 +10,10 @@ Daemon will be stopped at the end of the build
 > Task :app:mapDebugSourceSetPaths
 > Task :app:extractDebugSupportedLocales
 > Task :app:generateDebugResources
-> Task :app:createDebugCompatibleScreenManifests
 > Task :app:generateDebugLocaleConfig
-> Task :app:extractDeepLinksDebug
+> Task :app:createDebugCompatibleScreenManifests
 > Task :app:packageDebugResources
+> Task :app:extractDeepLinksDebug
 > Task :app:parseDebugLocalResources
 > Task :app:mergeDebugResources
 > Task :app:processDebugMainManifest
@@ -80,7 +80,7 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793775578984.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793775762208.json
 
-BUILD SUCCESSFUL in 2m 10s
+BUILD SUCCESSFUL in 2m
 60 actionable tasks: 60 executed
