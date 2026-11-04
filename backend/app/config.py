@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     port: int = 8000
     public_apk: bool = True
     app_import_dir: Path | None = None  # folder with an .apk (+ latest.json) copied into app_dir at start
+    # Reaching the laptop from other networks: "cloudflare" = quick tunnel via cloudflared; or a fixed public_url.
+    tunnel: str = ""
+    cloudflared_path: Path = Path("cloudflared")
+    public_url: str = ""
+    relay_server: str = "https://ntfy.sh"   # where the signed current address is posted for paired phones
+    relay_file: Path = Path("./relay.json")
 
 
 settings = Settings()

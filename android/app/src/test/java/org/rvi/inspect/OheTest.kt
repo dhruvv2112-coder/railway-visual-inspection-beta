@@ -94,6 +94,19 @@ class DiscoveryTest {
         assertEquals("", org.rvi.inspect.data.Discovery.normalise("  "))
     }
 
+    @Test fun relaySignatureMatchesServer() {
+        // same HMAC-SHA256("url|ts") the server computes in remote.sign
+        val key = "k3y"; val url = "https://brave-words.trycloudflare.com/"; val ts = 1762300000L
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256").apply { init(javax.crypto.spec.SecretKeySpec(key.toByteArray(), "HmacSHA256")) }
+        val sig = mac.doFinal("$url|$ts".toByteArray()).joinToString("") { "%02x".format(it) }
+        assertTrue(org.rvi.inspect.data.Discovery.verify(url, ts, sig, key))
+        // value produced by the Python server for the same inputs
+        assertTrue(org.rvi.inspect.data.Discovery.verify(url, ts, "f374d0400c25aa84ab2fbe7180e2dcd432b16bc5e265571a8938f9caef79e439", key))
+        assertFalse(org.rvi.inspect.data.Discovery.verify("https://evil.example/", ts, sig, key))
+        assertTrue(org.rvi.inspect.data.Discovery.isLocal("http://192.168.1.20:8000/"))
+        assertFalse(org.rvi.inspect.data.Discovery.isLocal(url))
+    }
+
     @Test fun parsesReportsAndAlertsFromServer() {
         val reports = Json.parseToJsonElement("""[{"id":"r1","territory":"SEC-1","status":"SIGNED","signed_by":"SSE-1","ended_at":"2026-11-05T04:30:00",
             "summary":{"expected_assets":6,"with_findings":1,"alerts":1,"not_assessable":0}}]""") as kotlinx.serialization.json.JsonArray

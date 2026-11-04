@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, select
@@ -448,9 +448,28 @@ class LoginIn(BaseModel):
     pin: str
 
 
+def client_ip(request: Request) -> str:
+    """Caller address, also behind the tunnel (Cloudflare sets CF-Connecting-IP)."""
+    h = request.headers
+    return h.get("cf-connecting-ip") or (h.get("x-forwarded-for") or "").split(",")[0].strip() or (request.client.host if request.client else "?")
+
+
 @router.post("/auth/login")
-def login(body: LoginIn):
-    return auth.login(body.id.strip(), body.pin.strip())
+def login(body: LoginIn, request: Request):
+    """ID + PIN sign-in. Repeated wrong PINs lock that ID and that caller for 1, 2, 4 ... 60 minutes."""
+    from . import remote
+    uid = body.id.strip()
+    keys = (f"id:{uid.upper()}", f"ip:{client_ip(request)}")
+    wait = remote.locked_for(*keys)
+    if wait:
+        raise HTTPException(429, f"Too many wrong PINs. Try again in {max(1, wait // 60)} min", headers={"Retry-After": str(wait)})
+    try:
+        out = auth.login(uid, body.pin.strip())
+    except HTTPException:
+        remote.record_failure(*keys)
+        raise
+    remote.record_success(*keys)
+    return out
 
 
 @router.get("/me")

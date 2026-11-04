@@ -186,6 +186,9 @@ interface OheApi {
     @GET("ohe/reports/{rid}")
     suspend fun report(@Path("rid") rid: String, @Header("X-Actor") actor: String, @Header("X-Role") role: String): JsonObject
 
+    @GET("ohe/connect/pairing")
+    suspend fun pairing(): JsonObject
+
     @GET("ohe/alerts")
     suspend fun alerts(@Header("X-Actor") actor: String, @Header("X-Role") role: String): kotlinx.serialization.json.JsonArray
 
@@ -287,11 +290,22 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
             throw IllegalStateException(if (e.code() == 401) "Wrong ID or PIN" else "Server error ${e.code()}")
         }
         save("token", out.token); save("inspector", out.id); save("role", out.role)
+        pair()
         schedule()
         return out
     }
 
     suspend fun signOut() { save("token", "") }
+
+    /** Store the server's internet address and relay key, so this phone finds the laptop from any network. */
+    suspend fun pair(): Boolean = runCatching {
+        val p = OheApi.create(baseUrl(), settings().token).pairing()
+        fun str(o: JsonObject?, k: String) = (o?.get(k) as? kotlinx.serialization.json.JsonPrimitive)?.takeIf { it.isString }?.content
+        str(p, "public_url")?.let { save("remote", it) }
+        val r = p["relay"] as? JsonObject
+        if (r != null) { save("relay_server", str(r, "server") ?: ""); save("relay_topic", str(r, "topic") ?: ""); save("relay_key", str(r, "key") ?: "") }
+        true
+    }.getOrDefault(false)
 
     /** Latest published app build on this server, or null when none is published or the server is unreachable. */
     suspend fun latestRelease(): AppRelease? = runCatching {

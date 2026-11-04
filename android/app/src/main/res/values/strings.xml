@@ -236,4 +236,5 @@
     <string name="g_photos_safe">Photos and notes stay on the phone during the update.</string>
     <string name="g_role">%1$s · %2$s</string>
     <string name="g_refresh">Refresh</string>
+    <string name="g_via_internet">over the internet</string>
 </resources>

@@ -54,6 +54,39 @@ class Discovery(context: Context) {
             }.getOrDefault(false)
         }
 
+        /** Newest signed address on the relay topic, or null. The signature (HMAC-SHA256 of "url|ts" with the pairing
+         *  key) must match and the message must be under 3 days old, so nobody else can redirect the phone. */
+        suspend fun relayAddress(server: String, topic: String, key: String): String? = withContext(Dispatchers.IO) {
+            if (server.isBlank() || topic.isBlank() || key.isBlank()) return@withContext null
+            runCatching {
+                val body = http.newCall(Request.Builder().url("${server.trimEnd('/')}/$topic/json?poll=1&since=72h").build()).execute()
+                    .use { if (it.isSuccessful) it.body?.string() else null } ?: return@runCatching null
+                body.lineSequence().filter { it.isNotBlank() }.mapNotNull { line ->
+                    val o = kotlinx.serialization.json.Json.parseToJsonElement(line) as? kotlinx.serialization.json.JsonObject ?: return@mapNotNull null
+                    val msg = (o["message"] as? kotlinx.serialization.json.JsonPrimitive)?.content ?: return@mapNotNull null
+                    val m = runCatching { kotlinx.serialization.json.Json.parseToJsonElement(msg) as kotlinx.serialization.json.JsonObject }.getOrNull() ?: return@mapNotNull null
+                    val url = (m["url"] as? kotlinx.serialization.json.JsonPrimitive)?.content ?: return@mapNotNull null
+                    val ts = (m["ts"] as? kotlinx.serialization.json.JsonPrimitive)?.content?.toLongOrNull() ?: return@mapNotNull null
+                    val sig = (m["sig"] as? kotlinx.serialization.json.JsonPrimitive)?.content ?: return@mapNotNull null
+                    val fresh = System.currentTimeMillis() / 1000 - ts < 72 * 3600
+                    if (fresh && verify(url, ts, sig, key) && url.startsWith("https://")) ts to url else null
+                }.maxByOrNull { it.first }?.second
+            }.getOrNull()
+        }
+
+        fun verify(url: String, ts: Long, sig: String, key: String): Boolean {
+            val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+            mac.init(javax.crypto.spec.SecretKeySpec(key.toByteArray(), "HmacSHA256"))
+            val want = mac.doFinal("$url|$ts".toByteArray()).joinToString("") { "%02x".format(it) }
+            return java.security.MessageDigest.isEqual(want.toByteArray(), sig.toByteArray())
+        }
+
+        /** True when the address is on a home/office network (192.168.x, 10.x, 172.16-31.x), false for internet. */
+        fun isLocal(url: String): Boolean {
+            val h = url.substringAfter("://").substringBefore("/").substringBefore(":")
+            return h.startsWith("192.168.") || h.startsWith("10.") || Regex("^172\\.(1[6-9]|2\\d|3[01])\\.").containsMatchIn(h) || h.endsWith(".local")
+        }
+
         /** Normalise what a person types: "192.168.1.20" -> "http://192.168.1.20:8000/". */
         fun normalise(raw: String): String {
             var s = raw.trim()

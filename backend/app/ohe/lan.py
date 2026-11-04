@@ -9,7 +9,7 @@ import socket
 from datetime import UTC
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
 
 from ..config import settings
@@ -108,10 +108,45 @@ def _app_meta() -> dict | None:
     return meta | {"size_mb": round(apk.stat().st_size / 1e6, 1)}
 
 
+def on_lan(request: Request) -> bool:
+    """True for callers on this computer or its local network; requests through the internet tunnel carry forwarding
+    headers (and a public client address) and are refused for the laptop-only pages."""
+    import ipaddress
+    h = request.headers
+    if h.get("cf-connecting-ip") or h.get("x-forwarded-for") or h.get("cf-ray"):
+        return False
+    try:
+        ip = ipaddress.ip_address(request.client.host if request.client else "")
+    except ValueError:
+        return request.client is not None and request.client.host == "testclient"
+    return ip.is_private or ip.is_loopback
+
+
+def _lan_only(request: Request) -> None:
+    if not on_lan(request):
+        raise HTTPException(404, "Not found")
+
+
+@router.get("/pairing")
+def pairing(request: Request):
+    """For a signed-in phone: the internet address and the relay topic + key used to find the server after it
+    restarts. Requires a valid sign-in token in token mode."""
+    from . import auth, remote
+    from .api import settings as _s
+    authz = request.headers.get("authorization", "")
+    if _s.auth_mode == "token" and not (authz.lower().startswith("bearer ") and auth.verify(authz[7:])):
+        raise HTTPException(401, "Sign in first")
+    r = remote.relay_secrets()
+    return {"public_url": remote.public_url(), "relay": {"server": settings.relay_server, "topic": r["topic"], "key": r["key"]}
+            if settings.relay_server and (settings.tunnel or settings.public_url) else None}
+
+
 @router.get("/info")
-def info():
-    """What the phone needs to connect: the addresses and whether an app build can be downloaded here."""
-    return {"name": settings.server_name, "host": socket.gethostname(), "urls": urls(), "mdns_service": SERVICE,
+def info(request: Request):
+    """What the phone needs to connect: the addresses and whether an app build can be downloaded here (LAN only)."""
+    from . import remote
+    _lan_only(request)
+    return {"public_url": remote.public_url(), "tunnel": remote.status(),"name": settings.server_name, "host": socket.gethostname(), "urls": urls(), "mdns_service": SERVICE,
             "mdns": bool(_zc), "app": _app_meta()}
 
 
@@ -125,7 +160,11 @@ def app_apk():
 
 
 @router.get("", response_class=HTMLResponse, include_in_schema=False)
-def connect_page():
+def connect_page(request: Request):
+    from . import remote
+    _lan_only(request)
+    pub = remote.public_url()
+    st = remote.status()
     us = urls()
     first = us[0] if us else f"http://<this-laptop>:{settings.port}/"
     meta = _app_meta()
@@ -140,7 +179,7 @@ def connect_page():
         "<div class='card'><h2>1 · Install the app</h2><p>No app build is on this laptop yet. Put the .apk in the "
         "<span class='mono'>app</span> folder next to the server and refresh.</p></div>")
     others = "".join(f"<li class='mono'>{esc(u)}</li>" for u in us[1:])
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="20"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OnTrack.AI server</title><style>
 :root{{--ink:#0E1020;--blue:#3346FF;--muted:#464B63}}
 body{{margin:0;font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink);background:#E6EAF5;min-height:100vh;
@@ -157,6 +196,8 @@ a{{color:var(--blue)}}</style></head><body><main>
 <p>The app finds this laptop by itself on the same Wi-Fi ({'<span class="ok">advertising</span>' if _zc else 'discovery off'}).
 If it does not, type this address in the app:</p><p class="mono" style="font-size:20px">{esc(first)}</p>
 {f'<p class="muted">Other addresses:</p><ul>{others}</ul>' if others else ''}</div>
+<div class="card"><h2>Away from this Wi-Fi</h2>{f"<p>Internet address (HTTPS):</p><p class='mono' style='font-size:17px'>{esc(pub)}</p><div class='qr'>{_qr_svg(pub)}</div><p class='muted'>Phones that signed in once here find this laptop from any network, even after this address changes on restart.</p>" if pub else ("<p class='muted'>Starting the internet tunnel…</p>" if st['tunnel'] != 'off' else "<p class='muted'>Internet access is off (started with -LanOnly).</p>")}
+{f"<p class='muted'>{esc(st['error'])}</p>" if st.get('error') else ''}</div>
 <div class="card"><h2>3 · Review reports</h2><p>Open the reviewer page on this laptop:</p><p><a href="/ohe/review">/ohe/review</a></p>
 <p class="muted">Server health: <a href="/health">/health</a></p></div>
 </div></main></body></html>"""

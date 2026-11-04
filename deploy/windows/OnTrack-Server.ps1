@@ -1,11 +1,14 @@
 # OnTrack.AI laptop server for Windows 10/11 (draft 1).
 # Double-click Start-OnTrack.bat. First run: installs Python 3.11 (per user), the server and its AI models, asks for
 # the first sign-in accounts, opens the Windows firewall for port 8000 on private networks, and adds a desktop shortcut.
-# Every run: starts the server, advertises it on the Wi-Fi so phones find it, and opens the connect page.
+# Every run: starts the server, advertises it on the Wi-Fi so phones find it, opens a secure internet tunnel so paired
+# phones reach it from any network, and opens the connect page.
 param(
     [switch]$NonInteractive,          # CI smoke test: default accounts from env, no prompts, no firewall/shortcut
     [int]$Port = 8000,
-    [switch]$NoBrowser
+    [switch]$NoBrowser,
+    [switch]$LanOnly,                 # no internet tunnel: phones must be on the same Wi-Fi
+    [string]$PublicUrl = ""           # fixed public address (named Cloudflare tunnel, ngrok domain) instead of a quick tunnel
 )
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
@@ -85,6 +88,23 @@ $env:RVI_AUTH_MODE = "token"
 $env:RVI_MDNS = "true"
 $env:RVI_PORT = "$Port"
 $env:RVI_SERVER_NAME = "OnTrack.AI server"
+$env:RVI_RELAY_FILE = Join-Path $Data "relay.json"
+
+# ---- 3b. Internet access: Cloudflare quick tunnel (outbound HTTPS only, no account, no router changes) --------------
+if (-not $LanOnly -and -not $PublicUrl) {
+    $Cf = Join-Path $Data "cloudflared.exe"
+    if (-not (Test-Path $Cf)) {
+        Say "Downloading the secure tunnel (cloudflared, one time, about 60 MB)..."
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            Invoke-WebRequest "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe" -OutFile "$Cf.part"
+            Move-Item -Force "$Cf.part" $Cf
+        } catch { Write-Host "  Tunnel download failed; continuing on Wi-Fi only. ($_)" -ForegroundColor Yellow }
+    }
+    if (Test-Path $Cf) { $env:RVI_TUNNEL = "cloudflare"; $env:RVI_CLOUDFLARED_PATH = $Cf; Ok "Internet tunnel ready" }
+} elseif ($PublicUrl) {
+    $env:RVI_PUBLIC_URL = $PublicUrl; Ok "Fixed internet address: $PublicUrl"
+}
 
 function Add-User($id, $role, $pin, $name) {
     Push-Location $Backend
@@ -149,6 +169,7 @@ try {
 Say "Starting. Phones on the same Wi-Fi find this laptop automatically."
 foreach ($ip in $ips) { Write-Host "     http://${ip}:$Port/" -ForegroundColor White }
 Write-Host "  Connect page: http://localhost:$Port/ohe/connect     Reviewer: http://localhost:$Port/ohe/review"
+if ($env:RVI_TUNNEL -or $env:RVI_PUBLIC_URL) { Write-Host "  Internet: the connect page shows the HTTPS address. Phones paired once find it from any network." }
 Write-Host "  Keep this window open. Close it (or press Ctrl+C) to stop the server."
 try { Stop-Transcript | Out-Null } catch {}
 if (-not $NoBrowser) {

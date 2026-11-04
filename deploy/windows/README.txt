@@ -13,6 +13,14 @@ OnTrack.AI laptop server (draft 1)
 4. Sign in on the phone with the patroller ID and PIN, and start a patrol.
 5. Review reports on the laptop at http://localhost:8000/ohe/review (sign in as the SSE).
 
+Using the phone away from the laptop (demo site, field):
+- The server also opens a secure HTTPS tunnel to the internet (Cloudflare, outbound only; nothing to set up on
+  the router). The connect page shows the internet address under "Away from this Wi-Fi".
+- Sign in on the phone ONCE while it is on the laptop's Wi-Fi (or by typing the internet address). The phone is
+  then paired: from any network it finds the laptop by itself, even after the address changes on a restart.
+- Leave the laptop on, plugged in and online at home. Wrong PINs lock the ID for a few minutes.
+- Wi-Fi only (no internet access at all): start with  Start-OnTrack.bat -LanOnly
+
 Stop the server: close its window. Start again: the desktop shortcut.
 Add more people: double-click Add-User.bat.
 Your data (database, photos, accounts) is kept in %LOCALAPPDATA%\OnTrack and survives updates:

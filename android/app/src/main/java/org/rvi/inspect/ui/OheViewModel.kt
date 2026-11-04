@@ -74,9 +74,26 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
     val found = MutableStateFlow<List<org.rvi.inspect.data.FoundServer>>(emptyList())
     private val discovery = org.rvi.inspect.data.Discovery(app)
 
+    /** Which way the phone reaches the laptop now: true = over the internet (tunnel), false = same Wi-Fi. */
+    val viaInternet = MutableStateFlow(false)
+
+    /** Keep a working route to the laptop: the current address, then the saved internet address, then the newest
+     *  signed address on the relay (after a laptop restart), then Wi-Fi discovery. */
     fun checkServer() = viewModelScope.launch {
-        val url = c.repository.settings.first().serverUrl
-        serverOk.value = if (url.isBlank()) false else org.rvi.inspect.data.Discovery.reachable(url)
+        val s = c.repository.settings.first()
+        val D = org.rvi.inspect.data.Discovery
+        if (s.serverUrl.isNotBlank() && D.reachable(s.serverUrl)) { serverOk.value = true; viaInternet.value = !D.isLocal(s.serverUrl); return@launch }
+        if (s.remoteUrl.isNotBlank() && s.remoteUrl != s.serverUrl && D.reachable(s.remoteUrl)) { switchTo(s.remoteUrl); return@launch }
+        val relayed = D.relayAddress(s.relayServer, s.relayTopic, s.relayKey)
+        if (relayed != null && D.reachable(relayed)) { c.repository.setText("remote", relayed); switchTo(relayed); return@launch }
+        serverOk.value = false
+    }
+
+    private suspend fun switchTo(url: String) {
+        c.repository.setText("server", url)
+        serverOk.value = true
+        viaInternet.value = !org.rvi.inspect.data.Discovery.isLocal(url)
+        repo.schedule()
     }
 
     /** Look for laptops on this Wi-Fi for a few seconds; if exactly one answers and none is set up yet, use it. */
@@ -97,7 +114,8 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
         c.repository.setText("server", url)
         serverOk.value = null
         serverOk.value = org.rvi.inspect.data.Discovery.reachable(url)
-        if (serverOk.value == true) repo.schedule()
+        viaInternet.value = !org.rvi.inspect.data.Discovery.isLocal(url)
+        if (serverOk.value == true) { repo.schedule(); if (!c.repository.settings.first().token.isBlank()) repo.pair() }
     }
 
     fun setTpc(n: String) = viewModelScope.launch { c.repository.setText("tpc", n) }

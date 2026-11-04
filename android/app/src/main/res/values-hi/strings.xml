@@ -236,4 +236,5 @@
     <string name="g_photos_safe">अपडेट के दौरान फोटो और नोट फ़ोन में रहते हैं।</string>
     <string name="g_role">%1$s · %2$s</string>
     <string name="g_refresh">ताज़ा करें</string>
+    <string name="g_via_internet">इंटरनेट से</string>
 </resources>

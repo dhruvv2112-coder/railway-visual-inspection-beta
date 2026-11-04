@@ -325,3 +325,63 @@ def test_server_starts_with_mdns_on(monkeypatch):
     with TestClient(app) as c:
         assert c.get("/health").status_code == 200
         assert "mdns" in c.get("/ohe/connect/info").json()
+
+
+def test_internet_sign_in_layer(tmp_path, monkeypatch):
+    """Over-the-internet use: PIN lockout, laptop-only pages hidden through the tunnel, pairing needs a sign-in,
+    relay messages are signed, and the tunnel's public address is picked up from cloudflared."""
+    import json as _json
+    import stat
+    import time as _time
+
+    from fastapi.testclient import TestClient
+
+    from app.config import settings
+    from app.main import app
+    from app.ohe import auth, remote
+    users = tmp_path / "users.yaml"
+    monkeypatch.setattr(settings, "users_file", users)
+    monkeypatch.setattr(settings, "relay_file", tmp_path / "relay.json")
+    monkeypatch.setattr(settings, "auth_mode", "token")
+    monkeypatch.setattr(settings, "tunnel", "fixed-test")
+    monkeypatch.setattr(settings, "public_url", "https://ontrack.example.org")
+    import yaml
+    users.write_text(yaml.safe_dump({"users": [{"id": "PT-9", "name": "T", "role": "Patrol", "pin_sha256": auth.pin_hash("2468")}]}))
+    remote._fails.clear()
+    c = TestClient(app)
+    fwd = {"cf-connecting-ip": "203.0.113.7"}
+    # lockout after 5 wrong PINs, even the right PIN is refused while locked
+    for _ in range(5):
+        assert c.post("/ohe/auth/login", json={"id": "PT-9", "pin": "0000"}, headers=fwd).status_code == 401
+    r = c.post("/ohe/auth/login", json={"id": "PT-9", "pin": "2468"}, headers=fwd)
+    assert r.status_code == 429 and int(r.headers["Retry-After"]) > 0
+    remote._fails.clear()
+    tok = c.post("/ohe/auth/login", json={"id": "PT-9", "pin": "2468"}, headers=fwd).json()["token"]
+    # laptop-only pages are hidden through the tunnel, visible locally
+    assert c.get("/ohe/connect", headers=fwd).status_code == 404
+    assert c.get("/ohe/connect/info", headers=fwd).status_code == 404
+    assert c.get("/ohe/connect/info").json()["public_url"] == "https://ontrack.example.org/"
+    # pairing requires a token and returns the relay key
+    assert c.get("/ohe/connect/pairing", headers=fwd).status_code == 401
+    p = c.get("/ohe/connect/pairing", headers=fwd | {"Authorization": f"Bearer {tok}"}).json()
+    assert p["public_url"] == "https://ontrack.example.org/" and p["relay"]["topic"].startswith("ontrack-")
+    # relay signature is HMAC-SHA256 over "url|ts" with the pairing key
+    ts = int(_time.time())
+    assert remote.sign("https://a.example/", ts, p["relay"]["key"]) == remote.sign("https://a.example/", ts, remote.relay_secrets()["key"])
+    assert _json.loads((tmp_path / "relay.json").read_text())["key"] == p["relay"]["key"]
+    # cloudflared stand-in prints the quick-tunnel address on stderr; the supervisor picks it up
+    fake = tmp_path / "cloudflared"
+    fake.write_text("#!/bin/sh\necho 'INF |  https://brave-test-words.trycloudflare.com  |' 1>&2\nsleep 30\n")
+    fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
+    monkeypatch.setattr(settings, "public_url", "")
+    monkeypatch.setattr(settings, "cloudflared_path", fake)
+    monkeypatch.setattr(settings, "relay_server", "")
+    monkeypatch.setattr(settings, "tunnel", "cloudflare")
+    remote._state["public_url"] = None
+    remote.start()
+    for _ in range(50):
+        if remote.public_url():
+            break
+        _time.sleep(0.1)
+    assert remote.public_url() == "https://brave-test-words.trycloudflare.com/"
+    remote.stop()

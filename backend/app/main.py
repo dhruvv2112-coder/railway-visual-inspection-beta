@@ -21,7 +21,7 @@ from .config import settings
 from .db import audit, get_session, init_db, verify_chain
 from .models import Evidence, Finding, FindingStatus, Patrol, PatrolType, now
 from .ohe import api as ohe_api
-from .ohe import lan
+from .ohe import lan, remote
 
 SUPERVISOR_ROLES = {"JE", "SSE", "ADEN", "ADEE"}  # P.Way and TRD supervisors
 
@@ -33,11 +33,15 @@ async def lifespan(_app: FastAPI):
     if settings.app_import_dir and settings.app_import_dir.exists():
         lan.install_app_from(settings.app_import_dir)
     await lan.start_mdns()
+    remote.start()
     yield
+    remote.stop()
     await lan.stop_mdns()
 
 
-app = FastAPI(title="RVI Beta API", version="0.1.0", lifespan=lifespan)
+_public = bool(settings.tunnel or settings.public_url)  # internet-facing laptop server: no interactive API docs
+app = FastAPI(title="RVI Beta API", version="0.1.0", lifespan=lifespan,
+              docs_url=None if _public else "/docs", redoc_url=None if _public else "/redoc", openapi_url=None if _public else "/openapi.json")
 app.include_router(ohe_api.router)  # OHE visual patrol (HLD v1.0)
 app.include_router(lan.router)  # laptop server: connect page, app download, discovery info
 

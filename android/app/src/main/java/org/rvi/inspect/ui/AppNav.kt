@@ -71,7 +71,11 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
         if (settings == null) return@LaunchedEffect
         ovm.checkServer(); delay(1500)
         if (ovm.serverOk.value != true) ovm.findServers(autoPick = true)
-        while (true) { delay(20_000); ovm.checkServer(); if (!settings?.token.isNullOrBlank()) ovm.loadAlerts() }
+        while (true) {
+            delay(20_000); ovm.checkServer(); delay(4000)
+            if (ovm.serverOk.value != true) ovm.findServers(autoPick = true)
+            if (!settings?.token.isNullOrBlank()) ovm.loadAlerts()
+        }
     }
     LaunchedEffect(settings?.token) { if (!settings?.token.isNullOrBlank()) { ovm.loadAlerts(); ovm.loadReports(); ovm.checkUpdate() } }
 
@@ -82,7 +86,9 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
     fun setLang(h: Boolean) = AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(if (h) "hi" else "en"))
     fun oheCapture() = camera.take(context, onSaved = { f -> ovm.onCaptured(f) }, onError = { })
     fun dialTpc() = context.startActivity(android.content.Intent(android.content.Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + (settings?.tpcNumber ?: ""))))
-    fun host() = (settings?.serverUrl ?: "").removePrefix("http://").removePrefix("https://").trimEnd('/')
+    val viaInternet by ovm.viaInternet.collectAsState()
+    val internetLabel = stringResource(R.string.g_via_internet)
+    fun host() = if (viaInternet) internetLabel else (settings?.serverUrl ?: "").removePrefix("http://").removePrefix("https://").trimEnd('/')
     var noteOpen by remember { mutableStateOf(false) }
     var noteText by remember { mutableStateOf("") }
     var urgentFor by remember { mutableStateOf<String?>(null) }   // capture id (or "manual") the urgent sheet is showing
