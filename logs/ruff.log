@@ -1,1 +1,37 @@
-All checks passed!
+S110 `try`-`except`-`pass` detected, consider logging the exception
+  --> app/ohe/lan.py:87:9
+   |
+85 |               if info:
+86 |                   await azc.async_unregister_service(info)
+87 | /         except Exception:  # noqa: BLE001
+88 | |             pass
+   | |________________^
+89 |           finally:
+90 |               await azc.async_close()
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_ohe.py:320:5
+    |
+318 |   def test_server_starts_with_mdns_on(monkeypatch):
+319 |       """Laptop mode: startup with discovery enabled must not block or crash (Windows EventLoopBlocked regression)."""
+320 | /     from app.config import settings
+321 | |     from app.main import app
+322 | |     from fastapi.testclient import TestClient
+    | |_____________________________________________^
+323 |       monkeypatch.setattr(settings, "mdns", True)
+324 |       with TestClient(app) as c:
+    |
+help: Organize imports
+    |
+319 |     """Laptop mode: startup with discovery enabled must not block or crash (Windows EventLoopBlocked regression)."""
+320 +     from fastapi.testclient import TestClient
+321 +
+322 |     from app.config import settings
+323 |     from app.main import app
+    -     from fastapi.testclient import TestClient
+324 |     monkeypatch.setattr(settings, "mdns", True)
+    |
+
+Found 2 errors.
+[*] 1 fixable with `--fix`.
