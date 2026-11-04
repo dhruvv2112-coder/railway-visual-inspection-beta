@@ -34,6 +34,7 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -96,6 +97,7 @@ interface OheDao {
     @Query("SELECT * FROM ohe_session WHERE id = :id") suspend fun session(id: String): OheSessionEntity?
     @Query("SELECT * FROM ohe_session WHERE endedAt IS NULL ORDER BY startedAt DESC LIMIT 1") fun active(): Flow<OheSessionEntity?>
     @Query("SELECT * FROM ohe_session ORDER BY startedAt DESC LIMIT 1") fun latest(): Flow<OheSessionEntity?>
+    @Query("SELECT * FROM ohe_session ORDER BY startedAt DESC LIMIT 50") fun all(): Flow<List<OheSessionEntity>>
     @Query("SELECT * FROM ohe_session WHERE endedAt IS NOT NULL AND reportId IS NULL") suspend fun awaitingReport(): List<OheSessionEntity>
 
     @Insert suspend fun insertCapture(c: OheCaptureEntity)
@@ -178,6 +180,15 @@ interface OheApi {
     @POST("ohe/sessions/{sid}/end")
     suspend fun end(@Path("sid") sid: String, @Header("X-Actor") actor: String, @Header("X-Role") role: String): OheEndOut
 
+    @GET("ohe/reports")
+    suspend fun reports(@Header("X-Actor") actor: String, @Header("X-Role") role: String): kotlinx.serialization.json.JsonArray
+
+    @GET("ohe/reports/{rid}")
+    suspend fun report(@Path("rid") rid: String, @Header("X-Actor") actor: String, @Header("X-Role") role: String): JsonObject
+
+    @GET("ohe/alerts")
+    suspend fun alerts(@Header("X-Actor") actor: String, @Header("X-Role") role: String): kotlinx.serialization.json.JsonArray
+
     companion object {
         /** With a token (from sign-in) every call carries it; the server then ignores the X-Actor/X-Role headers. */
         fun create(baseUrl: String, token: String? = null): OheApi = retrofit(baseUrl, token).create(OheApi::class.java)
@@ -192,6 +203,52 @@ interface OheApi {
             .addConverterFactory(RviApi.json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
+}
+
+/** One patrol report on the server (list in "My patrols"). */
+data class ReportRow(val id: String, val territory: String, val status: String, val signedBy: String?, val endedAt: String?,
+                     val masts: Int?, val withFindings: Int?, val alerts: Int?, val notAssessable: Int?)
+
+/** One urgent finding (Alerts tab). */
+data class AlertRow(val findingId: String, val territory: String, val assetId: String?, val what: String, val raisedAt: String?, val sessionId: String)
+
+/** Report status for the tracker: steps reached, who reviewed, amendments. */
+data class ReportDetail(val id: String, val status: String, val signedBy: String?, val signedAt: String?, val amendments: List<String>,
+                        val photos: Int?, val masts: Int?, val withFindings: Int?, val alerts: Int?, val notAssessable: Int?,
+                        val findings: List<Pair<String, Boolean>>)
+
+private fun JsonObject.s(k: String) = (this[k] as? kotlinx.serialization.json.JsonPrimitive)?.takeIf { it.isString }?.content
+private fun JsonObject.i(k: String) = (this[k] as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
+private fun JsonObject.o(k: String) = this[k] as? JsonObject
+
+/** Short human label for a finding: the rule's observed feature, else "component · condition". */
+fun findingLabel(f: JsonObject): String = f.s("observed_feature")
+    ?: listOfNotNull(f.s("component")?.replace('_', ' '), f.s("condition")?.replace('_', ' ')).joinToString(" · ").ifBlank { "Finding" }
+
+fun parseReports(a: kotlinx.serialization.json.JsonArray): List<ReportRow> = a.mapNotNull { it as? JsonObject }.map { r ->
+    val sm = r.o("summary") ?: JsonObject(emptyMap())
+    ReportRow(r.s("id") ?: "", r.s("territory") ?: "", r.s("status") ?: "", r.s("signed_by"), r.s("ended_at"),
+        sm.i("expected_assets"), sm.i("with_findings"), sm.i("alerts"), sm.i("not_assessable"))
+}
+
+fun parseAlerts(a: kotlinx.serialization.json.JsonArray): List<AlertRow> = a.mapNotNull { it as? JsonObject }.map { r ->
+    val what = r.o("assessment")?.let(::findingLabel) ?: "Urgent finding"
+    AlertRow(r.s("finding") ?: "", r.s("territory") ?: "", r.s("asset_id"), what, r.s("raised_at"), r.s("session") ?: "")
+}
+
+fun parseReport(r: JsonObject): ReportDetail {
+    val c = r.o("content") ?: JsonObject(emptyMap())
+    val sm = c.o("RPT-02_summary") ?: JsonObject(emptyMap())
+    val rv = r.o("RPT-11_review") ?: JsonObject(emptyMap())
+    val am = (rv["amendments"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }
+        .map { a -> listOfNotNull(a.s("reason"), a.s("new")?.let { "now: $it" }).joinToString(" · ").ifBlank { "Amended" } }
+    val fs = (c["RPT-06_findings"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }.map { f ->
+        val label = findingLabel(f)
+        val asset = f.s("asset_id")
+        (if (asset != null) "$label · $asset" else label) to ((f["alert"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
+    }
+    return ReportDetail(r.s("id") ?: "", r.s("status") ?: "", r.s("signed_by"), rv.s("signed_at"), am, sm.i("photos") ?: sm.i("media"),
+        sm.i("expected_assets"), sm.i("with_findings"), sm.i("alerts"), sm.i("not_assessable"), fs)
 }
 
 /** What the phone keeps from the server's analysis of one photo (pure function: unit-tested). */
@@ -211,6 +268,7 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
     private val dao get() = db.ohe()
     val active = dao.active()
     val latest = dao.latest()
+    val sessions = dao.all()
     val pending = dao.pendingCount()
     fun captures(sid: String) = dao.captures(sid)
     fun notes(sid: String) = dao.noteCount(sid)
@@ -242,6 +300,11 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
     }.getOrNull()
 
     suspend fun serverAndToken(): Pair<String, String> = baseUrl() to settings().token
+
+    private suspend fun api(): Pair<OheApi, UserSettings> { val s = settings(); return OheApi.create(baseUrl(), s.token) to s }
+    suspend fun reports(): List<ReportRow> { val (a, s) = api(); return parseReports(a.reports(s.inspectorId, s.role)) }
+    suspend fun alerts(): List<AlertRow> { val (a, s) = api(); return parseAlerts(a.alerts(s.inspectorId, s.role)) }
+    suspend fun report(rid: String): ReportDetail { val (a, s) = api(); return parseReport(a.report(rid, s.inspectorId, s.role)) }
 
     suspend fun addCapture(c: OheCaptureEntity) { dao.insertCapture(c); schedule() }
     suspend fun addNote(sid: String, text: String) { dao.insertNote(OheNoteEntity(sessionId = sid, text = text)); schedule() }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -65,14 +66,71 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setServer(url: String) = viewModelScope.launch { c.repository.setText("server", url) }
+
+    // ---- laptop server: reachability and Wi-Fi discovery ----
+    val sessions: StateFlow<List<OheSessionEntity>> = repo.sessions.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val serverOk = MutableStateFlow<Boolean?>(null)
+    val searching = MutableStateFlow(false)
+    val found = MutableStateFlow<List<org.rvi.inspect.data.FoundServer>>(emptyList())
+    private val discovery = org.rvi.inspect.data.Discovery(app)
+
+    fun checkServer() = viewModelScope.launch {
+        val url = c.repository.settings.first().serverUrl
+        serverOk.value = if (url.isBlank()) false else org.rvi.inspect.data.Discovery.reachable(url)
+    }
+
+    /** Look for laptops on this Wi-Fi for a few seconds; if exactly one answers and none is set up yet, use it. */
+    fun findServers(autoPick: Boolean = false) = viewModelScope.launch {
+        if (searching.value) return@launch
+        searching.value = true; found.value = emptyList()
+        kotlinx.coroutines.withTimeoutOrNull(6000) {
+            discovery.find().collect { f -> if (found.value.none { it.url == f.url }) found.value = found.value + f }
+        }
+        searching.value = false
+        val cur = c.repository.settings.first().serverUrl
+        if (autoPick && found.value.size == 1 && serverOk.value != true && found.value[0].url != cur) useServer(found.value[0].url)
+    }
+
+    fun useServer(raw: String) = viewModelScope.launch {
+        val url = org.rvi.inspect.data.Discovery.normalise(raw)
+        if (url.isBlank()) return@launch
+        c.repository.setText("server", url)
+        serverOk.value = null
+        serverOk.value = org.rvi.inspect.data.Discovery.reachable(url)
+        if (serverOk.value == true) repo.schedule()
+    }
+
+    fun setTpc(n: String) = viewModelScope.launch { c.repository.setText("tpc", n) }
+    fun toggle(k: String, v: Boolean) = viewModelScope.launch { c.repository.setToggle(k, v) }
+
+    // ---- server lists: reports, alerts, one report ----
+    val reports = MutableStateFlow<List<org.rvi.inspect.data.ReportRow>?>(null)
+    val alerts = MutableStateFlow<List<org.rvi.inspect.data.AlertRow>?>(null)
+    val report = MutableStateFlow<org.rvi.inspect.data.ReportDetail?>(null)
+    val reportError = MutableStateFlow<String?>(null)
+    val readAlerts = MutableStateFlow<Set<String>>(emptySet())
+
+    fun loadReports() = viewModelScope.launch { reports.value = runCatching { repo.reports() }.getOrNull() ?: reports.value }
+    fun loadAlerts() = viewModelScope.launch { alerts.value = runCatching { repo.alerts() }.getOrNull() ?: alerts.value }
+    fun loadReport(rid: String) = viewModelScope.launch {
+        reportError.value = null
+        runCatching { repo.report(rid) }.onSuccess { report.value = it }.onFailure { reportError.value = it.message ?: "Not reachable" }
+    }
+    fun markAlertsRead() { readAlerts.value = readAlerts.value + (alerts.value.orEmpty().map { it.findingId }) }
+    fun markAlertRead(id: String) { readAlerts.value = readAlerts.value + id }
     fun setInspector(id: String) = viewModelScope.launch { c.repository.setText("inspector", id) }
     fun retrySync() = repo.schedule()
 
     /** Sign-in message for the home screen: null = nothing to show. */
     val signMsg = MutableStateFlow<String?>(null)
-    fun signIn(id: String, pin: String) = viewModelScope.launch {
-        signMsg.value = "…"
-        signMsg.value = try { repo.signIn(id, pin).let { "${it.id} · ${it.role}" } } catch (e: Exception) { e.message ?: "Sign-in failed" }
+    val signingIn = MutableStateFlow(false)
+    val userName = MutableStateFlow("")
+    fun signIn(id: String, pin: String, onOk: () -> Unit = {}) = viewModelScope.launch {
+        signingIn.value = true; signMsg.value = null
+        try { val out = repo.signIn(id, pin); userName.value = out.name.ifBlank { out.id }; signMsg.value = null; onOk() }
+        catch (e: java.io.IOException) { signMsg.value = "Server not reachable – check Wi-Fi and the server address"; serverOk.value = false }
+        catch (e: Exception) { signMsg.value = e.message ?: "Sign-in failed" }
+        signingIn.value = false
     }
     fun signOut() = viewModelScope.launch { repo.signOut(); signMsg.value = null }
 

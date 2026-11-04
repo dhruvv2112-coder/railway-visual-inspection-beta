@@ -59,7 +59,7 @@ class Repository(private val context: Context, private val db: RviDatabase) {
     }
 
     suspend fun setText(key: String, value: String) = context.prefs.edit {
-        when (key) { "server" -> it[K.server] = value.trim(); "inspector" -> it[K.inspector] = value.trim(); "role" -> it[K.role] = value.trim(); "token" -> it[K.token] = value.trim() }
+        when (key) { "server" -> it[K.server] = value.trim(); "inspector" -> it[K.inspector] = value.trim(); "role" -> it[K.role] = value.trim(); "token" -> it[K.token] = value.trim(); "tpc" -> it[K.tpc] = value.trim() }
     }
 
     val activePatrol = db.patrols().active()

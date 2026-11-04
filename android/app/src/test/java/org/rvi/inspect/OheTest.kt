@@ -85,3 +85,22 @@ class OheTest {
         assertEquals(1012, r.versionCode); assertEquals("Sign-in on home", r.notes[0])
     }
 }
+
+class DiscoveryTest {
+    @Test fun normalisesTypedAddresses() {
+        assertEquals("http://192.168.1.20:8000/", org.rvi.inspect.data.Discovery.normalise("192.168.1.20"))
+        assertEquals("http://192.168.1.20:9000/", org.rvi.inspect.data.Discovery.normalise("http://192.168.1.20:9000"))
+        assertEquals("https://ohe.example.in/", org.rvi.inspect.data.Discovery.normalise("https://ohe.example.in"))
+        assertEquals("", org.rvi.inspect.data.Discovery.normalise("  "))
+    }
+
+    @Test fun parsesReportsAndAlertsFromServer() {
+        val reports = Json.parseToJsonElement("""[{"id":"r1","territory":"SEC-1","status":"SIGNED","signed_by":"SSE-1","ended_at":"2026-11-05T04:30:00",
+            "summary":{"expected_assets":6,"with_findings":1,"alerts":1,"not_assessable":0}}]""") as kotlinx.serialization.json.JsonArray
+        val r = org.rvi.inspect.data.parseReports(reports).single()
+        assertEquals(6, r.masts); assertEquals("SSE-1", r.signedBy)
+        val alerts = Json.parseToJsonElement("""[{"finding":"f1","session":"s1","territory":"SEC-1","asset_id":"1205/12",
+            "assessment":{"component":"insulator","condition":"shed_damage","observed_feature":"Insulator shed damage"}}]""") as kotlinx.serialization.json.JsonArray
+        assertEquals("Insulator shed damage", org.rvi.inspect.data.parseAlerts(alerts).single().what)
+    }
+}

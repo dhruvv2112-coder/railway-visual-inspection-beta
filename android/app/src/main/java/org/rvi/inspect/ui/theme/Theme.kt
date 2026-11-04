@@ -2,7 +2,7 @@ package org.rvi.inspect.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -11,61 +11,101 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import org.rvi.inspect.R
 
-/** Greyscale-only palette. White text on charcoal/black. No hue anywhere: state is shown by
- *  weight, fill, outline and icons (accessible for colour-vision deficiency). */
-object Grey {
-    val G950 = Color(0xFF0B0B0C) // background
-    val G900 = Color(0xFF141416)
-    val G850 = Color(0xFF1C1C1F)
-    val G800 = Color(0xFF26262A)
-    val G700 = Color(0xFF3A3A3F)
-    val G500 = Color(0xFF6E6E75)
-    val G400 = Color(0xFF8E8E95)
-    val G300 = Color(0xFFB4B4BA)
-    val G200 = Color(0xFFD6D6DA)
+/** OnTrack.AI glass palette (canvas "Glass kit"): ink text, electric blue for action, signal yellow for "now",
+ *  safety orange only for danger, mint for checked/signed. Colours that must be told apart also differ in lightness. */
+object Ink {
+    val Ink = Color(0xFF0E1020)
+    val Body = Color(0xFF3B4058)
+    val Muted = Color(0xFF464B63)
+    val Mist = Color(0xFFE6EAF5)
+    val Mist2 = Color(0xFFEEF0F7)
+    val Electric = Color(0xFF3346FF)
+    val ElectricDeep = Color(0xFF2433D6)
+    val ElectricTint = Color(0xFFDDE2FF)
+    val Signal = Color(0xFFFFD84D)
+    val Safety = Color(0xFFD93A10)
+    val SafetyTint = Color(0xFFFFE0D3)
+    val SafetyText = Color(0xFFA1300A)
+    val Mint = Color(0xFF10A36E)
+    val MintTint = Color(0xFFD3F5E6)
+    val MintText = Color(0xFF046C4E)
+    val Aqua = Color(0xFF14C8B4)
+    val Amber = Color(0xFFFFB020)
+    val Violet = Color(0xFF7C8CFF)
     val White = Color(0xFFFFFFFF)
-    val GlassFill = Color(0x1FFFFFFF)      // 12 % white – translucent panels
-    val GlassFillStrong = Color(0x33FFFFFF) // 20 %
-    val GlassStroke = Color(0x3DFFFFFF)     // 24 % hairline
-    val Scrim = Color(0x99000000)
+    val Glass = Color(0x9EFFFFFF)        // 62 % white panel
+    val GlassStrong = Color(0xD1FFFFFF)  // 82 %
+    val GlassEdge = Color(0xE6FFFFFF)
+    val DarkGlass = Color(0x610E1020)    // 38 % ink, on the camera
+    val DarkEdge = Color(0x38FFFFFF)
+    val Hair = Color(0x140E1020)
 }
 
-val JetBrainsMono = FontFamily(
-    Font(R.font.jetbrains_mono_light, FontWeight.Light),
-    Font(R.font.jetbrains_mono_regular, FontWeight.Normal),
-    Font(R.font.jetbrains_mono_medium, FontWeight.Medium),
-    Font(R.font.jetbrains_mono_semibold, FontWeight.SemiBold),
-    Font(R.font.jetbrains_mono_bold, FontWeight.Bold),
-) // Devanagari glyphs fall back to the system Noto Sans Devanagari automatically.
+/** Kept for the earlier track-patrol screens (they still compile against these names). */
+object Grey {
+    val G950 = Ink.Ink
+    val G900 = Color(0xFF1A1D33)
+    val G850 = Color(0xFF23274A)
+    val G800 = Color(0xFF2E3360)
+    val G700 = Color(0xFF8C93B0)
+    val G500 = Ink.Muted
+    val G400 = Ink.Muted
+    val G300 = Ink.Body
+    val G200 = Ink.Body
+    val White = Ink.Ink
+    val GlassFill = Ink.Glass
+    val GlassFillStrong = Ink.GlassStrong
+    val GlassStroke = Ink.GlassEdge
+    val Scrim = Color(0x990E1020)
+}
+
+/** Stand-in for FK Grotesk Neue (the Even Realities app face, commercial): Inter Tight with tight tracking.
+ *  Devanagari falls back to the system Noto Sans Devanagari. */
+val InterTight = FontFamily(
+    Font(R.font.inter_tight_400, FontWeight.Normal),
+    Font(R.font.inter_tight_500, FontWeight.Medium),
+    Font(R.font.inter_tight_600, FontWeight.SemiBold),
+    Font(R.font.inter_tight_700, FontWeight.Bold),
+    Font(R.font.inter_tight_800, FontWeight.ExtraBold),
+)
+val GeistMono = FontFamily(Font(R.font.geist_mono_500, FontWeight.Medium), Font(R.font.geist_mono_600, FontWeight.SemiBold))
+val JetBrainsMono = GeistMono
 
 @Immutable
 data class Scale(val factor: Float = 1f)
 
 val LocalScale = staticCompositionLocalOf { Scale() }
 
-private fun type(f: Float) = Typography(
-    displaySmall = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.SemiBold, fontSize = (34 * f).sp, lineHeight = (40 * f).sp, letterSpacing = (-0.5).sp),
-    headlineSmall = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.SemiBold, fontSize = (24 * f).sp, lineHeight = (30 * f).sp),
-    titleLarge = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.Medium, fontSize = (20 * f).sp, lineHeight = (26 * f).sp),
-    titleMedium = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.Medium, fontSize = (16 * f).sp, lineHeight = (22 * f).sp),
-    bodyLarge = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.Normal, fontSize = (16 * f).sp, lineHeight = (24 * f).sp),
-    bodyMedium = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.Normal, fontSize = (14 * f).sp, lineHeight = (21 * f).sp),
-    labelLarge = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.SemiBold, fontSize = (15 * f).sp, letterSpacing = 0.4.sp),
-    labelMedium = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.Medium, fontSize = (12 * f).sp, letterSpacing = 0.8.sp),
-    labelSmall = TextStyle(fontFamily = JetBrainsMono, fontWeight = FontWeight.Medium, fontSize = (11 * f).sp, letterSpacing = 1.sp),
-)
+private fun type(f: Float): Typography {
+    fun t(size: Int, w: FontWeight, ls: Double = -0.01, lh: Double = 1.25) =
+        TextStyle(fontFamily = InterTight, fontWeight = w, fontSize = (size * f).sp, lineHeight = (size * f * lh).sp, letterSpacing = ls.em)
+    return Typography(
+        displaySmall = t(34, FontWeight.Bold, -0.03, 1.1),
+        headlineMedium = t(30, FontWeight.Bold, -0.03, 1.1),
+        headlineSmall = t(24, FontWeight.Bold, -0.03, 1.15),
+        titleLarge = t(20, FontWeight.Bold, -0.02),
+        titleMedium = t(16, FontWeight.Bold, -0.02),
+        bodyLarge = t(16, FontWeight.Normal, -0.01, 1.45),
+        bodyMedium = t(14, FontWeight.Normal, -0.01, 1.45),
+        labelLarge = t(16, FontWeight.Bold, -0.01),
+        labelMedium = t(13, FontWeight.SemiBold, 0.0),
+        labelSmall = t(12, FontWeight.ExtraBold, 0.08),
+    )
+}
 
-private val scheme = darkColorScheme(
-    primary = Grey.White, onPrimary = Grey.G950,
-    secondary = Grey.G300, onSecondary = Grey.G950,
-    background = Grey.G950, onBackground = Grey.White,
-    surface = Grey.G900, onSurface = Grey.White,
-    surfaceVariant = Grey.G850, onSurfaceVariant = Grey.G300,
-    outline = Grey.G700, outlineVariant = Grey.G800,
-    error = Grey.White, onError = Grey.G950,
+private val scheme = lightColorScheme(
+    primary = Ink.Electric, onPrimary = Ink.White,
+    secondary = Ink.Ink, onSecondary = Ink.White,
+    tertiary = Ink.Signal, onTertiary = Ink.Ink,
+    background = Ink.Mist, onBackground = Ink.Ink,
+    surface = Ink.White, onSurface = Ink.Ink,
+    surfaceVariant = Ink.Mist2, onSurfaceVariant = Ink.Body,
+    outline = Color(0x1F0E1020), outlineVariant = Ink.Hair,
+    error = Ink.Safety, onError = Ink.White,
 )
 
 @Composable
