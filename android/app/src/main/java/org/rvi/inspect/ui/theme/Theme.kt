@@ -11,7 +11,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import org.rvi.inspect.R
 
@@ -82,7 +81,7 @@ val LocalScale = staticCompositionLocalOf { Scale() }
 
 private fun type(f: Float): Typography {
     fun t(size: Int, w: FontWeight, ls: Double = -0.01, lh: Double = 1.25) =
-        TextStyle(fontFamily = InterTight, fontWeight = w, fontSize = (size * f).sp, lineHeight = (size * f * lh).sp, letterSpacing = ls.em)
+        TextStyle(fontFamily = InterTight, fontWeight = w, fontSize = (size * f).sp, lineHeight = (size * f * lh).sp, letterSpacing = (size * f * ls).sp)
     return Typography(
         displaySmall = t(34, FontWeight.Bold, -0.03, 1.1),
         headlineMedium = t(30, FontWeight.Bold, -0.03, 1.1),
@@ -91,6 +90,11 @@ private fun type(f: Float): Typography {
         titleMedium = t(16, FontWeight.Bold, -0.02),
         bodyLarge = t(16, FontWeight.Normal, -0.01, 1.45),
         bodyMedium = t(14, FontWeight.Normal, -0.01, 1.45),
+        bodySmall = t(12, FontWeight.Normal, 0.0, 1.4),
+        titleSmall = t(14, FontWeight.Bold, -0.01),
+        headlineLarge = t(32, FontWeight.Bold, -0.03, 1.1),
+        displayMedium = t(40, FontWeight.Bold, -0.03, 1.1),
+        displayLarge = t(48, FontWeight.Bold, -0.03, 1.1),
         labelLarge = t(16, FontWeight.Bold, -0.01),
         labelMedium = t(13, FontWeight.SemiBold, 0.0),
         labelSmall = t(12, FontWeight.ExtraBold, 0.08),
