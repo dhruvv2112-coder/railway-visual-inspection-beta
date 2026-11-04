@@ -290,3 +290,26 @@ def test_app_update_publish_and_latest(client, tmp_path, monkeypatch):
     latest = client.get("/ohe/app/latest", headers=PATROL).json()
     assert latest["version_code"] == 1012 and latest["notes"] == ["Sign-in", "Updates"]
     assert client.get("/ohe/app/apk", headers=PATROL).content == b"APK1"
+
+
+def test_connect_page_and_public_apk(tmp_path, monkeypatch):
+    """Laptop server: connect info, page and the public app download from a dropped-in .apk."""
+    from fastapi.testclient import TestClient
+
+    from app.config import settings
+    from app.main import app
+    from app.ohe import lan
+    monkeypatch.setattr(settings, "app_dir", tmp_path / "app")
+    drop = tmp_path / "drop"
+    drop.mkdir()
+    (drop / "OnTrack.AI-draft1.apk").write_bytes(b"PK-fake-apk")
+    (drop / "latest.json").write_text('{"version_code": 1001, "version_name": "0.3.1001"}')
+    assert lan.install_app_from(drop)
+    c = TestClient(app)
+    info = c.get("/ohe/connect/info").json()
+    assert info["app"]["version_code"] == 1001 and info["name"]
+    assert c.get("/ohe/connect/app.apk").content == b"PK-fake-apk"
+    page = c.get("/ohe/connect").text
+    assert "OnTrack.AI server is running" in page and "app.apk" in page
+    monkeypatch.setattr(settings, "public_apk", False)
+    assert c.get("/ohe/connect/app.apk").status_code == 404

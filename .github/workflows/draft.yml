@@ -1,0 +1,131 @@
+name: draft
+# OnTrack.AI draft build: phone app (.apk) + Windows laptop server package, smoke-tested on a Windows runner and
+# published as the pre-release "draft-<n>". Run by hand (Actions > draft > Run workflow).
+on:
+  workflow_dispatch:
+    inputs:
+      tag: {description: "Release tag", default: "draft-1"}
+permissions:
+  contents: write
+concurrency: {group: draft, cancel-in-progress: false}
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HAS_KEY: ${{ secrets.ANDROID_KEYSTORE_B64 != '' }}
+    outputs:
+      vname: ${{ steps.b.outputs.vname }}
+      signed: ${{ steps.b.outputs.signed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "17"}
+      - uses: gradle/actions/setup-gradle@v4
+        with: {gradle-version: "8.11.1"}
+      - id: b
+        name: Build the app (signed Beta key when the secret exists, else debug key)
+        working-directory: android
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          set -e
+          export RVI_VERSION_CODE=$((3000 + ${{ github.run_number }})) RVI_VERSION_NAME="0.3.$((3000 + ${{ github.run_number }}))-draft"
+          if [ "$HAS_KEY" = "true" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/beta.jks"; export ANDROID_KEYSTORE_FILE="$RUNNER_TEMP/beta.jks"
+            gradle --no-daemon :app:assembleBeta; cp app/build/outputs/apk/beta/*.apk ../OnTrack.AI.apk; rm -f "$RUNNER_TEMP/beta.jks"
+            echo "signed=beta" >> "$GITHUB_OUTPUT"
+          else
+            gradle --no-daemon :app:assembleDebug; cp app/build/outputs/apk/debug/*.apk ../OnTrack.AI.apk
+            echo "signed=debug" >> "$GITHUB_OUTPUT"
+          fi
+          echo "vname=$RVI_VERSION_NAME" >> "$GITHUB_OUTPUT"
+          cd .. && printf 'OnTrack.AI draft %s\n' "$RVI_VERSION_NAME" > notes.txt
+          VCODE=$RVI_VERSION_CODE VNAME=$RVI_VERSION_NAME python3 .github/scripts/app_manifest.py OnTrack.AI.apk notes.txt > latest.json
+          cat latest.json
+      - uses: actions/upload-artifact@v4
+        with: {name: app, path: "OnTrack.AI.apk\nlatest.json"}
+
+  windows:
+    needs: apk
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults: {run: {shell: bash}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {name: app, path: app-build}
+      - name: Assemble OnTrack-Server folder (server, models, app)
+        run: |
+          set -e
+          P=OnTrack-Server; mkdir -p $P/setup $P/server $P/models $P/app
+          cp deploy/windows/Start-OnTrack.bat deploy/windows/Add-User.bat deploy/windows/README.txt $P/
+          cp deploy/windows/OnTrack-Server.ps1 deploy/windows/ontrack.ico $P/setup/
+          cp -r backend shared $P/server/
+          rm -rf $P/server/backend/tests $P/server/backend/.pytest_cache
+          for b in ci-ohe-train-long ci-ohe-train; do
+            if git fetch -q --depth 1 origin $b 2>/dev/null && git cat-file -e FETCH_HEAD:reports/ohe_detector.onnx 2>/dev/null; then
+              git show FETCH_HEAD:reports/ohe_detector.onnx > $P/models/ohe_detector.onnx
+              git show FETCH_HEAD:reports/ohe_detector.names.json > $P/models/ohe_detector.names.json; echo "detector from $b"; break
+            fi
+          done
+          if git fetch -q --depth 1 origin ci-ohe-assess 2>/dev/null && git cat-file -e FETCH_HEAD:reports/ohe_assess.onnx 2>/dev/null; then
+            git show FETCH_HEAD:reports/ohe_assess.onnx > $P/models/ohe_assess.onnx
+            git show FETCH_HEAD:reports/ohe_assess.json > $P/models/ohe_assess.json
+          fi
+          cp app-build/OnTrack.AI.apk app-build/latest.json $P/app/
+          echo "${{ needs.apk.outputs.vname }} ${GITHUB_SHA::7}" > $P/VERSION.txt
+          find $P -maxdepth 2 | sort; ls -la $P/models
+      - name: Smoke test on Windows (first-run install, sign-in, photo upload, connect page)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $p = Start-Process powershell -PassThru -NoNewWindow -RedirectStandardOutput srv.out.txt -RedirectStandardError srv.err.txt `
+               -ArgumentList "-NoProfile","-ExecutionPolicy","Bypass","-File","OnTrack-Server\setup\OnTrack-Server.ps1","-NonInteractive","-NoBrowser"
+          $up = $false
+          for ($i = 0; $i -lt 120; $i++) {
+            Start-Sleep 5
+            try { $h = Invoke-RestMethod http://127.0.0.1:8000/health -TimeoutSec 5; $up = $true; break } catch {}
+            if ($p.HasExited) { break }
+          }
+          Get-Content srv.out.txt -Tail 60; Get-Content srv.err.txt -Tail 40
+          if (-not $up) { throw "server did not start" }
+          $h | ConvertTo-Json
+          if ($h.ohe_detector -eq "none") { throw "detector not loaded" }
+          $info = Invoke-RestMethod http://127.0.0.1:8000/ohe/connect/info; $info | ConvertTo-Json -Depth 5
+          if (-not $info.app) { throw "app not offered on connect page" }
+          $tok = (Invoke-RestMethod -Method Post http://127.0.0.1:8000/ohe/auth/login -ContentType application/json -Body '{"id":"PT-0001","pin":"1234"}').token
+          $hdr = @{ Authorization = "Bearer $tok" }
+          $sid = (Invoke-RestMethod -Method Post http://127.0.0.1:8000/ohe/sessions -Headers $hdr -ContentType application/json -Body '{"territory":"SEC-SMOKE"}').id
+          python -c "import numpy as n,cv2;i=(n.random.rand(960,1280,3)*255).astype('uint8');cv2.imwrite('t.jpg',i)" 2>$null
+          if (-not (Test-Path t.jpg)) { & "$env:LOCALAPPDATA\OnTrack\venv\Scripts\python.exe" -c "import numpy as n,cv2;i=(n.random.rand(960,1280,3)*255).astype('uint8');cv2.imwrite('t.jpg',i)" }
+          $sha = (Get-FileHash t.jpg -Algorithm SHA256).Hash.ToLower()
+          $r = curl.exe -s -f -H "Authorization: Bearer $tok" -F "image=@t.jpg;type=image/jpeg" -F "sha256=$sha" -F "captured_at=2026-11-05T10:00:00Z" `
+               http://127.0.0.1:8000/ohe/sessions/$sid/media
+          if ($LASTEXITCODE -ne 0) { throw "photo upload failed" }
+          $r
+          $end = Invoke-RestMethod -Method Post http://127.0.0.1:8000/ohe/sessions/$sid/end -Headers $hdr; $end.summary | ConvertTo-Json
+          if ((Invoke-WebRequest http://127.0.0.1:8000/ohe/connect/app.apk).RawContentLength -lt 1000000) { throw "apk download too small" }
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force
+      - name: Zip
+        shell: pwsh
+        run: Compress-Archive -Path OnTrack-Server -DestinationPath OnTrack-Server-Windows.zip -CompressionLevel Optimal
+      - name: Publish pre-release
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          cat > notes.md <<E
+          OnTrack.AI ${{ needs.apk.outputs.vname }} (commit ${GITHUB_SHA::7}, app signed with the ${{ needs.apk.outputs.signed }} key)
+
+          - **OnTrack-Server-Windows.zip** - unzip on the laptop and double-click Start-OnTrack.bat (see README.txt inside).
+          - **OnTrack.AI.apk** - the phone app (also offered by the laptop's connect page as a QR code).
+          E
+          gh release delete "$TAG" -y --cleanup-tag 2>/dev/null || true
+          for i in 1 2 3; do
+            gh release create "$TAG" --prerelease --target "$GITHUB_SHA" --title "OnTrack.AI $TAG" --notes-file notes.md \
+              OnTrack-Server-Windows.zip app-build/OnTrack.AI.apk && break
+            sleep 20
+          done
+          gh release view "$TAG" --json assets -q '.assets[] | "\(.name) \(.size)"'

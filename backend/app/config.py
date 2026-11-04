@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     github_token: str = ""
     app_release_repo: str = "dhruvv2112-coder/railway-visual-inspection-beta"
     app_release_tag: str = "android-beta"
+    # Laptop / local-network server: mDNS advertising (_ontrack._tcp), connect page /ohe/connect, public app download.
+    mdns: bool = False
+    server_name: str = "OnTrack.AI server"
+    port: int = 8000
+    public_apk: bool = True
+    app_import_dir: Path | None = None  # folder with an .apk (+ latest.json) copied into app_dir at start
 
 
 settings = Settings()
