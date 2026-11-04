@@ -317,9 +317,10 @@ def test_connect_page_and_public_apk(tmp_path, monkeypatch):
 
 def test_server_starts_with_mdns_on(monkeypatch):
     """Laptop mode: startup with discovery enabled must not block or crash (Windows EventLoopBlocked regression)."""
+    from fastapi.testclient import TestClient
+
     from app.config import settings
     from app.main import app
-    from fastapi.testclient import TestClient
     monkeypatch.setattr(settings, "mdns", True)
     with TestClient(app) as c:
         assert c.get("/health").status_code == 200
