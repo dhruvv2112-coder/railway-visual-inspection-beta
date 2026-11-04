@@ -136,3 +136,18 @@ Release **draft-1** (GitHub pre-release) holds `OnTrack-Server-Windows.zip` and 
 The Windows package is smoke-tested on every draft build (CI workflow `draft`): first-run install, sign-in, photo
 upload, end of patrol and app download. Draft APKs are signed with the CI debug key: when the Beta signing key is
 added to CI secrets, uninstall the draft once before installing a signed Beta.
+
+
+### Using the phone away from the laptop (draft 1, internet layer)
+
+- The laptop opens an outbound Cloudflare quick tunnel (no account, no router changes) and shows its HTTPS address
+  on the connect page. Start with `-LanOnly` to switch this off, or `-PublicUrl https://...` for a fixed address
+  (named Cloudflare tunnel or ngrok static domain).
+- The quick-tunnel address changes on every restart. The server posts its current address to a private ntfy.sh
+  topic, signed with HMAC-SHA256 using a key only paired phones get (GET /ohe/connect/pairing after sign-in).
+  A phone that cannot reach the laptop reads the newest signed address, checks it and switches.
+- Pair each phone once: sign in on the laptop's Wi-Fi, or type the HTTPS address from the connect page.
+- Internet-facing hardening: 5 wrong PINs lock the ID and the caller (1, 2, 4 ... 60 min); connect page and
+  server info are hidden through the tunnel; API docs are off; tokens travel only over HTTPS on the internet path.
+- Verified on every draft build on a Windows runner: tunnel address, health, sign-in, pairing, hidden pages,
+  lockout (429) and a correctly signed relay message, all through the public internet.

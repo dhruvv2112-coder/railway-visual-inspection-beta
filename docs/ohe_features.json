@@ -493,5 +493,14 @@
   "status": "Built",
   "built": "Start-OnTrack.bat: Python 3.11, server, detector + photo-angle model, accounts, firewall, connect page with QR + app download; smoke-tested on Windows in CI (release draft-1)",
   "next": "Run on the ProArt"
+ },
+ {
+  "id": "B25",
+  "area": "Inspection service",
+  "feature": "Use the laptop server from any network",
+  "hld_ref": "—",
+  "status": "Built",
+  "built": "Cloudflare quick tunnel (or fixed address), signed address relay for paired phones, PIN lockout, laptop pages hidden on the internet; tested end to end in CI",
+  "next": "Test with the phone on mobile data"
  }
 ]
