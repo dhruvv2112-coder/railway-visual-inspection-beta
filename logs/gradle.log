@@ -12,10 +12,10 @@ Daemon will be stopped at the end of the build
 > Task :app:generateDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:generateDebugLocaleConfig
-> Task :app:packageDebugResources
 > Task :app:extractDeepLinksDebug
-> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
 > Task :app:parseDebugLocalResources
+> Task :app:mergeDebugResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
 > Task :app:processDebugManifestForPackage
@@ -56,8 +56,8 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:bundleDebugClassesToCompileJar
 > Task :app:mergeProjectDexDebug
 > Task :app:generateDebugLintReportModel
-> Task :app:generateDebugAndroidTestLintModel
 > Task :app:mergeDebugJavaResource
+> Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugUnitTestLintModel
 > Task :app:kspDebugUnitTestKotlin
 > Task :app:packageDebug
@@ -80,7 +80,7 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793660146828.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793775578984.json
 
-BUILD SUCCESSFUL in 2m 11s
+BUILD SUCCESSFUL in 2m 10s
 60 actionable tasks: 60 executed

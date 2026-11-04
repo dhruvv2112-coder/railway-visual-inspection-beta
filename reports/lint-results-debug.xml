@@ -1173,7 +1173,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/values/themes.xml"
-            line="9"
+            line="10"
             column="12"/>
     </issue>
 
@@ -1189,6 +1189,22 @@
         errorLine2="^">
         <location
             file="/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        severity="Warning"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        category="Usability:Icons"
+        priority="6"
+        summary="Monochrome icon is not defined"
+        explanation="If `android:roundIcon` and `android:icon` are both in your manifest, you must either remove the reference to `android:roundIcon` if it is not needed; or, supply the monochrome icon in the drawable defined by the `android:roundIcon` and `android:icon` attribute.&#xA;&#xA;For example, if `android:roundIcon` and `android:icon` are both in the manifest, a launcher might choose to use `android:roundIcon` over `android:icon` to display the adaptive app icon. Therefore, your themed application iconwill not show if your monochrome attribute is not also specified in `android:roundIcon`."
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
             line="2"
             column="1"/>
     </issue>
