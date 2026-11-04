@@ -1,13 +1,1 @@
-S110 `try`-`except`-`pass` detected, consider logging the exception
-  --> app/ohe/lan.py:87:9
-   |
-85 |               if info:
-86 |                   await azc.async_unregister_service(info)
-87 | /         except Exception:  # noqa: BLE001
-88 | |             pass
-   | |________________^
-89 |           finally:
-90 |               await azc.async_close()
-   |
-
-Found 1 error.
+All checks passed!
