@@ -84,8 +84,8 @@ async def stop_mdns() -> None:
         try:
             if info:
                 await azc.async_unregister_service(info)
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as e:  # noqa: BLE001
+            print("mDNS: unregister failed:", e)
         finally:
             await azc.async_close()
 
