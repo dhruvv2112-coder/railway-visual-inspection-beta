@@ -6,6 +6,5 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
     <color name="charcoal_950">#FF0B0B0C</color>
-    <color name="launcher_bg">#FFFFFFFF</color>
     <color name="ink">#FFFFFFFF</color>
 </resources>
