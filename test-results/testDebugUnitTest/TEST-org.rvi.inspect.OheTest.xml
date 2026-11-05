@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.OheTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-05T06:11:48" hostname="runnervm7aw5e" time="0.042">
+<testsuite name="org.rvi.inspect.OheTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-05T09:27:43" hostname="runnervm48cm3" time="0.05">
   <properties/>
-  <testcase name="uploadWithUrgentFinding" classname="org.rvi.inspect.OheTest" time="0.011"/>
+  <testcase name="uploadWithUrgentFinding" classname="org.rvi.inspect.OheTest" time="0.016"/>
   <testcase name="localQualityPrompts" classname="org.rvi.inspect.OheTest" time="0.0"/>
-  <testcase name="sha256MatchesKnownVector" classname="org.rvi.inspect.OheTest" time="0.002"/>
-  <testcase name="promptsNeverAskToApproachLiveOhe" classname="org.rvi.inspect.OheTest" time="0.003"/>
-  <testcase name="summaryUsesServerCountsWhenReportExists" classname="org.rvi.inspect.OheTest" time="0.001"/>
-  <testcase name="failedAnalysisIsNotShownAsNoDefect" classname="org.rvi.inspect.OheTest" time="0.001"/>
-  <testcase name="phoneRollFromGravity" classname="org.rvi.inspect.OheTest" time="0.005"/>
-  <testcase name="duplicateUploadWithoutAnalysisIsHarmless" classname="org.rvi.inspect.OheTest" time="0.0"/>
-  <testcase name="oheVoiceSetIsPhotoNoteEnd" classname="org.rvi.inspect.OheTest" time="0.002"/>
+  <testcase name="sha256MatchesKnownVector" classname="org.rvi.inspect.OheTest" time="0.003"/>
+  <testcase name="promptsNeverAskToApproachLiveOhe" classname="org.rvi.inspect.OheTest" time="0.001"/>
+  <testcase name="summaryUsesServerCountsWhenReportExists" classname="org.rvi.inspect.OheTest" time="0.003"/>
+  <testcase name="failedAnalysisIsNotShownAsNoDefect" classname="org.rvi.inspect.OheTest" time="0.0"/>
+  <testcase name="phoneRollFromGravity" classname="org.rvi.inspect.OheTest" time="0.001"/>
+  <testcase name="duplicateUploadWithoutAnalysisIsHarmless" classname="org.rvi.inspect.OheTest" time="0.002"/>
+  <testcase name="oheVoiceSetIsPhotoNoteEnd" classname="org.rvi.inspect.OheTest" time="0.004"/>
   <testcase name="onlyNewAlertsNotify" classname="org.rvi.inspect.OheTest" time="0.001"/>
   <testcase name="updateOnlyWhenNewer" classname="org.rvi.inspect.OheTest" time="0.001"/>
-  <testcase name="uploadReportsWhatWasSeenAndWhatCouldBeJudged" classname="org.rvi.inspect.OheTest" time="0.001"/>
+  <testcase name="uploadReportsWhatWasSeenAndWhatCouldBeJudged" classname="org.rvi.inspect.OheTest" time="0.005"/>
   <testcase name="releaseManifestParses" classname="org.rvi.inspect.OheTest" time="0.005"/>
   <testcase name="uploadNotAssessableAsksForZoom" classname="org.rvi.inspect.OheTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>

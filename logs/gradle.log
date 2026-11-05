@@ -18,7 +18,6 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -26,32 +25,33 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugAssets
 > Task :app:desugarDebugFileDependencies
 > Task :app:compressDebugAssets
-> Task :app:mergeDebugJniLibFolders
+> Task :app:processDebugManifestForPackage
 > Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugNativeLibs
+> Task :app:mergeDebugJniLibFolders
 > Task :app:mergeLibDexDebug
+> Task :app:mergeDebugNativeLibs
 > Task :app:processDebugResources
-
-> Task :app:stripDebugDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
-
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest
 > Task :app:packageDebugUnitTestForUnitTest
-> Task :app:preDebugAndroidTestBuild SKIPPED
 > Task :app:generateDebugUnitTestConfig
+> Task :app:preDebugAndroidTestBuild SKIPPED
 > Task :app:generateDebugAndroidTestResValues
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
+
 > Task :app:extractProguardFiles
-> Task :app:kspDebugKotlin
 > Task :app:mergeExtDexDebug
+> Task :app:kspDebugKotlin
 
 > Task :app:compileDebugKotlin
 w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/components/Glass.kt:235:98 'val Icons.Outlined.ListAlt: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.ListAlt.
 w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:206:67 'val Icons.Outlined.Backspace: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.Backspace.
-w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:900:124 'val Icons.Outlined.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.Logout.
+w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/screens/OheScreens.kt:910:124 'val Icons.Outlined.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.Logout.
 
 > Task :app:compileDebugJavaWithJavac
 > Task :app:dexBuilderDebug
@@ -75,8 +75,8 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:lintAnalyzeDebugAndroidTest
-> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:testDebugUnitTest
 > Task :app:finalizeTestRoborazziDebug
 > Task :app:recordRoborazziDebug
@@ -85,7 +85,7 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793859012663.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793870745292.json
 
-BUILD SUCCESSFUL in 1m 54s
+BUILD SUCCESSFUL in 2m 23s
 60 actionable tasks: 60 executed

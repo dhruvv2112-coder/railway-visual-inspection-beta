@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.HindiShots" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-05T06:11:40" hostname="runnervm7aw5e" time="7.557">
+<testsuite name="org.rvi.inspect.HindiShots" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-05T09:27:34" hostname="runnervm48cm3" time="8.915">
   <properties/>
-  <testcase name="s01_signin" classname="org.rvi.inspect.HindiShots" time="0.748"/>
-  <testcase name="s01b_signin_server" classname="org.rvi.inspect.HindiShots" time="0.705"/>
-  <testcase name="s06_urgent" classname="org.rvi.inspect.HindiShots" time="0.613"/>
-  <testcase name="s02_home" classname="org.rvi.inspect.HindiShots" time="0.521"/>
-  <testcase name="s07_note" classname="org.rvi.inspect.HindiShots" time="0.626"/>
-  <testcase name="s10_report" classname="org.rvi.inspect.HindiShots" time="0.552"/>
-  <testcase name="s09_patrols" classname="org.rvi.inspect.HindiShots" time="0.669"/>
-  <testcase name="s12_profile" classname="org.rvi.inspect.HindiShots" time="0.683"/>
-  <testcase name="s04_hud" classname="org.rvi.inspect.HindiShots" time="0.43"/>
-  <testcase name="s08_end" classname="org.rvi.inspect.HindiShots" time="0.548"/>
-  <testcase name="s03_start" classname="org.rvi.inspect.HindiShots" time="0.496"/>
-  <testcase name="s11_alerts" classname="org.rvi.inspect.HindiShots" time="0.549"/>
-  <testcase name="s05_retake" classname="org.rvi.inspect.HindiShots" time="0.414"/>
+  <testcase name="s01_signin" classname="org.rvi.inspect.HindiShots" time="0.817"/>
+  <testcase name="s01b_signin_server" classname="org.rvi.inspect.HindiShots" time="0.813"/>
+  <testcase name="s06_urgent" classname="org.rvi.inspect.HindiShots" time="0.789"/>
+  <testcase name="s02_home" classname="org.rvi.inspect.HindiShots" time="0.998"/>
+  <testcase name="s07_note" classname="org.rvi.inspect.HindiShots" time="0.443"/>
+  <testcase name="s10_report" classname="org.rvi.inspect.HindiShots" time="0.555"/>
+  <testcase name="s09_patrols" classname="org.rvi.inspect.HindiShots" time="0.585"/>
+  <testcase name="s12_profile" classname="org.rvi.inspect.HindiShots" time="0.77"/>
+  <testcase name="s04_hud" classname="org.rvi.inspect.HindiShots" time="0.559"/>
+  <testcase name="s08_end" classname="org.rvi.inspect.HindiShots" time="0.648"/>
+  <testcase name="s03_start" classname="org.rvi.inspect.HindiShots" time="0.619"/>
+  <testcase name="s11_alerts" classname="org.rvi.inspect.HindiShots" time="0.733"/>
+  <testcase name="s05_retake" classname="org.rvi.inspect.HindiShots" time="0.583"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
