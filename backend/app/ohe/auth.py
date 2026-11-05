@@ -55,7 +55,8 @@ def verify(token: str) -> dict | None:
 
 
 def login(uid: str, pin: str) -> dict:
-    u = next((x for x in _users() if x["id"] == uid), None)
+    # IDs are not case-sensitive: the phone types them in capitals, accounts may have been created in lower case
+    u = next((x for x in _users() if str(x["id"]).strip().upper() == uid.strip().upper()), None)
     if not u or not hmac.compare_digest(u.get("pin_sha256", ""), pin_hash(pin)):
         raise HTTPException(401, "Wrong ID or PIN")
     return {"token": issue(u["id"], u["role"], u.get("name", "")), "id": u["id"], "role": u["role"], "name": u.get("name", "")}

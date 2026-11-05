@@ -385,3 +385,23 @@ def test_internet_sign_in_layer(tmp_path, monkeypatch):
         _time.sleep(0.1)
     assert remote.public_url() == "https://brave-test-words.trycloudflare.com/"
     remote.stop()
+
+
+def test_sign_in_ignores_id_case(tmp_path, monkeypatch):
+    """An account created as 'pt-0007' signs in as 'PT-0007' (the phone sends capitals) and vice versa."""
+    import yaml
+    from fastapi.testclient import TestClient
+
+    from app.config import settings
+    from app.main import app
+    from app.ohe import auth, remote
+    users = tmp_path / "users.yaml"
+    users.write_text(yaml.safe_dump({"users": [{"id": "pt-0007", "name": "R", "role": "Patrol", "pin_sha256": auth.pin_hash("1357")}]}))
+    monkeypatch.setattr(settings, "users_file", users)
+    remote._fails.clear()
+    c = TestClient(app)
+    for typed in ("PT-0007", "pt-0007", " Pt-0007 "):
+        r = c.post("/ohe/auth/login", json={"id": typed, "pin": "1357"})
+        assert r.status_code == 200, typed
+        assert r.json()["id"] == "pt-0007"
+    assert c.post("/ohe/auth/login", json={"id": "PT-0007", "pin": "9999"}).status_code == 401
