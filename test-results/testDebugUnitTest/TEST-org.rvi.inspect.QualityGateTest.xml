@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.QualityGateTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-05T05:19:14" hostname="runnervm7aw5e" time="0.066">
+<testsuite name="org.rvi.inspect.QualityGateTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-05T06:11:48" hostname="runnervm7aw5e" time="0.081">
   <properties/>
-  <testcase name="sharpTexturePasses" classname="org.rvi.inspect.QualityGateTest" time="0.04"/>
-  <testcase name="darkImageRejected" classname="org.rvi.inspect.QualityGateTest" time="0.017"/>
+  <testcase name="sharpTexturePasses" classname="org.rvi.inspect.QualityGateTest" time="0.053"/>
+  <testcase name="darkImageRejected" classname="org.rvi.inspect.QualityGateTest" time="0.01"/>
   <testcase name="lowResolutionRejected" classname="org.rvi.inspect.QualityGateTest" time="0.002"/>
-  <testcase name="flatImageIsBlurred" classname="org.rvi.inspect.QualityGateTest" time="0.007"/>
+  <testcase name="flatImageIsBlurred" classname="org.rvi.inspect.QualityGateTest" time="0.012"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

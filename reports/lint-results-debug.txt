@@ -1,4 +1,4 @@
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/AppNav.kt:83: Warning: Field requires API level 30 (current min is 26): android.view.HapticFeedbackConstants#CONFIRM [InlinedApi]
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/AppNav.kt:84: Warning: Field requires API level 30 (current min is 26): android.view.HapticFeedbackConstants#CONFIRM [InlinedApi]
         if (settings?.haptics != false) view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -294,7 +294,7 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
 
    https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
 
-/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/AndroidManifest.xml:22: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/AndroidManifest.xml:23: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
         android:allowBackup="false"
                              ~~~~~
 
@@ -314,6 +314,9 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
    https://developer.android.com/about/versions/12/backup-restore#xml-changes
    https://goo.gle/DataExtractionRules
 
+/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/data/AlertNotifier.kt:36: Warning: Unnecessary; SDK_INT is always >= 26 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= 26) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/res/mipmap-anydpi-v26: Warning: This folder configuration (v26) is unnecessary; minSdkVersion is 26. Merge all the resources in this folder into mipmap-anydpi. [ObsoleteSdkInt]
 
    Explanation for issues of type "ObsoleteSdkInt":
@@ -446,4 +449,4 @@ fun CameraPreview(handle: CameraHandle, modifier: Modifier = Modifier.fillMaxSiz
    Identifier: androidx.compose.foundation
    Feedback: https://issuetracker.google.com/issues/new?component=612128
 
-0 errors, 100 warnings
+0 errors, 101 warnings
