@@ -10,7 +10,7 @@ on:
       evalcap: {description: "Max val/test images per source", default: "150"}
   push:
     branches: [main, feat/ohe-visual-patrol]
-    paths: ["ml/ohe/**", ".github/workflows/ohe-train.yml"]
+    paths: [".github/workflows/ohe-train.yml"]   # manual runs only otherwise (ml/ohe edits must not start a training)
 concurrency: {group: "ohe-train-${{ github.ref }}", cancel-in-progress: true}
 defaults:
   run:
