@@ -310,7 +310,11 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
         val out = try {
             OheApi.create(baseUrl()).login(OheLoginIn(id.trim(), pin.trim()))
         } catch (e: HttpException) {
-            throw IllegalStateException(if (e.code() == 401) "Wrong ID or PIN" else "Server error ${e.code()}")
+            throw IllegalStateException(when (e.code()) {
+                401, 403 -> "Wrong ID or PIN. Enter the PIN again."
+                429 -> "Too many wrong tries. Wait ${e.response()?.headers()?.get("Retry-After")?.toIntOrNull()?.let { (it + 59) / 60 } ?: 1} min, then try again."
+                else -> "Server error ${e.code()}"
+            })
         }
         save("token", out.token); save("inspector", out.id); save("role", out.role)
         pair()

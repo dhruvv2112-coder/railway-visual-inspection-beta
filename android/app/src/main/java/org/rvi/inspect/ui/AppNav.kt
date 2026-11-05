@@ -119,7 +119,8 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
             val msg by ovm.signMsg.collectAsState()
             SignInScreen(SignInState(id, pin.length, busy, msg, settings?.serverUrl ?: "", serverOk, searching, found, hindi, showServer || serverOk == false),
                 onId = { id = it.uppercase().trim() }, onDigit = { if (pin.length < 8) pin += it }, onBackspace = { pin = pin.dropLast(1) },
-                onSubmit = { ovm.signIn(id, pin) { pin = ""; nav.navigate("home") { popUpTo("signin") { inclusive = true } } } },
+                onSubmit = { val p = pin; pin = ""  // always start the next try from an empty PIN
+                    ovm.signIn(id, p) { nav.navigate("home") { popUpTo("signin") { inclusive = true } } } },
                 onLang = ::setLang, onToggleServer = { showServer = !showServer; if (showServer) ovm.findServers() }, onFind = { ovm.findServers() },
                 onUseServer = { ovm.useServer(it) })
         }
