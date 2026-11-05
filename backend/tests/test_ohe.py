@@ -123,7 +123,9 @@ def test_v07_checksum_and_idempotent_ingest(client, models):
                       data={"sha256": "0" * 64, "captured_at": datetime.now(UTC).isoformat()}, headers=PATROL)
     assert bad.status_code == 422
     assert _upload(client, sid, data).json()["idempotent"] is False
-    assert _upload(client, sid, data).json()["idempotent"] is True
+    again = _upload(client, sid, data).json()
+    assert again["idempotent"] is True
+    assert "assessments" in again["analysis"]  # a retried upload still gets its result (phone must not show "no defect")
 
 
 def test_v09_repeated_evidence_links_one_finding(client, models):

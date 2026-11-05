@@ -119,6 +119,17 @@ jobs:
                http://127.0.0.1:8000/ohe/sessions/$sid/media
           if ($LASTEXITCODE -ne 0) { throw "photo upload failed" }
           $r
+          if (($r | ConvertFrom-Json).media.status -ne "assessed") { throw "photo was not analysed on Windows" }
+          # ---- detection really works on this laptop build: a public broken-insulator photo (CPLID) must be flagged ----
+          Invoke-WebRequest https://raw.githubusercontent.com/InsulatorData/InsulatorDataSet/master/Defective_Insulators/images/010.jpg -OutFile d.jpg
+          $dsha = (Get-FileHash d.jpg -Algorithm SHA256).Hash.ToLower()
+          $dr = curl.exe -s -f -H "Authorization: Bearer $tok" -F "image=@d.jpg;type=image/jpeg" -F "sha256=$dsha" -F "captured_at=2026-11-05T10:01:00Z" `
+               http://127.0.0.1:8000/ohe/sessions/$sid/media | ConvertFrom-Json
+          $states = @($dr.analysis.assessments | ForEach-Object { $_.state }); Write-Host "defect photo: $($dr.analysis.detections | ConvertTo-Json -Compress) -> $states"
+          if ($states -notcontains "assessable_defect") { throw "broken insulator was not detected" }
+          $again = curl.exe -s -f -H "Authorization: Bearer $tok" -F "image=@d.jpg;type=image/jpeg" -F "sha256=$dsha" -F "captured_at=2026-11-05T10:01:00Z" `
+               http://127.0.0.1:8000/ohe/sessions/$sid/media | ConvertFrom-Json
+          if (-not $again.idempotent -or @($again.analysis.assessments).Count -eq 0) { throw "retried upload lost its result" }
           $end = Invoke-RestMethod -Method Post http://127.0.0.1:8000/ohe/sessions/$sid/end -Headers $hdr; $end.summary | ConvertTo-Json
           if ((Invoke-WebRequest http://127.0.0.1:8000/ohe/connect/app.apk).RawContentLength -lt 1000000) { throw "apk download too small" }
           # ---- over the internet: Cloudflare quick tunnel + signed relay (what a phone at another site uses) ----

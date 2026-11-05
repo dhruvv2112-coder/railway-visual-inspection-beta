@@ -237,4 +237,17 @@
     <string name="g_role">%1$s · %2$s</string>
     <string name="g_refresh">ताज़ा करें</string>
     <string name="g_via_internet">इंटरनेट से</string>
+    <string name="g_toast_nothing">यहाँ जाँचने को कुछ नहीं</string>
+    <string name="g_toast_nothing_sub">AI इंसुलेटर, चिड़िया के घोंसले और तार पर बाहरी वस्तु जाँचता है। इनमें से किसी पर कैमरा करें।</string>
+    <string name="g_toast_failed">फोटो सेव हुई, जाँची नहीं गई</string>
+    <string name="g_toast_failed_sub">सर्वर यह फोटो नहीं जाँच सका। यह रिपोर्ट में रखी गई है।</string>
+    <string name="g_toast_saw">दिखा: %1$s</string>
+    <string name="g_toast_saw_none">कोई OHE हिस्सा नहीं मिला</string>
+    <string name="g_cls_insulator">इंसुलेटर</string>
+    <string name="g_cls_insulator_defect">क्षतिग्रस्त इंसुलेटर</string>
+    <string name="g_cls_bird_nest">चिड़िया का घोंसला</string>
+    <string name="g_cls_vegetation">पेड़-पौधे</string>
+    <string name="g_cls_mast">मास्ट</string>
+    <string name="g_cls_foreign_object">तार पर बाहरी वस्तु</string>
+    <string name="g_cls_corrosion">जंग</string>
 </resources>

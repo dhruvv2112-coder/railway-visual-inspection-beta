@@ -379,12 +379,13 @@ fun StartSheet(st: StartState, onTerritory: (String) -> Unit, onClose: () -> Uni
 
 // ------------------------------------------------------------------------------------------------------------ camera HUD
 
-enum class ToastKind { Saved, Uploading, Checked, Flagged, Retake }
+enum class ToastKind { Saved, Uploading, Checked, Flagged, Retake, Nothing, Failed }
 data class Thumb(val path: String, val uploaded: Boolean, val flagged: Boolean)
 
 data class OheHudState(val photos: Int, val uploaded: Int, val flagged: Int, val alerts: Int, val notes: Int, val prompt: Prompt?,
                        val listening: Boolean, val heard: String?, val territory: String = "", val zoom: Float = 1f, val maxZoom: Float = 5f,
-                       val toast: ToastKind? = null, val thumbs: List<Thumb> = emptyList(), val serverOk: Boolean? = null)
+                       val toast: ToastKind? = null, val thumbs: List<Thumb> = emptyList(), val serverOk: Boolean? = null,
+                       val seen: List<Pair<String, Int>> = emptyList())
 
 @Composable
 fun OheHud(st: OheHudState, onCapture: () -> Unit, onVoice: () -> Unit, onNote: () -> Unit, onEnd: () -> Unit,
@@ -412,8 +413,8 @@ fun OheHud(st: OheHudState, onCapture: () -> Unit, onVoice: () -> Unit, onNote: 
                 IconCircle(Icons.Outlined.Warning, stringResource(R.string.g_danger), onDanger, size = 44.dp, bg = Color(0xD9FF5A36), tint = Ink.White)
             }
             Spacer(Modifier.weight(1f))
-            AnimatedVisibility(st.toast != null && st.prompt == null, enter = slideInVertically { it } + fadeIn(), exit = fadeOut()) {
-                st.toast?.let { HudToast(it) }
+            AnimatedVisibility(st.toast != null && (st.prompt == null || st.toast != ToastKind.Checked), enter = slideInVertically { it } + fadeIn(), exit = fadeOut()) {
+                st.toast?.let { HudToast(it, st.seen) }
             }
             st.prompt?.let { p -> RetakeCard(p, onDismissPrompt) }
             if (st.listening || st.heard != null) {
@@ -484,18 +485,40 @@ private fun ThumbView(t: Thumb) {
     }
 }
 
+/** Readable name for a detector class ("insulator_defect" -> "Damaged insulator"). */
 @Composable
-private fun HudToast(k: ToastKind) {
+fun clsLabel(cls: String): String = when (cls) {
+    "insulator" -> stringResource(R.string.g_cls_insulator)
+    "insulator_defect" -> stringResource(R.string.g_cls_insulator_defect)
+    "bird_nest" -> stringResource(R.string.g_cls_bird_nest)
+    "vegetation" -> stringResource(R.string.g_cls_vegetation)
+    "mast" -> stringResource(R.string.g_cls_mast)
+    "foreign_object" -> stringResource(R.string.g_cls_foreign_object)
+    "corrosion" -> stringResource(R.string.g_cls_corrosion)
+    else -> cls.replace('_', ' ').replaceFirstChar { it.uppercase() }
+}
+
+@Composable
+private fun HudToast(k: ToastKind, seen: List<Pair<String, Int>> = emptyList()) {
     val (bg, icon, title, sub) = when (k) {
         ToastKind.Checked -> Quad(Ink.Mint, Icons.Outlined.Check, R.string.g_toast_checked, R.string.g_toast_checked_sub)
         ToastKind.Flagged -> Quad(Ink.Safety, Icons.Outlined.Flag, R.string.g_toast_flagged, R.string.g_toast_flagged_sub)
         ToastKind.Uploading -> Quad(Ink.Electric, Icons.Outlined.CloudUpload, R.string.g_toast_uploading, R.string.g_toast_saved_sub)
+        ToastKind.Nothing -> Quad(Ink.Amber, Icons.Outlined.CropFree, R.string.g_toast_nothing, R.string.g_toast_nothing_sub)
+        ToastKind.Failed -> Quad(Ink.Amber, Icons.Outlined.Warning, R.string.g_toast_failed, R.string.g_toast_failed_sub)
         else -> Quad(Ink.Electric, Icons.Outlined.Check, R.string.g_toast_saved, R.string.g_toast_saved_sub)
     }
+    val showSeen = k in setOf(ToastKind.Checked, ToastKind.Flagged, ToastKind.Nothing)
+    val saw = seen.map { (c, n) -> clsLabel(c) + if (n > 1) " ×$n" else "" }.joinToString(", ")
     Row(Modifier.padding(horizontal = 14.dp, vertical = 6.dp).fillMaxWidth().glass(RoundedCornerShape(22.dp), strong = true).padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(38.dp).clip(RoundedCornerShape(12.dp)).background(bg), contentAlignment = Alignment.Center) { Icon(icon, null, tint = Ink.White) }
         Spacer(Modifier.width(12.dp))
-        Column { Text(stringResource(title), style = MaterialTheme.typography.titleMedium, color = Ink.Ink); Text(stringResource(sub), style = MaterialTheme.typography.bodyMedium, color = Ink.Body) }
+        Column {
+            Text(stringResource(title), style = MaterialTheme.typography.titleMedium, color = Ink.Ink)
+            if (showSeen) Text(if (saw.isNotEmpty()) stringResource(R.string.g_toast_saw, saw) else stringResource(R.string.g_toast_saw_none),
+                style = MaterialTheme.typography.bodyMedium, color = Ink.Ink, fontWeight = FontWeight.SemiBold)
+            Text(stringResource(sub), style = MaterialTheme.typography.bodyMedium, color = Ink.Body)
+        }
     }
 }
 

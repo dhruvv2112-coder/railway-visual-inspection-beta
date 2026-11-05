@@ -159,15 +159,22 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
             LaunchedEffect(prompt, caps.size) { prompt?.let { if (settings?.tts != false) voice.speak(context.getString(promptRes(it)), voiceTag) } }
             LaunchedEffect(last?.id, last?.uploaded, last?.findings) {
                 if (last == null) return@LaunchedEffect
-                toast = when { !last.uploaded -> if (serverOk == true) ToastKind.Uploading else ToastKind.Saved; last.findings > 0 -> ToastKind.Flagged
-                    last.prompt == null && last.imageState != "missing_file" -> ToastKind.Checked; else -> null }
+                toast = when {
+                    !last.uploaded -> if (serverOk == true) ToastKind.Uploading else ToastKind.Saved
+                    last.findings > 0 -> ToastKind.Flagged
+                    last.imageState == org.rvi.inspect.data.ANALYSIS_FAILED || last.imageState == org.rvi.inspect.data.NO_RESULT -> ToastKind.Failed
+                    last.imageState == "missing_file" || last.imageState == "checksum_rejected" -> null
+                    last.assessed > 0 -> ToastKind.Checked
+                    else -> ToastKind.Nothing   // nothing the models can judge: say so instead of "no defect"
+                }
                 if (last.uploaded && last.alert && last.id !in seenAlerts) { seenAlerts.add(last.id); urgentFor = last.id; say(R.string.g_urgent_title) }
                 delay(4000); toast = null
             }
             Box(Modifier.fillMaxSize()) {
                 OheHud(OheHudState(caps.size, caps.count { it.uploaded }, caps.count { it.findings > 0 }, caps.count { it.alert }, notes, prompt,
                     vstate is VoiceController.State.Listening, heard, active?.territory ?: "", zoom, camera.maxZoom().coerceAtLeast(1f), toast,
-                    caps.map { Thumb(it.path, it.uploaded, it.findings > 0) }, serverOk),
+                    caps.map { Thumb(it.path, it.uploaded, it.findings > 0) }, serverOk,
+                    org.rvi.inspect.data.parseSeen(last?.seen ?: "")),
                     onCapture = { oheCapture() }, onVoice = { voice.listen(voiceTag) }, onNote = { noteText = ""; noteOpen = true },
                     onEnd = { ovm.end(); nav.navigate("end") { popUpTo("home") } }, onZoom = { zoom = camera.zoom(it) },
                     onDanger = { urgentFor = "manual" }, onDismissPrompt = { dismissed = last?.id },

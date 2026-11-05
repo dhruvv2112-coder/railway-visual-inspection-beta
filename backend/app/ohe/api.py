@@ -156,7 +156,7 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, imag
         raise HTTPException(422, "Checksum mismatch – media not persisted")          # HLD §4.2, V07
     dup = s.exec(select(OheMedia).where(OheMedia.session_id == sid, OheMedia.sha256 == sha256.lower())).first()
     if dup:
-        return {"media": dup, "idempotent": True}
+        return {"media": dup, "analysis": json.loads(dup.analysis_json), "idempotent": True}  # a retried upload still gets its result
     d = settings.evidence_dir / "ohe"
     d.mkdir(parents=True, exist_ok=True)
     path = d / f"{sha256.lower()}.jpg"

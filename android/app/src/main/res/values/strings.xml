@@ -237,4 +237,17 @@
     <string name="g_role">%1$s · %2$s</string>
     <string name="g_refresh">Refresh</string>
     <string name="g_via_internet">over the internet</string>
+    <string name="g_toast_nothing">Nothing to check here</string>
+    <string name="g_toast_nothing_sub">The AI checks insulators, bird nests and objects on the wire. Aim at one of these.</string>
+    <string name="g_toast_failed">Photo saved, not checked</string>
+    <string name="g_toast_failed_sub">The server could not check this photo. It is kept in the report.</string>
+    <string name="g_toast_saw">Saw: %1$s</string>
+    <string name="g_toast_saw_none">No OHE parts found</string>
+    <string name="g_cls_insulator">Insulator</string>
+    <string name="g_cls_insulator_defect">Damaged insulator</string>
+    <string name="g_cls_bird_nest">Bird nest</string>
+    <string name="g_cls_vegetation">Vegetation</string>
+    <string name="g_cls_mast">Mast</string>
+    <string name="g_cls_foreign_object">Object on wire</string>
+    <string name="g_cls_corrosion">Rust</string>
 </resources>

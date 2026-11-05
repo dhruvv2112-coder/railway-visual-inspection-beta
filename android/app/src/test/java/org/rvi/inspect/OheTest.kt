@@ -37,7 +37,22 @@ class OheTest {
 
     @Test fun duplicateUploadWithoutAnalysisIsHarmless() {
         val r = parseUpload(obj("""{"media":{"id":"m1"},"idempotent":true}"""))
-        assertEquals(0, r.findings); assertNull(r.prompt)
+        assertEquals(0, r.findings); assertNull(r.prompt); assertEquals(org.rvi.inspect.data.NO_RESULT, r.imageState)
+    }
+
+    @Test fun uploadReportsWhatWasSeenAndWhatCouldBeJudged() {
+        val r = parseUpload(obj("""{"analysis":{"image_state":null,"recapture_prompt":null,
+            "detections":[{"cls":"vegetation"},{"cls":"mast"},{"cls":"vegetation"}],
+            "assessments":[{"state":"unsupported_class"},{"state":"unsupported_class"}]}}"""))
+        assertEquals(0, r.assessed); assertEquals(0, r.findings); assertEquals("vegetation:2,mast:1", r.seen)
+        assertEquals(listOf("vegetation" to 2, "mast" to 1), org.rvi.inspect.data.parseSeen(r.seen))
+        val ok = parseUpload(obj("""{"analysis":{"detections":[{"cls":"insulator"}],"assessments":[{"state":"assessable_no_visible_defect"}]}}"""))
+        assertEquals(1, ok.assessed)
+    }
+
+    @Test fun failedAnalysisIsNotShownAsNoDefect() {
+        val r = parseUpload(obj("""{"analysis":{"error":"RuntimeError: model","assessments":[]}}"""))
+        assertEquals(org.rvi.inspect.data.ANALYSIS_FAILED, r.imageState); assertEquals(0, r.assessed)
     }
 
     @Test fun localQualityPrompts() {

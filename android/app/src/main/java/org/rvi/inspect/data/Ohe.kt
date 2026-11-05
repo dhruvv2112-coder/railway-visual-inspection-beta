@@ -79,6 +79,8 @@ data class OheCaptureEntity(
     val prompt: String? = null,          // server recapture prompt code (see Prompt)
     val findings: Int = 0,               // assessments with a defect or anomaly on this photo
     val alert: Boolean = false,
+    val seen: String = "",               // what the detector saw, "insulator:2,mast:1" (shown to the inspector)
+    val assessed: Int = 0,               // parts whose condition the models could judge on this photo
 )
 
 @Entity(tableName = "ohe_note")
@@ -262,16 +264,30 @@ fun parseReport(r: JsonObject): ReportDetail {
 }
 
 /** What the phone keeps from the server's analysis of one photo (pure function: unit-tested). */
-data class UploadResult(val imageState: String?, val prompt: Prompt?, val findings: Int, val alert: Boolean)
+data class UploadResult(val imageState: String?, val prompt: Prompt?, val findings: Int, val alert: Boolean,
+                        val seen: String = "", val assessed: Int = 0)
+
+/** imageState values the phone sets itself (never sent by the server). */
+const val NO_RESULT = "no_result"            // server stored the photo but sent no analysis back (older server)
+const val ANALYSIS_FAILED = "analysis_failed" // server could not run the models on this photo
 
 fun parseUpload(body: JsonObject): UploadResult {
-    val a = body["analysis"]?.let { it as? JsonObject } ?: return UploadResult(null, null, 0, false)
+    val a = body["analysis"]?.let { it as? JsonObject } ?: return UploadResult(NO_RESULT, null, 0, false)
     fun str(e: JsonElement?) = (e as? kotlinx.serialization.json.JsonPrimitive)?.takeIf { it.isString }?.content
-    val asm = a["assessments"]?.let { runCatching { it.jsonArray }.getOrNull() }.orEmpty()
-    val flagged = asm.map { it.jsonObject }.filter { str(it["state"]) in setOf("assessable_defect", "anomalous_unclassified") }
+    if (a["error"] != null && a["error"] !is kotlinx.serialization.json.JsonNull) return UploadResult(ANALYSIS_FAILED, null, 0, false)
+    val asm = a["assessments"]?.let { runCatching { it.jsonArray }.getOrNull() }.orEmpty().map { it.jsonObject }
+    val flagged = asm.filter { str(it["state"]) in setOf("assessable_defect", "anomalous_unclassified") }
     val alert = flagged.any { runCatching { it["alert"]?.jsonPrimitive?.content == "true" }.getOrDefault(false) }
-    return UploadResult(str(a["image_state"]), Prompt.fromServer(str(a["recapture_prompt"])), flagged.size, alert)
+    val assessed = asm.count { str(it["state"]) in setOf("assessable_defect", "anomalous_unclassified", "assessable_no_visible_defect") }
+    val seen = a["detections"]?.let { runCatching { it.jsonArray }.getOrNull() }.orEmpty()
+        .mapNotNull { str((it as? JsonObject)?.get("cls")) }.groupingBy { it }.eachCount()
+        .entries.sortedByDescending { it.value }.joinToString(",") { "${it.key}:${it.value}" }
+    return UploadResult(str(a["image_state"]), Prompt.fromServer(str(a["recapture_prompt"])), flagged.size, alert, seen, assessed)
 }
+
+/** "insulator:2,mast:1" -> pairs, for the "Saw: …" line. */
+fun parseSeen(s: String): List<Pair<String, Int>> = s.split(',').filter { ':' in it }
+    .map { it.substringBefore(':') to (it.substringAfter(':').toIntOrNull() ?: 1) }
 
 class OheRepository(private val context: Context, private val db: RviDatabase, private val settings: suspend () -> UserSettings,
                     private val baseUrl: suspend () -> String, private val save: suspend (String, String) -> Unit = { _, _ -> }) {
@@ -373,7 +389,7 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
             }
             val r = parseUpload(body)
             dao.updateCapture(c.copy(uploaded = true, imageState = r.imageState, prompt = r.prompt?.name ?: c.prompt,
-                findings = r.findings, alert = r.alert))
+                findings = r.findings, alert = r.alert, seen = r.seen, assessed = r.assessed))
         }
         for (n in dao.pendingNotes()) {
             val sess = dao.session(n.sessionId) ?: continue
