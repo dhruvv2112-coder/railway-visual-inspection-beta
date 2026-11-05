@@ -258,4 +258,5 @@
     <string name="g_signoff_hint">AI जाँच पूरी हुई। नीचे कमियाँ देखें, फिर पेट्रोल बंद करने के लिए साइन-ऑफ करें।</string>
     <string name="g_sign_off">पेट्रोल साइन-ऑफ करें</string>
     <string name="g_signing_off">साइन-ऑफ हो रहा है…</string>
+    <string name="g_gallery">गैलरी</string>
 </resources>

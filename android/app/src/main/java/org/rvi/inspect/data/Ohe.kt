@@ -82,6 +82,7 @@ data class OheCaptureEntity(
     val seen: String = "",               // what the detector saw, "insulator:2,mast:1" (shown to the inspector)
     val assessed: Int = 0,               // parts whose condition the models could judge on this photo
     val rollDeg: Float? = null,          // phone roll at capture (gravity sensor), for the mast lean check
+    val origin: String = "camera",       // camera | gallery (the server then reads the photo's own EXIF time / GPS)
 )
 
 @Entity(tableName = "ohe_note")
@@ -149,7 +150,7 @@ object Hashing {
 
 @Serializable data class OheSessionIn(val territory: String, @SerialName("expected_assets") val expectedAssets: List<String>? = null)
 @Serializable data class OheIdOut(val id: String)
-@Serializable data class OheNoteIn(val text: String)
+@Serializable data class OheNoteIn(val text: String, val at: String? = null)
 @Serializable data class OheLoginIn(val id: String, val pin: String)
 @Serializable data class OheLoginOut(val token: String, val id: String, val role: String, val name: String = "")
 @Serializable data class OheEndOut(@SerialName("report_id") val reportId: String, val revision: Int, val sha256: String, val summary: JsonObject)
@@ -173,6 +174,7 @@ interface OheApi {
         @Part("accuracy_m") accuracy: RequestBody?,
         @Part("device") device: RequestBody,
         @Part("roll_deg") roll: RequestBody?,
+        @Part("origin") origin: RequestBody,
         @Header("X-Actor") actor: String,
         @Header("X-Role") role: String,
     ): JsonObject
@@ -257,10 +259,16 @@ fun parseReport(r: JsonObject): ReportDetail {
     val am = (rv["amendments"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }
         .map { a -> listOfNotNull(a.s("reason"), a.s("new")?.let { "now: $it" }).joinToString(" · ").ifBlank { "Amended" } }
     val fs = (c["RPT-06_findings"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }.map { f ->
-        val label = findingLabel(f)
-        val asset = f.s("asset_id")
+        val label = findingLabel(f) + (Regex("seen as '([^']+)'").find(f["reasons"]?.toString() ?: "")?.let { " (${it.groupValues[1]})" } ?: "")
+        val w = f.o("where")
+        val lat = (w?.get("lat") as? kotlinx.serialization.json.JsonPrimitive)?.content?.toDoubleOrNull()
+        val lon = (w?.get("lon") as? kotlinx.serialization.json.JsonPrimitive)?.content?.toDoubleOrNull()
+        val asset = f.s("asset_id") ?: if (lat != null && lon != null)
+            "%.5f, %.5f · %s".format(lat, lon, (w?.s("captured_at") ?: "").take(16).replace('T', ' ')) else null
+        val conf = f.o("confidence_level")?.s("label")?.let { " · $it confidence" } ?: ""
+        val note = when (f.o("note_check")?.s("state")) { "matches_note" -> " · matches your note"; "conflicts_with_note" -> " · differs from your note"; else -> "" }
         val vs = when (f.s("temporal")) { "new" -> " · new since last patrol"; "persistent" -> " · also in last patrol"; else -> "" }
-        ((if (asset != null) "$label · $asset" else label) + vs) to ((f["alert"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
+        ((if (asset != null) "$label · $asset" else label) + conf + note + vs) to ((f["alert"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
     }
     val status = latest?.s("status") ?: r.s("status") ?: ""
     val reviewed = am.isNotEmpty() || (latest?.i("revision") ?: 1) > 1
@@ -286,8 +294,10 @@ fun parseUpload(body: JsonObject): UploadResult {
     val flagged = asm.filter { str(it["state"]) in setOf("assessable_defect", "anomalous_unclassified") }
     val alert = flagged.any { runCatching { it["alert"]?.jsonPrimitive?.content == "true" }.getOrDefault(false) }
     val assessed = asm.count { str(it["state"]) in setOf("assessable_defect", "anomalous_unclassified", "assessable_no_visible_defect") }
-    val seen = a["detections"]?.let { runCatching { it.jsonArray }.getOrNull() }.orEmpty()
-        .mapNotNull { str((it as? JsonObject)?.get("cls")) }.groupingBy { it }.eachCount()
+    val inv = a["inventory"]?.let { runCatching { it.jsonArray }.getOrNull() }
+    val seen = (inv?.mapNotNull { str((it as? JsonObject)?.get("label")) }
+        ?: a["detections"]?.let { runCatching { it.jsonArray }.getOrNull() }.orEmpty().mapNotNull { str((it as? JsonObject)?.get("cls")) })
+        .asSequence().groupingBy { it }.eachCount()
         .entries.sortedByDescending { it.value }.joinToString(",") { "${it.key}:${it.value}" }
     return UploadResult(str(a["image_state"]), Prompt.fromServer(str(a["recapture_prompt"])), flagged.size, alert, seen, assessed)
 }
@@ -400,7 +410,7 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
             val body = try {
                 api.media(sid, MultipartBody.Part.createFormData("image", file.name, file.asRequestBody("image/jpeg".toMediaType())),
                     text(c.sha256), text(Instant.ofEpochMilli(c.capturedAt).toString()), c.lat?.let { text(it.toString()) },
-                    c.lon?.let { text(it.toString()) }, c.accuracyM?.let { text(it.toString()) }, text(android.os.Build.MODEL ?: ""), c.rollDeg?.let { text(it.toString()) },
+                    c.lon?.let { text(it.toString()) }, c.accuracyM?.let { text(it.toString()) }, text(android.os.Build.MODEL ?: ""), c.rollDeg?.let { text(it.toString()) }, text(c.origin),
                     s.inspectorId, s.role)
             } catch (e: HttpException) {
                 if (e.code() == 422) { dao.updateCapture(c.copy(uploaded = true, imageState = "checksum_rejected")); continue }
@@ -412,7 +422,7 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
         }
         for (n in dao.pendingNotes()) {
             val sess = dao.session(n.sessionId) ?: continue
-            api.note(remoteSession(api, sess), OheNoteIn(n.text), s.inspectorId, s.role)
+            api.note(remoteSession(api, sess), OheNoteIn(n.text, java.time.Instant.ofEpochMilli(n.createdAt).toString()), s.inspectorId, s.role)
             dao.updateNote(n.copy(uploaded = true))
         }
         for (sess in dao.awaitingReport()) {

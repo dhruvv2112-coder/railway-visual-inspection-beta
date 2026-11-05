@@ -1,7 +1,7 @@
 """End-to-end scenarios from the OHE HLD §15.2 (V01–V07, V09, V11) with fixture model adapters."""
 import hashlib
 import math
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import cv2
 import numpy as np
@@ -47,6 +47,7 @@ DEFECT = Det("insulator_defect", 0.83, (430, 260, 500, 330))
 def models():
     yield ohe.Models
     ohe.Models.detector, ohe.Models.ocr = ohe.pipeline.NullDetector(), ohe.pipeline.NullOCR()
+    ohe.Models.scene = ohe.Models.scene_vocab = None
 
 
 def _session(client, expected=None):
@@ -260,7 +261,7 @@ def test_report_sections_coverage_notes_and_review(client, models):
     assert "not verified inspection coverage" in c["RPT-03_coverage"]["statement"]
     assert c["RPT-03_coverage"]["evidence_gaps"] == ["1205/13"]
     assert c["RPT-12_notes"]["notes"][0]["text"] == "branch near mast"
-    assert "not used by the AI" in c["RPT-12_notes"]["statement"]
+    assert "assessed the photos without them" in c["RPT-12_notes"]["statement"]
     assert all(a["status"].startswith("suggested") for a in c["RPT-08_actions"])
     client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER)
     rev = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["RPT-11_review"]
@@ -582,6 +583,7 @@ def test_rotation_merge_finds_sideways_parts():
 
 def _exif_jpeg(seed, lat=None, lon=None, when=None):
     import io
+
     from PIL import Image
     from PIL.TiffImagePlugin import IFDRational as R
     im = Image.fromarray(cv2.cvtColor(cv2.imdecode(np.frombuffer(_jpeg(seed), np.uint8), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
@@ -625,3 +627,61 @@ def test_unlocated_findings_on_different_photos_stay_separate(client, models):
     _upload(client, sid, _jpeg(603))
     _upload(client, sid, _jpeg(604))
     assert len(client.get(f"/ohe/sessions/{sid}/processing", headers=PATROL).json()["findings"]) == 2
+
+
+
+def test_whole_photo_inventory_lists_everything_and_raises_out_of_place_articles(client, models):
+    voc = {"classes": [{"prompt": "plastic bag", "group": "debris", "finding": "scene_foreign_object"},
+                       {"prompt": "stone", "group": "debris", "finding": "loose_stone"},
+                       {"prompt": "tree", "group": "vegetation"}, {"prompt": "object", "group": "other"},
+                       {"prompt": "fire", "group": "hazard", "finding": "fire_or_smoke"}]}
+    models.detector, models.ocr = FixDet([INS]), FixOCR([])
+    models.scene, models.scene_vocab = FixDet([Det("plastic bag", 0.41, (50, 50, 120, 120)), Det("stone", 0.12, (600, 600, 640, 640)),
+                                              Det("tree", 0.5, (700, 10, 1000, 400)), Det("object", 0.2, (10, 600, 60, 650)),
+                                              Det("fire", 0.33, (800, 500, 900, 600))]), voc
+    sid = _session(client)
+    a = _upload(client, sid, _jpeg(701)).json()["analysis"]
+    labels = {i["label"] for i in a["inventory"]}
+    assert {"insulator", "plastic bag", "stone", "tree", "object", "fire"} <= labels        # nothing ignored
+    conds = {x["condition"] for x in a["assessments"] if x["state"] == "assessable_defect"}
+    assert conds == {"scene_foreign_object", "fire_or_smoke"}       # low-score stone listed, not a finding
+    fire = next(x for x in a["assessments"] if x["condition"] == "fire_or_smoke")
+    assert fire["alert"] and fire["rule_id"] == "R-SCN-07"
+
+
+def test_notes_cross_checked_with_findings(client, models):
+    models.detector, models.ocr = FixDet([NEST]), FixOCR([])
+    sid = _session(client)
+    t0 = datetime.now(UTC)
+    _upload(client, sid, _jpeg(801), captured_at=t0.isoformat())
+    client.post(f"/ohe/sessions/{sid}/notes", json={"text": "Mast ke paas पतंग फंसी है", "at": t0.isoformat()}, headers=PATROL)
+    client.post(f"/ohe/sessions/{sid}/notes", json={"text": "two dogs near the track", "at": t0.isoformat()}, headers=PATROL)
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    c = client.get(f"/ohe/reports/{rid}").json()["content"]
+    f = c["RPT-06_findings"][0]
+    assert f["note_check"]["state"] == "matches_note" and f["confidence_level"]["label"] in ("High", "Medium", "Low")
+    xc = c["RPT-14_note_cross_check"]
+    assert xc["matches_note"] == 1 and [n["topic"] for n in xc["note_only"]] == ["animal_near_track"]
+    assert c["RPT-15_photo_inventory"][0]["objects"][0]["label"] == "bird_nest"
+
+
+def test_note_saying_all_ok_conflicts_with_a_finding():
+    from app.ohe import notes_check
+    t = datetime(2026, 11, 5, 10, 0, tzinfo=UTC)
+    fs = [{"condition": "insulator_visible_damage", "media_ids": ["m1"], "confidence": {"C": 0.9, "Q": 1.0}}]
+    out = notes_check.cross_check(fs, [{"id": "n1", "text": "सब ठीक है", "at": t}], {"m1": t})
+    assert fs[0]["note_check"]["state"] == "conflicts_with_note" and out["conflicts_with_note"] == 1
+    assert fs[0]["confidence_level"]["label"] == "Medium"        # 0.9 - 0.2
+    far = [{"condition": "insulator_visible_damage", "media_ids": ["m1"], "confidence": {"C": 0.9, "Q": 1.0}}]
+    notes_check.cross_check(far, [{"id": "n1", "text": "insulator टूटा", "at": t + timedelta(hours=1)}], {"m1": t})
+    assert far[0]["note_check"]["state"] == "ai_only"            # a note an hour away is about something else
+
+
+def test_printable_report_shows_location_confidence_notes_inventory(client, models):
+    models.detector, models.ocr = FixDet([NEST]), FixOCR(["Lat26.912400", "Long75.787300"])
+    sid = _session(client)
+    _upload(client, sid, _jpeg(811))
+    client.post(f"/ohe/sessions/{sid}/notes", json={"text": "घोंसला दिखा"}, headers=PATROL)
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    h = client.get(f"/ohe/reports/{rid}/html").text
+    assert "26.91240, 75.78730 (photo stamp)" in h and "matches note" in h and "Everything seen in each photo" in h

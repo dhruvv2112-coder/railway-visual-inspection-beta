@@ -19,7 +19,7 @@ from .. import quality
 from ..config import settings
 from ..db import audit, get_session
 from ..models import now
-from . import auth, geo, pipeline
+from . import auth, geo, notes_check, pipeline
 
 router = APIRouter(prefix="/ohe", tags=["ohe"])
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -85,12 +85,14 @@ class OheReport(SQLModel, table=True):
 
 
 class OheNote(SQLModel, table=True):
-    """Isolated notes channel (HLD I-06). Nothing in the pipeline reads this table."""
+    """Notes channel (HLD I-06): the AI assessment never reads it; the report compares notes with findings afterwards
+    (notes_check) so agreement and gaps are visible."""
     id: str = Field(default_factory=_id, primary_key=True)
     session_id: str = Field(index=True)
     text: str
     author: str
     created_at: datetime = Field(default_factory=now)
+    noted_at: datetime | None = None      # when the patroller spoke / typed it (phone time; uploads may be later)
 
 
 # ---------------------------------------------------------------- model wiring (replaceable, HLD §6.4)
@@ -99,6 +101,8 @@ class Models:
     ocr: pipeline.OCR = pipeline.NullOCR()
     anomaly = None
     view: pipeline.ViewCheck | None = None
+    scene = None                # open-vocabulary whole-photo inventory model (scene_detector.onnx), optional
+    scene_vocab: dict | None = None
     calib: dict | None = None   # per-class confidence calibration (ohe_calibration.json), None = uncalibrated
 
     @classmethod
@@ -116,6 +120,14 @@ class Models:
             meta = settings.model_dir / "ohe_assess.json"
             thr = json.loads(meta.read_text()).get("threshold", 0.5) if meta.exists() else 0.5
             cls.view = pipeline.OnnxViewCheck(str(vc), thr)
+        sp, sn, sv = (settings.model_dir / f for f in ("scene_detector.onnx", "scene_detector.names.json", "scene_vocabulary.json"))
+        if sp.exists() and sn.exists():
+            try:
+                sb = pipeline.OnnxYoloDetector(str(sp), json.loads(sn.read_text()), conf=0.10)
+                cls.scene = pipeline.Sectioned(sb, full_angles=(0,), tile_angles=(0,), tile_px=1400) if settings.sections else sb
+                cls.scene_vocab = json.loads(sv.read_text()) if sv.exists() else None
+            except Exception as e:  # noqa: BLE001 - the inventory is optional; OHE analysis still runs
+                print("scene model not loaded:", e)
         cal = settings.model_dir / "ohe_calibration.json"
         cls.calib = json.loads(cal.read_text()) if cal.exists() else None
         try:
@@ -148,7 +160,7 @@ def start(body: SessionIn, s: SessionDep, a: ActorDep):
     return o
 
 
-def _finding_key(ident: dict, a: dict, m: "OheMedia | None" = None) -> str:
+def _finding_key(ident: dict, a: dict, m: OheMedia | None = None) -> str:
     where = ident["selected_asset_id"] or ("cand:" + ",".join(c["asset_id"] for c in ident["candidates"][:3])
                                            if ident["candidates"] else
                                            ("geo:" + geo.cell(m.lat, m.lon) if m is not None and m.lat is not None else
@@ -220,7 +232,8 @@ def process(m: OheMedia, s: Session) -> list:
     reg = pipeline.load_registry()
     img = quality.decode(Path(m.path).read_bytes())
     res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m,
-                                Models.view, roll_deg=m.roll_deg, calib=Models.calib)
+                                Models.view, roll_deg=m.roll_deg, calib=Models.calib, scene=Models.scene,
+                                scene_vocab=Models.scene_vocab)
     if m.lat is None or (m.origin == "gallery" and m.time_source == "phone"):
         st = geo.from_stamp(res.get("ocr_texts", []))   # time / place printed on the photo by a GPS-camera app
         if m.lat is None and "lat" in st:
@@ -268,7 +281,12 @@ def processing(sid: str, s: SessionDep, a: ActorDep):
 
 @router.post("/sessions/{sid}/notes", status_code=201)
 def add_note(sid: str, body: dict, s: SessionDep, a: ActorDep):
-    n = OheNote(session_id=sid, text=str(body.get("text", "")), author=a["id"])
+    at = None
+    try:
+        at = datetime.fromisoformat(str(body["at"])) if body.get("at") else None
+    except ValueError:
+        at = None
+    n = OheNote(session_id=sid, text=str(body.get("text", "")), author=a["id"], noted_at=at)
     s.add(n)
     s.commit()
     return {"id": n.id}
@@ -306,6 +324,8 @@ def _reconcile(sess: OheSession, s: Session) -> dict:
     findings = [{"id": f.id, "asset_id": f.asset_id, "candidates": json.loads(f.candidates_json),
                  "observations": f.observations, "alert": f.alert, "media_ids": json.loads(f.media_ids_json),
                  **json.loads(f.payload_json)} for f in fs]
+    xc = notes_check.cross_check(findings, [{"id": n.id, "text": n.text, "at": n.noted_at or n.created_at} for n in notes],
+                                 {m.id: m.captured_at for m in media})
     count = lambda st: sum(r["state"] == st for r in register)
     return {
         "RPT-01_document_control": {"session": sess.id, "territory": sess.territory, "capture_start": sess.started_at,
@@ -344,10 +364,15 @@ def _reconcile(sess: OheSession, s: Session) -> dict:
                                  if r["state"] == "unsupported_class"]],
         "RPT-10_provenance": {"models": sorted({json.dumps(json.loads(m.analysis_json).get("model_versions", {}), sort_keys=True)
                                                 for m in media}), "registry": pipeline.load_registry()["version"]},
-        **({"RPT-12_notes": {"statement": "Transcribed or typed notes from the patrol. They were not used by the AI inspection.",
+        **({"RPT-12_notes": {"statement": "Transcribed or typed notes from the patrol. The AI assessed the photos without them; RPT-14 compares the two.",
                              "notes": [{"at": n.created_at, "author": n.author, "text": n.text} for n in notes]}} if notes else {}),
         "RPT-13_evidence_manifest": [{"media_id": m.id, "sha256": m.sha256, "captured_at": m.captured_at,
-                                      "location_source": m.location_source} for m in media],
+                                      "location_source": m.location_source, "time_source": m.time_source,
+                                      "origin": m.origin} for m in media],
+        "RPT-14_note_cross_check": xc,
+        "RPT-15_photo_inventory": [{"media_id": m.id, "captured_at": m.captured_at, "lat": m.lat, "lon": m.lon,
+                                    "sections_inspected": (_an(m).get("sections") or {}).get("inspected"),
+                                    "objects": _an(m).get("inventory", [])} for m in media],
     }
 
 
@@ -495,6 +520,30 @@ def amend(rid: str, body: Amendment, s: SessionDep, a: ActorDep):
     return {"report_id": new.id, "revision": new.revision, "status": new.status, "supersedes": r.id}
 
 
+def _count(labels) -> list[tuple[str, int]]:
+    from collections import Counter
+    return Counter(labels).most_common()
+
+
+def where(f: dict) -> str:
+    """Mast if known; otherwise GPS + time of the photo (phone, EXIF or the stamp printed on the photo)."""
+    if f.get("asset_id"):
+        return f["asset_id"]
+    w = f.get("where") or {}
+    if w.get("lat") is not None:
+        return (f"{w['lat']:.5f}, {w['lon']:.5f} ({str(w.get('location_source', '')).replace('_', ' ')}) · "
+                f"{str(w.get('captured_at', ''))[:16]}")
+    cands = ", ".join(x["asset_id"] for x in f.get("candidates", [])[:3])
+    return ("near " + cands) if cands else "location not recorded"
+
+
+def label_of(f: dict) -> str:
+    r = " ".join(f.get("reasons") or [])
+    import re as _re
+    m = _re.search(r"seen as '([^']+)'", r)
+    return f" ({m.group(1)})" if m else ""
+
+
 @router.get("/reports/{rid}/html", response_class=HTMLResponse)
 def report_html(rid: str, s: SessionDep, a: ActorDep):
     """Deterministic render from the frozen revision; no AI at export time (HLD §10.4). Print to PDF from here."""
@@ -504,10 +553,19 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
     c = json.loads(r.content_json)
     row = lambda *v: "<tr>" + "".join(f"<td>{esc(x)}</td>" for x in v) + "</tr>"
     reg = "".join(row(x["asset_id"], x["state"].replace("_", " "), len(x["findings"])) for x in c["RPT-05_asset_register"])
-    fnd = "".join(row(f["id"], f["asset_id"] or "unresolved: " + ", ".join(x["asset_id"] for x in f["candidates"][:3]),
-                      f.get("observed_feature", f["state"]), f.get("priority", "review"), f.get("routing", {}).get("primary", ""),
-                      f.get("temporal", "—").replace("_", " "))
+    fnd = "".join(row(f["id"][:8], where(f), f.get("observed_feature", f["state"]) + label_of(f), f.get("priority", "review"),
+                      (f.get("confidence_level") or {}).get("label", "—"),
+                      (f.get("note_check") or {}).get("state", "—").replace("_", " "),
+                      f.get("routing", {}).get("primary", ""), f.get("temporal", "—").replace("_", " "))
                   for f in c["RPT-06_findings"])
+    xc = c.get("RPT-14_note_cross_check") or {}
+    nonly = "".join(row(str(n.get("at") or "")[:16], n["topic"].replace("_", " "), n["text"]) for n in xc.get("note_only", []))
+    nonly = (f"<p>Mentioned by the patroller but not found by the AI:</p><table><tr><th>When</th><th>About</th><th>Note</th></tr>"
+             f"{nonly}</table>") if nonly else ""
+    inv = "".join(row(str(p_["captured_at"])[:16], f"{p_['lat']:.5f}, {p_['lon']:.5f}" if p_.get("lat") is not None else "—",
+                      p_.get("sections_inspected") or 1,
+                      ", ".join(f"{k} ×{v}" if v > 1 else k for k, v in _count(o["label"] for o in p_["objects"])) or "nothing recognised")
+                  for p_ in c.get("RPT-15_photo_inventory", []))
     tmp = c.get("RPT-07_temporal", {})
     gone = "".join(row(g["asset_id"], f"{g.get('component')} · {g.get('condition')}", g["state"].replace("_", " "))
                    for g in tmp.get("not_seen_again", []))
@@ -525,7 +583,11 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
             f" · territory {esc(c['RPT-01_document_control']['territory'])} · SHA-256 {r.sha256}</p>"
             f"<h2>Summary</h2><table>{''.join(row(k.replace('_', ' '), v) for k, v in sm.items())}</table>"
             f"<h2>Asset register</h2><table><tr><th>Asset</th><th>State</th><th>Findings</th></tr>{reg}</table>"
-            f"<h2>Findings</h2><table><tr><th>ID</th><th>Asset</th><th>Observed</th><th>Priority</th><th>Route</th><th>Vs last patrol</th></tr>{fnd}</table>"
+            f"<h2>Findings</h2><table><tr><th>ID</th><th>Where</th><th>Observed</th><th>Priority</th><th>Confidence</th>"
+            f"<th>Patroller note</th><th>Route</th><th>Vs last patrol</th></tr>{fnd}</table>"
+            f"<h2>AI findings vs patroller notes</h2><p>{esc(xc.get('statement', ''))}</p>{nonly}"
+            f"<h2>Everything seen in each photo</h2><table><tr><th>Taken</th><th>Location</th><th>Sections inspected</th>"
+            f"<th>Objects</th></tr>{inv}</table>"
             f"<h2>Coverage</h2><p>{esc(cov.get('statement', ''))}</p><p>Photos: {len(cov.get('captures', []))} · not linked to one mast: "
             f"{len(cov.get('ambiguous_captures', []))} · masts with no photo: {esc(', '.join(cov.get('evidence_gaps', [])) or 'none')}"
             f" · registry {esc(cov.get('registry_version', ''))}</p>"

@@ -193,6 +193,26 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
             lat = loc?.first, lon = loc?.second, accuracyM = loc?.third, localQualityOk = q.passed, localReasons = q.reasons.joinToString(","), rollDeg = roll))
     }
 
+    /** Photos picked from the phone's gallery: copied into the patrol and uploaded like camera photos. The server
+     *  reads each photo's own EXIF time / GPS (or the stamp printed on it); the phone's current position is NOT
+     *  attached, because the photo may have been taken elsewhere. */
+    fun onPicked(uris: List<android.net.Uri>) = viewModelScope.launch {
+        val s = active.value ?: return@launch
+        val app = getApplication<Application>()
+        val dir = File(app.filesDir, "evidence").apply { mkdirs() }
+        for (u in uris) {
+            val src = runCatching { android.provider.MediaStore.setRequireOriginal(u) }.getOrDefault(u)   // keep GPS tags
+            val f = File(dir, "gallery-${java.util.UUID.randomUUID()}.jpg")
+            val ok = runCatching { (runCatching { app.contentResolver.openInputStream(src) }.getOrNull() ?: app.contentResolver.openInputStream(u))
+                ?.use { input -> f.outputStream().use { input.copyTo(it) } } }.isSuccess && f.length() > 0
+            if (!ok) continue
+            val q = PatrolViewModel.assessFile(f)
+            val taken = runCatching { androidx.exifinterface.media.ExifInterface(f.absolutePath).dateTimeOriginal }.getOrNull()
+            repo.addCapture(OheCaptureEntity(sessionId = s.id, path = f.absolutePath, sha256 = Hashing.sha256(f),
+                capturedAt = taken ?: f.lastModified(), localQualityOk = q.passed, localReasons = q.reasons.joinToString(","), origin = "gallery"))
+        }
+    }
+
     /** Server prompt for the newest uploaded photo, if any (shown until the next capture). */
     fun serverPrompt(caps: List<OheCaptureEntity>): Prompt? =
         caps.lastOrNull()?.takeIf { it.uploaded }?.prompt?.let { runCatching { Prompt.valueOf(it) }.getOrNull() }

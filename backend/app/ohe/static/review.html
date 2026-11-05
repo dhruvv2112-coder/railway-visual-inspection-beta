@@ -182,7 +182,10 @@
   function drawReport() {
     const r = current, c = r.content, s = c['RPT-02_summary'], dc = c['RPT-01_document_control'];
     const findings = c['RPT-06_findings'] || [], reg = c['RPT-05_asset_register'] || [];
-    const exceptions = findings.filter((f) => f.state === 'anomalous_unclassified' || !f.asset_id);
+    const located = (f) => f.asset_id || (f.where && f.where.lat != null);
+    const placeOf = (f) => f.asset_id ? 'mast ' + f.asset_id : (f.where && f.where.lat != null ?
+      `${Number(f.where.lat).toFixed(5)}, ${Number(f.where.lon).toFixed(5)} (${human(f.where.location_source)}) · ${String(f.where.captured_at || '').slice(0, 16)}` : 'location not recorded');
+    const exceptions = findings.filter((f) => f.state === 'anomalous_unclassified' || !located(f));
     const gaps = reg.filter((x) => ['insufficient_resolution', 'occluded_or_missing_view', 'no_evidence', 'unsupported_class'].includes(x.state));
     const signable = me?.can_sign && r.status === 'READY_FOR_REVIEW';
     $('#detail').innerHTML = `
@@ -209,6 +212,15 @@
         return `<h3>Compared with the last patrol</h3><p class="small">${esc(t.statement || 'Not compared.')}</p>` + (g.length ?
         `<div class="tbl"><table><tr><th>Mast</th><th>Earlier finding</th><th>Now</th></tr>${g.map((x) =>
         `<tr><td>${esc(x.asset_id)}</td><td>${esc(human(x.condition || x.component))}</td><td>${esc(human(x.state))}</td></tr>`).join('')}</table></div>` : ''); })()}
+      ${(() => { const x = c['RPT-14_note_cross_check'] || {}; const no = x.note_only || [];
+        return `<h3>AI findings vs patroller notes</h3><p class="small">${esc(x.statement || '')}</p>` + (no.length ?
+        `<div class="tbl"><table><tr><th>When</th><th>Patroller mentioned</th><th>Note</th></tr>${no.map((n) =>
+        `<tr><td>${esc(String(n.at || '').slice(0, 16))}</td><td>${esc(human(n.topic))}</td><td>${esc(n.text)}</td></tr>`).join('')}</table></div>` : ''); })()}
+      ${(() => { const inv = c['RPT-15_photo_inventory'] || [];
+        return `<h3>Everything seen in each photo</h3><div class="tbl"><table><tr><th>Taken</th><th>Location</th><th>Sections</th><th>Objects</th></tr>${inv.map((p) => {
+          const n = {}; (p.objects || []).forEach((o) => { n[o.label] = (n[o.label] || 0) + 1; });
+          return `<tr><td>${esc(String(p.captured_at || '').slice(0, 16))}</td><td>${p.lat != null ? esc(Number(p.lat).toFixed(5) + ', ' + Number(p.lon).toFixed(5)) : '—'}</td>
+            <td>${esc(p.sections_inspected || 1)}</td><td>${esc(Object.entries(n).map(([k, v]) => v > 1 ? `${k} ×${v}` : k).join(', ') || 'nothing recognised')}</td></tr>`; }).join('')}</table></div>`; })()}
       <h3>Mast register</h3>
       <div class="tbl"><table><tr><th>Mast</th><th>State</th><th>Findings</th></tr>
         ${reg.map((x) => `<tr><td>${esc(x.asset_id)}</td><td>${esc(human(x.state))}</td><td>${x.findings.length}</td></tr>`).join('')}</table></div>
@@ -225,7 +237,9 @@
     return `<div class="finding ${f.alert ? 'urgent' : ''}">
       <div class="row" style="justify-content:space-between"><b>${esc(f.hypothesis || human(f.condition || f.state))}</b>
         <span>${f.alert ? '<span class="chip urgent">urgent</span> ' : ''}<span class="chip">${esc(f.priority || 'review')}</span>${f.temporal && f.temporal !== 'first_cycle' ? ` <span class="chip">${esc(human(f.temporal))}</span>` : ''}</span></div>
-      <div class="small muted">Finding ${esc(f.id)} · mast ${esc(f.asset_id || 'unresolved')} · ${esc(f.component)} · seen in ${f.observations} photo(s) · rule ${esc(f.rule_id || '—')}</div>
+      <div class="small muted">Finding ${esc(f.id)} · ${esc(placeOf(f))} · ${esc(human(f.component))} · seen in ${f.observations} photo(s) · rule ${esc(f.rule_id || '—')}</div>
+      <div class="small">Confidence <b>${esc((f.confidence_level || {}).label || '—')}</b>${(f.confidence_level || {}).basis ? ` <span class="muted">(${esc(f.confidence_level.basis)})</span>` : ''}
+        · Patroller note: <b>${esc(human((f.note_check || {}).state || 'no notes'))}</b>${(f.reasons || []).length ? ` · <span class="muted">${esc(f.reasons.join('; '))}</span>` : ''}</div>
       <dl class="claim small">
         <dt>Observed</dt><dd>${esc(f.observed_feature || human(f.state))}</dd>
         <dt>Hypothesis</dt><dd>${esc(f.hypothesis || '—')}</dd>

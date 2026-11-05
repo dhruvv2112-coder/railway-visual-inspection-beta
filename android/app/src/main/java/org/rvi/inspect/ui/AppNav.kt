@@ -65,7 +65,8 @@ fun AppNav(ovm: OheViewModel = viewModel(), openAlerts: Boolean = false) {
     val unread = alertsList.orEmpty().count { it.findingId !in readAlerts }
     val perms = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
     LaunchedEffect(Unit) { perms.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION) +
-        (if (android.os.Build.VERSION.SDK_INT >= 33) arrayOf(Manifest.permission.POST_NOTIFICATIONS) else emptyArray())) }
+        (if (android.os.Build.VERSION.SDK_INT >= 33) arrayOf(Manifest.permission.POST_NOTIFICATIONS) else emptyArray()) +
+        (if (android.os.Build.VERSION.SDK_INT >= 29) arrayOf(Manifest.permission.ACCESS_MEDIA_LOCATION) else emptyArray())) }
     DisposableEffect(Unit) { onDispose { voice.release() } }
     // Keep an eye on the server: reachability every 20 s, alerts every 30 s.
     LaunchedEffect(settings?.serverUrl, settings?.token) {
@@ -173,6 +174,9 @@ fun AppNav(ovm: OheViewModel = viewModel(), openAlerts: Boolean = false) {
                 if (last.uploaded && last.alert && last.id !in seenAlerts) { seenAlerts.add(last.id); urgentFor = last.id; say(R.string.g_urgent_title) }
                 delay(4000); toast = null
             }
+            val gallery = rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+                if (uris.isNotEmpty()) ovm.onPicked(uris)
+            }
             Box(Modifier.fillMaxSize()) {
                 OheHud(OheHudState(caps.size, caps.count { it.uploaded }, caps.count { it.findings > 0 }, caps.count { it.alert }, notes, prompt,
                     vstate is VoiceController.State.Listening, heard, active?.territory ?: "", zoom, camera.maxZoom().coerceAtLeast(1f), toast,
@@ -181,6 +185,7 @@ fun AppNav(ovm: OheViewModel = viewModel(), openAlerts: Boolean = false) {
                     onCapture = { oheCapture() }, onVoice = { voice.listen(voiceTag) }, onNote = { noteText = ""; noteOpen = true },
                     onEnd = { ovm.end(); nav.navigate("end") { popUpTo("home") } }, onZoom = { zoom = camera.zoom(it) },
                     onDanger = { urgentFor = "manual" }, onDismissPrompt = { dismissed = last?.id },
+                    onGallery = { gallery.launch("image/*") },
                     background = { CameraPreview(camera) })
                 if (noteOpen) OheNoteSheet(noteText, { noteText = it }, { voice.listen(voiceTag) },
                     onSave = { ovm.note(noteText); noteOpen = false; say(R.string.saved_offline) }, onCancel = { noteOpen = false },

@@ -78,6 +78,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation("androidx.exifinterface:exifinterface:1.3.7")   // gallery photos: when they were taken
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

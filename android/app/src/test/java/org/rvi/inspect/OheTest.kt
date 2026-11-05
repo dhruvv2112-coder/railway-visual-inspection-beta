@@ -64,6 +64,13 @@ class OheTest {
         assertNull(org.rvi.inspect.data.Tilt.rollFrom(0f, 1f, 9.7f))  // lying flat
     }
 
+    @Test fun sawListUsesWholePhotoInventory() {
+        val r = parseUpload(obj("""{"analysis":{"detections":[{"cls":"insulator"}],
+            "inventory":[{"label":"insulator"},{"label":"plastic bag"},{"label":"stone"},{"label":"stone"}],
+            "assessments":[{"state":"assessable_defect"}]}}"""))
+        assertEquals("stone:2,insulator:1,plastic bag:1", r.seen)
+    }
+
     @Test fun failedAnalysisIsNotShownAsNoDefect() {
         val r = parseUpload(obj("""{"analysis":{"error":"RuntimeError: model","assessments":[]}}"""))
         assertEquals(org.rvi.inspect.data.ANALYSIS_FAILED, r.imageState); assertEquals(0, r.assessed)

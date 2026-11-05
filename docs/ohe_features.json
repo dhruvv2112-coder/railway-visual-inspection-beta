@@ -510,5 +510,40 @@
   "status": "Built",
   "built": "Server looks at each photo at 8 rotations and merges results (sideways defect found 30/30 vs 0/30 before; no false alarms on 70 normal insulators). No whole-assembly or square-on retake demands; partial close-ups accepted",
   "next": "Retrain with rotation augmentation for odd angles (35-125 deg currently 60-85%)"
+ },
+ {
+  "id": "B27",
+  "feature": "Whole-photo inventory (open vocabulary)",
+  "status": "Built",
+  "built": "YOLO-World v2 with a 58-word railway + debris vocabulary (incl. catch-all 'object') lists every article in every photo; out-of-place articles become findings (R-SCN-01..08, fire urgent)",
+  "next": "Validate on railway photos; tune thresholds"
+ },
+ {
+  "id": "B28",
+  "feature": "Sectioned inspection",
+  "status": "Built",
+  "built": "Photo split into 640-px overlapping sections (capped 2560 px), each inspected at 2 orientations plus whole photo at 8; small part in a 12 MP photo found 11-12/12 vs 0/12",
+  "next": "—"
+ },
+ {
+  "id": "B29",
+  "feature": "Location without mast number",
+  "status": "Built",
+  "built": "Phone GPS, else photo EXIF GPS/time, else time/location stamp printed on the photo (OCR); findings placed by GPS + time",
+  "next": "—"
+ },
+ {
+  "id": "B30",
+  "feature": "Voice note cross-check + confidence level",
+  "status": "Built",
+  "built": "EN/HI/Hinglish keywords matched to findings within 10 min: matches note / AI only / conflicts / note only; High/Medium/Low confidence from calibrated score, photo quality and note agreement",
+  "next": "Hindi terminology review"
+ },
+ {
+  "id": "A14",
+  "feature": "Gallery upload",
+  "status": "Built",
+  "built": "Pick photos from the gallery into the patrol; server uses each photo's own EXIF time/GPS",
+  "next": "—"
  }
 ]

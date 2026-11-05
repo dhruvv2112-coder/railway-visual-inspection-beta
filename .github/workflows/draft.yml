@@ -62,6 +62,8 @@ jobs:
           if git fetch -q --depth 1 origin ci-ohe-calib 2>/dev/null; then
             git show FETCH_HEAD:reports/ohe_calibration.json > models/ohe_calibration.json && echo "calibration included"
           fi
+          git fetch -q --depth 1 origin ci-scene-model      # whole-photo inventory (open vocabulary)
+          for f in scene_detector.onnx scene_detector.names.json scene_vocabulary.json; do git show FETCH_HEAD:reports/$f > models/$f; done
           ls -la models
       - uses: actions/upload-artifact@v4
         with: {name: app, path: "OnTrack.AI.apk\nlatest.json"}
@@ -130,6 +132,8 @@ jobs:
                http://127.0.0.1:8000/ohe/sessions/$sid/media | ConvertFrom-Json
           $states = @($dr.analysis.assessments | ForEach-Object { $_.state }); Write-Host "defect photo: $($dr.analysis.detections | ConvertTo-Json -Compress) -> $states"
           if ($states -notcontains "assessable_defect") { throw "broken insulator was not detected" }
+          if ($dr.analysis.model_versions.scene -eq "none") { throw "whole-photo inventory model not loaded" }
+          Write-Host "inventory: $(@($dr.analysis.inventory | ForEach-Object { $_.label }) -join ', ') · sections $($dr.analysis.sections.inspected)"
           # the same photo turned sideways (any orientation must work)
           Add-Type -AssemblyName System.Drawing
           $bm = [System.Drawing.Image]::FromFile("$PWD\d.jpg"); $bm.RotateFlip([System.Drawing.RotateFlipType]::Rotate90FlipNone)

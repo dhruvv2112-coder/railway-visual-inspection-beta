@@ -389,7 +389,8 @@ data class OheHudState(val photos: Int, val uploaded: Int, val flagged: Int, val
 
 @Composable
 fun OheHud(st: OheHudState, onCapture: () -> Unit, onVoice: () -> Unit, onNote: () -> Unit, onEnd: () -> Unit,
-           onZoom: (Float) -> Unit = {}, onDanger: () -> Unit = {}, onDismissPrompt: () -> Unit = {}, background: @Composable () -> Unit) {
+           onZoom: (Float) -> Unit = {}, onDanger: () -> Unit = {}, onDismissPrompt: () -> Unit = {}, onGallery: () -> Unit = {},
+           background: @Composable () -> Unit) {
     Box(Modifier.fillMaxSize().background(Color(0xFF10142A))) {
         background()
         Box(Modifier.fillMaxWidth().height(160.dp).background(Brush.verticalGradient(listOf(Color(0x660E1020), Color.Transparent))))
@@ -451,7 +452,10 @@ fun OheHud(st: OheHudState, onCapture: () -> Unit, onVoice: () -> Unit, onNote: 
                     .border(4.dp, Ink.White, CircleShape).semantics { contentDescription = "Take photo" }) {
                     Box(contentAlignment = Alignment.Center) { Box(Modifier.size(70.dp).clip(CircleShape).background(Ink.White)) }
                 }
-                IconCircle(Icons.Outlined.EditNote, stringResource(R.string.ohe_note), onNote, size = 60.dp, dark = true)
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    IconCircle(Icons.Outlined.EditNote, stringResource(R.string.ohe_note), onNote, size = 60.dp, dark = true)
+                    IconCircle(Icons.Outlined.PhotoLibrary, stringResource(R.string.g_gallery), onGallery, size = 44.dp, dark = true)
+                }
             }
             Spacer(Modifier.height(6.dp))
         }
@@ -509,7 +513,7 @@ private fun HudToast(k: ToastKind, seen: List<Pair<String, Int>> = emptyList()) 
         else -> Quad(Ink.Electric, Icons.Outlined.Check, R.string.g_toast_saved, R.string.g_toast_saved_sub)
     }
     val showSeen = k in setOf(ToastKind.Checked, ToastKind.Flagged, ToastKind.Nothing)
-    val saw = seen.map { (c, n) -> clsLabel(c) + if (n > 1) " ×$n" else "" }.joinToString(", ")
+    val saw = seen.take(6).map { (c, n) -> clsLabel(c) + if (n > 1) " ×$n" else "" }.joinToString(", ") + if (seen.size > 6) " +${seen.size - 6}" else ""
     Row(Modifier.padding(horizontal = 14.dp, vertical = 6.dp).fillMaxWidth().glass(RoundedCornerShape(22.dp), strong = true).padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(38.dp).clip(RoundedCornerShape(12.dp)).background(bg), contentAlignment = Alignment.Center) { Icon(icon, null, tint = Ink.White) }
         Spacer(Modifier.width(12.dp))

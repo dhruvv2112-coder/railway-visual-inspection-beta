@@ -74,7 +74,7 @@ interface FindingDao {
 }
 
 @Database(entities = [PatrolEntity::class, FindingEntity::class, OheSessionEntity::class, OheCaptureEntity::class, OheNoteEntity::class],
-    version = 5, exportSchema = false)
+    version = 6, exportSchema = false)
 abstract class RviDatabase : RoomDatabase() {
     abstract fun patrols(): PatrolDao
     abstract fun findings(): FindingDao
@@ -82,12 +82,19 @@ abstract class RviDatabase : RoomDatabase() {
 
     companion object {
         fun build(context: Context) = Room.databaseBuilder(context, RviDatabase::class.java, "rvi.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build()
 
         /** v2: OHE danger record (TPC informed) for the combined track + OHE foot patrol. */
         val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE finding ADD COLUMN tpcInformedAt INTEGER")
+            }
+        }
+
+        /** v6: where a photo came from (camera or gallery). */
+        val MIGRATION_5_6 = object : androidx.room.migration.Migration(5, 6) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE ohe_capture ADD COLUMN origin TEXT NOT NULL DEFAULT 'camera'")
             }
         }
 

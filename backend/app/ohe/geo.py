@@ -27,20 +27,20 @@ def from_exif(data: bytes) -> dict:
             lat, lon = deg(gps[2], gps.get(1, "N")), deg(gps[4], gps.get(3, "E"))
             if -90 <= lat <= 90 and -180 <= lon <= 180 and (lat, lon) != (0.0, 0.0):
                 out |= {"lat": round(lat, 7), "lon": round(lon, 7)}
-    except Exception:  # noqa: BLE001
+    except Exception:  # noqa: BLE001, S110 - unreadable EXIF just means no GPS tag
         pass
     try:
         sub = ex.get_ifd(0x8769)
         t = sub.get(36867) or ex.get(306)                     # DateTimeOriginal, else DateTime
         off = sub.get(36881) or sub.get(36880)                # OffsetTimeOriginal / OffsetTime, e.g. "+05:30"
         if t:
-            dt = datetime.strptime(str(t).strip("\x00 "), "%Y:%m:%d %H:%M:%S")
+            dt = datetime.strptime(str(t).strip("\x00 "), "%Y:%m:%d %H:%M:%S")  # noqa: DTZ007 - EXIF has no zone; set below
             tz = IST
             if off and re.fullmatch(r"[+-]\d{2}:\d{2}", str(off)):
                 sign = 1 if str(off)[0] == "+" else -1
                 tz = timezone(sign * timedelta(hours=int(str(off)[1:3]), minutes=int(str(off)[4:6])))
             out["taken_at"] = dt.replace(tzinfo=tz)
-    except Exception:  # noqa: BLE001
+    except Exception:  # noqa: BLE001, S110 - unreadable EXIF just means no GPS tag
         pass
     return out
 
@@ -52,8 +52,8 @@ def from_stamp(texts: list[str]) -> dict:
     """Latitude/longitude and date-time printed on the photo (GPS-camera apps). OCR text has spaces removed."""
     t = " ".join(texts)
     out: dict = {}
-    lat = re.search(r"Lat(?:itude)?[:=.]?" + _NUM + r"°?([NS])?", t, re.I)
-    lon = re.search(r"(?:Long(?:itude)?|Lng|Lon)[:=.]?" + _NUM + r"°?([EW])?", t, re.I)
+    lat = re.search(r"Lat(?:itude)?[:=.]?" + _NUM + r"°?([NS])?", t, re.IGNORECASE)
+    lon = re.search(r"(?:Long(?:itude)?|Lng|Lon)[:=.]?" + _NUM + r"°?([EW])?", t, re.IGNORECASE)
     if not (lat and lon):  # "26.912400°N 75.787300°E" / "26.9124N,75.7873E" / "26.9124, 75.7873"
         pair = re.search(_NUM + r"°?([NS])?[,;/\s]*" + _NUM + r"°?([EW])?", t)
         if pair:
@@ -71,8 +71,8 @@ def from_stamp(texts: list[str]) -> dict:
             lo = -abs(lo)
         if -90 <= la <= 90 and -180 <= lo <= 180 and abs(la) > 0.01:
             out |= {"lat": la, "lon": lo}
-    m = re.search(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\D{0,3}(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?", t, re.I) \
-        or re.search(r"(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\D{0,3}(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?", t, re.I)
+    m = re.search(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\D{0,3}(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?", t, re.IGNORECASE) \
+        or re.search(r"(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\D{0,3}(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?", t, re.IGNORECASE)
     if m:
         g = m.groups()
         try:

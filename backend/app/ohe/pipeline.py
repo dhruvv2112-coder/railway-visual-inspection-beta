@@ -249,8 +249,8 @@ class Sectioned:
     boxes are mapped back onto the full photo and merged (a part cut by a section edge keeps its largest box).
     `last_sections` records what each section held, for the report."""
 
-    def __init__(self, base, full_angles=(0, 90, 180, 270, 45, 135, 225, 315), tile_angles=(0, 90, 270),
-                 tile_px: int = 900, overlap: float = 0.25, iou: float = 0.45):
+    def __init__(self, base, full_angles=(0, 90, 180, 270, 45, 135, 225, 315), tile_angles=(0, 90),
+                 tile_px: int = 640, overlap: float = 0.25, iou: float = 0.45):
         self.full = RotationTTA(base, full_angles, iou)
         self.tile = RotationTTA(base, tile_angles, iou)
         self.tile_px, self.overlap, self.iou = tile_px, overlap, iou
@@ -267,10 +267,17 @@ class Sectioned:
         return [(int(max(0, i * tw - ox)), int(max(0, j * th - oy)), int(min(w, (i + 1) * tw + ox)), int(min(h, (j + 1) * th + oy)))
                 for j in range(ny) for i in range(nx)]
 
+    max_side = 2560   # sections are cut from the photo at most this size (12 MP phone photos: ~12 sections)
+
     def detect(self, img):
-        h, w = img.shape[:2]
-        found = [(d, -1) for d in self.full.detect(img)]
+        import cv2
+        H, W = img.shape[:2]
+        k = min(1.0, self.max_side / max(H, W))
+        work = cv2.resize(img, (round(W * k), round(H * k)), interpolation=cv2.INTER_AREA) if k < 1 else img
+        h, w = work.shape[:2]
+        found = [(d, -1) for d in self.full.detect(work)]
         secs = self.grid(w, h)
+        img = work
         for k, (x1, y1, x2, y2) in enumerate(secs):
             for d in self.tile.detect(img[y1:y2, x1:x2]):
                 b = d.box
@@ -287,9 +294,11 @@ class Sectioned:
                       max(g[0].box[2] for g in group), max(g[0].box[3] for g in group)) if len(group) > 1 else best[0].box
                 out.append(Det(cls, best[0].score, tuple(float(v) for v in bx)))
                 where.append(sorted({g[1] for g in group}))
-        self.last_sections = [{"section": k, "box": list(b), "found": sorted(d.cls for d, ks in zip(out, where) if k in ks)}
-                              for k, b in enumerate(secs)]
-        return [d for d, _ in sorted(zip(out, where), key=lambda t: -t[0].score)]
+        inv = 1 / k
+        self.last_sections = [{"section": i, "box": [round(v * inv) for v in b], "found": sorted(d.cls for d, ks in zip(out, where) if i in ks)}
+                              for i, b in enumerate(secs)]
+        res = [Det(d.cls, d.score, tuple(float(v * inv) for v in d.box)) for d, _ in sorted(zip(out, where), key=lambda t: -t[0].score)]
+        return res
 
 
 def _inside(a, b) -> float:
@@ -357,7 +366,7 @@ def calibrate(score: float, cls: str, calib: dict | None) -> float | None:
 
 def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: Anomaly | None = None,
                  lat=None, lon=None, acc=None, view: ViewCheck | None = None, roll_deg: float | None = None,
-                 calib: dict | None = None) -> dict:
+                 calib: dict | None = None, scene=None, scene_vocab: dict | None = None) -> dict:
     q = quality.assess(img)
     view_res = None
     if view is not None and img is not None:
@@ -421,18 +430,39 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
             obs.append(Observation(parent, tuple(round(v, 1) for v in s.box), "assessable_defect",
                                    comps[parent]["supported_conditions"][0], {"defect": round(s.score, 4)},
                                    ["defect seen without a detected parent component"]))
+    # whole-photo inventory: every article the open-vocabulary scene model can name, OHE or not; out-of-place
+    # articles become findings unless the OHE model already raised the same thing at the same place
+    inventory = [{"label": d.cls, "group": "ohe", "score": round(d.score, 3), "box": [round(v, 1) for v in d.box],
+                  "source": "ohe-detector", "finding": None} for d in dets]
+    if scene is not None and img is not None:
+        voc = {c["prompt"]: c for c in (scene_vocab or {}).get("classes", [])}
+        for d in scene.detect(img):
+            c = voc.get(d.cls, {})
+            floor = 0.15 if c.get("group") == "other" else 0.10
+            if d.score < floor:
+                continue
+            cond = c.get("finding") if d.score >= 0.25 else None
+            inventory.append({"label": d.cls, "group": c.get("group", "other"), "score": round(d.score, 3),
+                              "box": [round(v, 1) for v in d.box], "source": "scene-model", "finding": cond})
+            if cond and comps.get(cond) and not any(_iou(o.box, d.box) > 0.3 and o.state == "assessable_defect" for o in obs):
+                o = Observation(cond, tuple(round(v, 1) for v in d.box), "assessable_defect", cond,
+                                {"scene": round(d.score, 4)}, [f"seen as '{d.cls}' anywhere in the photo (scene model)"])
+                if not q.passed and set(q.reasons) & {"blurred", "too_dark", "overexposed"}:
+                    o.state, o.condition, o.reasons = "insufficient_resolution", "", q.reasons
+                obs.append(o)
     image_state = None
     if not obs:
         image_state = "insufficient_resolution" if not q.passed else "occluded_or_missing_view"
     return {"quality": asdict(q) | {"passed": q.passed}, "detections": [asdict(d) for d in dets], "identity": ident,
-            "ocr_texts": [t for t, _ in reads],
+            "ocr_texts": [t for t, _ in reads], "inventory": inventory,
             "observations": [asdict(o) for o in obs], "image_state": image_state,
             "view_check": view_res,
             "sections": {"inspected": 1 + len(getattr(det, "last_sections", [])), "grid": getattr(det, "last_sections", [])},
             "recapture_prompt": recapture_prompt(q, obs, ident, image_state),   # view check is information only now
             "model_versions": {"detector": det.version, "ocr": ocr.version,
                                "anomaly": anomaly.version if anomaly else "none", "quality": "opencv-rules-v2",
-                               "view_check": view.version if view else "none"}}
+                               "view_check": view.version if view else "none",
+                               "scene": getattr(scene, "version", "none") if scene is not None else "none"}}
 
 
 def recapture_prompt(q, obs, ident, image_state) -> str | None:
@@ -453,7 +483,7 @@ def decide(obs: dict, ident: dict, q_passed: bool, reg: dict) -> dict:
     rule = next((r for r in reg["rules"] if r["condition"] == obs["condition"]), None) if obs["condition"] else None
     cal = obs["raw_scores"].get("calibrated")
     conf = {"Q": 1.0 if q_passed else 0.5, "A": ident["A"], "V": None, "C": cal if cal is not None else
-            (obs["raw_scores"].get("defect") or obs["raw_scores"].get("detector")), "T": None, "R": 1.0 if rule else None,
+            (obs["raw_scores"].get("defect") or obs["raw_scores"].get("detector") or obs["raw_scores"].get("scene")), "T": None, "R": 1.0 if rule else None,
             "calibration": "platt-per-class (public test split)" if cal is not None else "uncalibrated"}
     out = {"component": obs["component"], "state": obs["state"], "condition": obs["condition"], "box": obs["box"],
            "confidence": conf, "reasons": obs["reasons"]}
