@@ -130,6 +130,15 @@ jobs:
                http://127.0.0.1:8000/ohe/sessions/$sid/media | ConvertFrom-Json
           $states = @($dr.analysis.assessments | ForEach-Object { $_.state }); Write-Host "defect photo: $($dr.analysis.detections | ConvertTo-Json -Compress) -> $states"
           if ($states -notcontains "assessable_defect") { throw "broken insulator was not detected" }
+          # the same photo turned sideways (any orientation must work)
+          Add-Type -AssemblyName System.Drawing
+          $bm = [System.Drawing.Image]::FromFile("$PWD\d.jpg"); $bm.RotateFlip([System.Drawing.RotateFlipType]::Rotate90FlipNone)
+          $bm.Save("$PWD\d90.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg); $bm.Dispose()
+          $rsha = (Get-FileHash d90.jpg -Algorithm SHA256).Hash.ToLower()
+          $rr = curl.exe -s -f -H "Authorization: Bearer $tok" -F "image=@d90.jpg;type=image/jpeg" -F "sha256=$rsha" -F "captured_at=2026-11-05T10:02:00Z" `
+               http://127.0.0.1:8000/ohe/sessions/$sid/media | ConvertFrom-Json
+          $rstates = @($rr.analysis.assessments | ForEach-Object { $_.state }); Write-Host "sideways defect photo -> $rstates ($($rr.analysis.model_versions.detector))"
+          if ($rstates -notcontains "assessable_defect") { throw "sideways broken insulator was not detected" }
           $again = curl.exe -s -f -H "Authorization: Bearer $tok" -F "image=@d.jpg;type=image/jpeg" -F "sha256=$dsha" -F "captured_at=2026-11-05T10:01:00Z" `
                http://127.0.0.1:8000/ohe/sessions/$sid/media | ConvertFrom-Json
           if (-not $again.idempotent -or @($again.analysis.assessments).Count -eq 0) { throw "retried upload lost its result" }

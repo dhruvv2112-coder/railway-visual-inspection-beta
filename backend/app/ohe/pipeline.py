@@ -191,6 +191,65 @@ class OnnxViewCheck:
         return float(e[1] / e.sum())   # classes: [valid, perspective_distorted]
 
 
+class RotationTTA:
+    """Looks at the photo at several rotations and merges what it finds, so a part is found whatever way the phone
+    or the part is turned (sideways cantilever insulators, tilted shots, upside-down photos). Each rotated view is
+    drawn on a canvas big enough to keep every pixel; boxes are mapped back to the original photo and merged per
+    class (non-maximum suppression). Close-ups and partial views need nothing extra: the detector handles crops."""
+
+    def __init__(self, base, angles=(0, 90, 180, 270, 45, 135, 225, 315), iou: float = 0.45):
+        self.base, self.angles, self.iou = base, angles, iou
+        self.version = f"{getattr(base, 'version', 'detector')}+rot{len(angles)}"
+        self.conf = getattr(base, "conf", None)
+
+    @staticmethod
+    def _view(img, a):
+        import cv2
+        h, w = img.shape[:2]
+        if a % 360 == 0:
+            return img, None
+        m = cv2.getRotationMatrix2D((w / 2, h / 2), a, 1.0)
+        c, s_ = abs(m[0, 0]), abs(m[0, 1])
+        nw, nh = int(h * s_ + w * c), int(h * c + w * s_)
+        m[0, 2] += nw / 2 - w / 2
+        m[1, 2] += nh / 2 - h / 2
+        return cv2.warpAffine(img, m, (nw, nh), borderValue=(114, 114, 114)), cv2.invertAffineTransform(m)
+
+    def detect(self, img):
+        h, w = img.shape[:2]
+        found = []
+        for a in self.angles:
+            v, inv = self._view(img, a)
+            for d in self.base.detect(v):
+                x1, y1, x2, y2 = d.box
+                if inv is not None:
+                    pts = np.array([[x1, y1, 1], [x2, y1, 1], [x2, y2, 1], [x1, y2, 1]], float) @ inv.T
+                    x1, y1 = pts[:, 0].min(), pts[:, 1].min()
+                    x2, y2 = pts[:, 0].max(), pts[:, 1].max()
+                    # a rotated box is wider than the object; shrink it back towards the centre by the rotation slack
+                    k = 1.0 if a % 90 == 0 else 0.78
+                    cx, cy, bw, bh = (x1 + x2) / 2, (y1 + y2) / 2, (x2 - x1) * k, (y2 - y1) * k
+                    x1, y1, x2, y2 = cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2
+                box = (float(max(0, x1)), float(max(0, y1)), float(min(w, x2)), float(min(h, y2)))
+                if box[2] - box[0] > 2 and box[3] - box[1] > 2:
+                    found.append((d.cls, float(d.score), box, a))
+        out = []
+        for cls in {f[0] for f in found}:
+            cand = sorted((f for f in found if f[0] == cls), key=lambda f: -f[1])
+            while cand:
+                best = cand.pop(0)
+                out.append(Det(cls, best[1], best[2]))
+                cand = [f for f in cand if _iou(f[2], best[2]) < self.iou]
+        return sorted(out, key=lambda d: -d.score)
+
+
+def _iou(a, b) -> float:
+    ix = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    u = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - ix * iy
+    return ix * iy / u if u > 0 else 0.0
+
+
 def mast_lean(img: np.ndarray, box, roll_deg: float | None) -> tuple[float | None, str]:
     """Screening angle of a mast from vertical (degrees, + = top leans right in the photo), corrected for the
     phone's roll at capture. Uses the long straight edges inside the mast box (OpenCV Hough). Returns (None, reason)
@@ -273,8 +332,8 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
             if spec.get("lean_check"):
                 lean, why = mast_lean(img, d.box, roll_deg)
                 o.raw_scores["lean_deg"] = lean
-                if lean is None:
-                    o.state, o.reasons = "occluded_or_missing_view", [why]
+                if lean is None:   # lean not measurable on this view: no claim either way, and no retake demanded
+                    o.state, o.reasons = "unsupported_class", [f"lean not measured: {why}"]
                 elif abs(lean) > reg.get("mast_lean_screen_deg", 3.0):
                     o.state, o.condition, o.reasons = "assessable_defect", "mast_lean", [f"{why}: {lean:+.1f} deg"]
                 else:
@@ -310,21 +369,21 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
     return {"quality": asdict(q) | {"passed": q.passed}, "detections": [asdict(d) for d in dets], "identity": ident,
             "observations": [asdict(o) for o in obs], "image_state": image_state,
             "view_check": view_res,
-            "recapture_prompt": recapture_prompt(q, obs, ident, image_state)
-            or ("Take the photo square-on to the mast" if view_res and view_res["flag"] else None),
+            "recapture_prompt": recapture_prompt(q, obs, ident, image_state),   # view check is information only now
             "model_versions": {"detector": det.version, "ocr": ocr.version,
                                "anomaly": anomaly.version if anomaly else "none", "quality": "opencv-rules-v2",
                                "view_check": view.version if view else "none"}}
 
 
 def recapture_prompt(q, obs, ident, image_state) -> str | None:
-    """Smallest useful request (HLD §8.2). Never asks the user to approach live equipment."""
-    if image_state == "insufficient_resolution" or any(o.state == "insufficient_resolution" for o in obs):
+    """Smallest useful request (HLD §8.2). Never asks the user to approach live equipment, and never asks for a
+    framing the field cannot give: partial views, close-ups and any orientation are accepted as they are. Only a
+    photo nothing could be judged on asks for zoom/steadiness, and a finding asks for the plate to tie it to a mast."""
+    judged = [o for o in obs if o.state in ("assessable_defect", "anomalous_unclassified", "assessable_no_visible_defect")]
+    if not judged and (image_state == "insufficient_resolution" or any(o.state == "insufficient_resolution" for o in obs)):
         return "Hold still and use optical zoom on the component; do not move closer to the OHE"
     if ident["state"] != "resolved" and any(o.state in ("assessable_defect", "anomalous_unclassified") for o in obs):
         return "Capture the mast number plate from where you stand"
-    if image_state == "occluded_or_missing_view":
-        return "Include the whole assembly in the frame"
     return None
 
 

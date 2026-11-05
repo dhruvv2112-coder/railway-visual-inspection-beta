@@ -272,7 +272,7 @@ class FixView:
     def p_distorted(self, img): return self.p
 
 
-def test_view_check_only_adds_a_retake_request(client, models):
+def test_view_check_is_information_only(client, models):
     models.detector, models.ocr = FixDet([INS]), FixOCR(["1205/12"])
     sid = _session(client)
     base = _upload(client, sid, _jpeg(30), **NEAR_12).json()["analysis"]
@@ -281,7 +281,7 @@ def test_view_check_only_adds_a_retake_request(client, models):
         a = _upload(client, sid, _jpeg(31), **NEAR_12).json()["analysis"]
     finally:
         models.view = None
-    assert a["view_check"]["flag"] is True and a["recapture_prompt"] == "Take the photo square-on to the mast"
+    assert a["view_check"]["flag"] is True and a["recapture_prompt"] is None   # angled photos are accepted
     assert [x["state"] for x in a["assessments"]] == [x["state"] for x in base["assessments"]]   # assessment unchanged
 
 
@@ -546,3 +546,33 @@ def test_sse_mode_needs_authorised_signer(client, models, monkeypatch):
     rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
     assert client.post(f"/ohe/reports/{rid}/sign", headers=PATROL).status_code == 403
     assert client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER).json()["status"] == "AUTHORISED_SIGNED"
+
+
+
+def test_no_framing_demands_for_partial_views(client, models):
+    """Field photos are partial and at any angle: nothing detected or a partial view never asks to reframe."""
+    models.detector, models.ocr = FixDet([]), FixOCR([])
+    sid = _session(client)
+    a = _upload(client, sid, _jpeg(40)).json()["analysis"]
+    assert a["recapture_prompt"] is None
+
+
+def test_rotation_merge_finds_sideways_parts():
+    import cv2
+    from app.ohe import pipeline
+
+    class Upright:   # finds a tall bar only when it stands upright, like a detector trained on upright insulators
+        version = "u"
+        def detect(self, img):
+            g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) < 80
+            ys, xs = np.nonzero(g)
+            if len(xs) == 0 or (ys.max() - ys.min()) < 2 * (xs.max() - xs.min()):
+                return []
+            return [pipeline.Det("insulator", 0.9, (float(xs.min()), float(ys.min()), float(xs.max()), float(ys.max())))]
+    img = np.full((400, 600, 3), 200, np.uint8)
+    img[180:220, 100:500] = 30                       # a horizontal part (e.g. a bracket insulator)
+    assert Upright().detect(img) == []
+    d = pipeline.RotationTTA(Upright()).detect(img)
+    assert len(d) == 1 and d[0].cls == "insulator"
+    x1, y1, x2, y2 = d[0].box
+    assert x1 < 130 and x2 > 470 and 150 < y1 < 200 and 200 < y2 < 250   # box mapped back onto the original photo

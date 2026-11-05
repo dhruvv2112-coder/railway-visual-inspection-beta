@@ -502,5 +502,13 @@
   "status": "Built",
   "built": "Cloudflare quick tunnel (or fixed address), signed address relay for paired phones, PIN lockout, laptop pages hidden on the internet; tested end to end in CI",
   "next": "Test with the phone on mobile data"
+ },
+ {
+  "id": "B26",
+  "area": "AI analysis",
+  "feature": "Any orientation and partial views",
+  "status": "Built",
+  "built": "Server looks at each photo at 8 rotations and merges results (sideways defect found 30/30 vs 0/30 before; no false alarms on 70 normal insulators). No whole-assembly or square-on retake demands; partial close-ups accepted",
+  "next": "Retrain with rotation augmentation for odd angles (35-125 deg currently 60-85%)"
  }
 ]

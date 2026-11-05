@@ -123,8 +123,7 @@ enum class Prompt { ZOOM, PLATE, WHOLE, SQUARE, BLUR, DARK, BRIGHT;
             text == null -> null
             text.contains("optical zoom", true) -> ZOOM
             text.contains("number plate", true) -> PLATE
-            text.contains("whole assembly", true) -> WHOLE
-            text.contains("square-on", true) -> SQUARE
+            // "whole assembly" / "square-on" framing is not asked for any more: field photos are partial, any angle
             else -> null
         }
         fun fromLocal(reasons: List<String>): Prompt? = when {

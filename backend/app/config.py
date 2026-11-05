@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     auth_mode: str = "header"
     # who closes a patrol report: "patroller" (AI analysis + the patroller signs off; SSE review optional) or "sse"
     signoff: str = "patroller"
+    rotation_views: int = 8    # detector passes per photo at evenly spaced rotations (1 = upright only)
     secret_key: str = "change-me"     # set RVI_SECRET_KEY in production
     token_hours: int = 12
     users_file: Path = Path("./users.yaml")

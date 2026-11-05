@@ -104,7 +104,9 @@ class Models:
         p = settings.model_dir / "ohe_detector.onnx"
         names = settings.model_dir / "ohe_detector.names.json"
         if p.exists() and names.exists():
-            cls.detector = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
+            base = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
+            n = max(1, settings.rotation_views)   # look at each photo at n rotations: parts are found at any angle
+            cls.detector = pipeline.RotationTTA(base, angles=tuple(round(i * 360 / n) for i in range(n))) if n > 1 else base
         vc = settings.model_dir / "ohe_assess.onnx"
         if vc.exists():
             meta = settings.model_dir / "ohe_assess.json"
