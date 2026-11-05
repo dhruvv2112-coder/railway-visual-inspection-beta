@@ -559,6 +559,7 @@ def test_no_framing_demands_for_partial_views(client, models):
 
 def test_rotation_merge_finds_sideways_parts():
     import cv2
+
     from app.ohe import pipeline
 
     class Upright:   # finds a tall bar only when it stands upright, like a detector trained on upright insulators
