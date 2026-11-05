@@ -18,19 +18,19 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :app:mergeDebugAssets
-> Task :app:desugarDebugFileDependencies
+> Task :app:processDebugManifestForPackage
 > Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
 > Task :app:mergeDebugJniLibFolders
 > Task :app:checkDebugDuplicateClasses
-> Task :app:processDebugResources
 > Task :app:mergeDebugNativeLibs
 > Task :app:mergeLibDexDebug
+> Task :app:processDebugResources
 
 > Task :app:stripDebugDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libimage_processing_util_jni.so, libmlkit_google_ocr_pipeline.so, libsurface_util_jni.so.
@@ -59,8 +59,8 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 > Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:bundleDebugClassesToCompileJar
-> Task :app:generateDebugLintReportModel
 > Task :app:mergeProjectDexDebug
+> Task :app:generateDebugLintReportModel
 > Task :app:mergeDebugJavaResource
 > Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugUnitTestLintModel
@@ -85,7 +85,7 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793834292177.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793851739672.json
 
-BUILD SUCCESSFUL in 1m 34s
+BUILD SUCCESSFUL in 1m 33s
 60 actionable tasks: 60 executed
