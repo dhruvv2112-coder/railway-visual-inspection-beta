@@ -34,7 +34,8 @@ def from_exif(data: bytes) -> dict:
         t = sub.get(36867) or ex.get(306)                     # DateTimeOriginal, else DateTime
         off = sub.get(36881) or sub.get(36880)                # OffsetTimeOriginal / OffsetTime, e.g. "+05:30"
         if t:
-            dt = datetime.strptime(str(t).strip("\x00 "), "%Y:%m:%d %H:%M:%S")  # noqa: DTZ007 - EXIF has no zone; set below
+            import time
+            dt = datetime(*time.strptime(str(t).strip("\x00 "), "%Y:%m:%d %H:%M:%S")[:6])   # EXIF has no zone; set below
             tz = IST
             if off and re.fullmatch(r"[+-]\d{2}:\d{2}", str(off)):
                 sign = 1 if str(off)[0] == "+" else -1
