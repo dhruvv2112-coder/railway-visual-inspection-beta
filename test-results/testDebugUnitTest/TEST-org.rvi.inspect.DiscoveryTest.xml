@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.DiscoveryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-05T09:26:58" hostname="runnervm48cm3" time="0.496">
+<testsuite name="org.rvi.inspect.DiscoveryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-05T10:54:47" hostname="runnervm48cm3" time="0.614">
   <properties/>
-  <testcase name="normalisesTypedAddresses" classname="org.rvi.inspect.DiscoveryTest" time="0.421"/>
-  <testcase name="patrollerSignOffMode" classname="org.rvi.inspect.DiscoveryTest" time="0.032"/>
-  <testcase name="parsesReportsAndAlertsFromServer" classname="org.rvi.inspect.DiscoveryTest" time="0.008"/>
-  <testcase name="reportTrackerFollowsSignatureAndAmendments" classname="org.rvi.inspect.DiscoveryTest" time="0.001"/>
-  <testcase name="relaySignatureMatchesServer" classname="org.rvi.inspect.DiscoveryTest" time="0.03"/>
+  <testcase name="normalisesTypedAddresses" classname="org.rvi.inspect.DiscoveryTest" time="0.541"/>
+  <testcase name="patrollerSignOffMode" classname="org.rvi.inspect.DiscoveryTest" time="0.019"/>
+  <testcase name="parsesReportsAndAlertsFromServer" classname="org.rvi.inspect.DiscoveryTest" time="0.002"/>
+  <testcase name="reportTrackerFollowsSignatureAndAmendments" classname="org.rvi.inspect.DiscoveryTest" time="0.004"/>
+  <testcase name="relaySignatureMatchesServer" classname="org.rvi.inspect.DiscoveryTest" time="0.042"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
