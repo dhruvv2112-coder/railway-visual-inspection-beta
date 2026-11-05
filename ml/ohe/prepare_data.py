@@ -20,6 +20,7 @@ import json
 import os
 import re
 import shutil
+import zipfile
 import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -320,9 +321,9 @@ def hf_files(repo: str, patterns: list[str], dest: Path, per_dir_cap: int) -> Pa
 
 
 def epdcl(w: Writer, manifest: list):
-    d = hf_files("EPDCL/pd-defect", [r"^pole_detection/", r"^vegetation_conductor/"], BASE / "epdcl",
-                 per_dir_cap=max(CAP, EVAL_CAP))
-    for sub in ("pole_detection", "vegetation_conductor"):
+    d = hf_files("EPDCL/pd-defect", [r"^pole_detection/", r"^vegetation_conductor/", r"^pole_lean_assessment/object_detection/"],
+                 BASE / "epdcl", per_dir_cap=max(CAP, EVAL_CAP))
+    for sub in ("pole_detection", "vegetation_conductor", "pole_lean_assessment/object_detection"):
         root = d / sub
         if root.exists():
             readme = root / "README.md"
@@ -330,7 +331,31 @@ def epdcl(w: Writer, manifest: list):
             if sub == "vegetation_conductor":
                 coco_dir(w, "epdclvege", root, manifest, "CC BY 4.0", f"hf:EPDCL/pd-defect/{sub}")
             else:
-                yolo_tree(w, "epdcl" + sub.split("_")[0][:4], root, manifest, "CC BY 4.0", f"hf:EPDCL/pd-defect/{sub}")
+                yolo_tree(w, "epdcl" + ("lean" if "lean" in sub else sub.split("_")[0][:4]), root, manifest, "CC BY 4.0",
+                          f"hf:EPDCL/pd-defect/{sub}")
+
+
+def toxin0(w: Writer, manifest: list):
+    """ToXiN0/Powerlines-detection (Apache-2.0): ~8,000 power-line photos, YOLO; festoon / polymer insulators,
+    bad / damaged insulators, nests (other classes are dropped by map_name). Only train/val in the source: hash split."""
+    d = hf_files("ToXiN0/Powerlines-detection", [r"^images/", r"^dataset\.yaml$"], BASE / "toxin0",
+                 per_dir_cap=max(CAP, EVAL_CAP) * 2)
+    yolo_tree(w, "toxin0", d, manifest, "Apache-2.0", "hf:ToXiN0/Powerlines-detection", hash_split=True)
+
+
+MPID = ["porcelain_MPID-20250106T111149Z-001.zip", "composite_MPID-20250106T113900Z-001.zip", "glass_MPID-20250106T113616Z-001.zip"]
+
+
+def mpid(w: Writer, manifest: list):
+    """MPID (Zenodo 14604384, CC BY 4.0): porcelain, composite and glass insulator sets, Roboflow YOLO exports."""
+    for f in MPID:
+        z = download(f"https://zenodo.org/records/14604384/files/{f}?download=1", BASE / f)
+        root = BASE / ("mpid_" + f.split("_")[0])
+        with zipfile.ZipFile(z) as zz:
+            zz.extractall(root)
+        z.unlink()
+        yolo_tree(w, "mpid" + f.split("_")[0][:4], root, manifest, "CC BY 4.0", f"zenodo:14604384/{f}")
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def coco_dir(w: Writer, src: str, root: Path, manifest: list, lic: str, label: str):
@@ -442,7 +467,7 @@ def main():
         shutil.rmtree(OUT)
     w, manifest = Writer(), []
     for fn, args in ((cplid, ()), *((hf_parquet, a) for a in HF), (roboflow, ()), (epdcl, ()), (railfod23, ()),
-                     (vpmbgi, ()), (corrosion, ())):
+                     (vpmbgi, ()), (corrosion, ()), (toxin0, ()), (mpid, ())):
         try:
             fn(w, *args, manifest)
         except Exception as e:

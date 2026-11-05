@@ -11,6 +11,9 @@ on:
       cap: {description: "Max train images per source", default: "3000"}
       evalcap: {description: "Max val/test images per source", default: "400"}
       budget: {description: "Training minutes per job", default: "280"}
+      degrees: {description: "Random rotation augmentation (+/- degrees)", default: "0"}
+      flipud: {description: "Up-down flip probability", default: "0"}
+      out_branch: {description: "Branch for results (keep ci-ohe-train-long for the released model)", default: "ci-ohe-train-long"}
 concurrency: {group: ohe-train-long, cancel-in-progress: false}
 permissions:
   contents: write
@@ -23,6 +26,8 @@ env:
   OHE_MODEL: ${{ inputs.model }}
   OHE_IMGSZ: ${{ inputs.imgsz }}
   OHE_TIME_BUDGET_MIN: ${{ inputs.budget }}
+  OHE_DEGREES: ${{ inputs.degrees }}
+  OHE_FLIPUD: ${{ inputs.flipud }}
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -237,12 +242,13 @@ jobs:
         run: |
           python anomaly.py 2>&1 | tee ../../logs/anomaly.log || true
           [ -f ../../reports/ohe_detector.onnx ] && python verify_onnx.py ../../reports "$OHE_DATA/ohe_yolo" 2>&1 | tee ../../logs/verify_onnx.log || echo "detector not finished"
-      - name: Publish to branch ci-ohe-train-long
+      - name: Publish results branch
         run: |
           mkdir -p /tmp/pub && cp -r logs reports /tmp/pub/ 2>/dev/null || true
           cp .cache/ohe/ohe_yolo/manifest.json .cache/ohe/ohe_yolo/runs/det/progress.json .cache/ohe/ohe_yolo/runs/det/results.csv /tmp/pub/reports/ 2>/dev/null || true
-          cd /tmp/pub && git init -q -b ci-ohe-train-long
+          cp .cache/ohe/ohe_yolo/runs/det/weights/best.pt /tmp/pub/reports/ohe_detector_best.pt 2>/dev/null || true   # for later fine-tuning
+          cd /tmp/pub && git init -q -b "${{ inputs.out_branch }}"
           echo "${{ github.sha }} $(cat reports/progress.json 2>/dev/null)" > STATUS
           git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
           git add -A && git commit -qm "results ${{ github.sha }}"
-          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-ohe-train-long
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" "HEAD:${{ inputs.out_branch }}"

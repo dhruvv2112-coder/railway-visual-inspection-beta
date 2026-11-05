@@ -55,7 +55,9 @@ def main():
         m = YOLO(MODEL)
         kw = dict(data=str(DATA / "data.yaml"), epochs=EPOCHS, imgsz=IMGSZ, device=DEVICE,
                   batch=int(BATCH) if BATCH >= 1 or BATCH == -1 else BATCH, workers=2, seed=0, deterministic=True,
-                  plots=False, verbose=False, project=str(DATA / "runs"), name="det", exist_ok=True)
+                  plots=False, verbose=False, project=str(DATA / "runs"), name="det", exist_ok=True,
+                  # any orientation: random rotation and up-down flips (field photos of parts at any angle)
+                  degrees=float(os.environ.get("OHE_DEGREES", "0")), flipud=float(os.environ.get("OHE_FLIPUD", "0")))
     m.add_callback("on_model_save", keep_resume)
     m.add_callback("on_fit_epoch_end", budget)
     m.train(**kw)
