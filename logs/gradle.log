@@ -10,8 +10,8 @@ Daemon will be stopped at the end of the build
 > Task :app:mapDebugSourceSetPaths
 > Task :app:extractDebugSupportedLocales
 > Task :app:generateDebugResources
-> Task :app:createDebugCompatibleScreenManifests
 > Task :app:generateDebugLocaleConfig
+> Task :app:createDebugCompatibleScreenManifests
 > Task :app:packageDebugResources
 > Task :app:extractDeepLinksDebug
 > Task :app:parseDebugLocalResources
@@ -45,8 +45,8 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:generateDebugAndroidTestResValues
 > Task :app:generateDebugUnitTestConfig
 > Task :app:extractProguardFiles
-> Task :app:kspDebugKotlin
 > Task :app:mergeExtDexDebug
+> Task :app:kspDebugKotlin
 
 > Task :app:compileDebugKotlin
 w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/src/main/java/org/rvi/inspect/ui/components/Glass.kt:235:98 'val Icons.Outlined.ListAlt: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.ListAlt.
@@ -57,14 +57,14 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
-> Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
 > Task :app:mergeProjectDexDebug
-> Task :app:mergeDebugJavaResource
-> Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugLintReportModel
-> Task :app:kspDebugUnitTestKotlin
+> Task :app:generateDebugAndroidTestLintModel
 > Task :app:generateDebugUnitTestLintModel
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:mergeDebugJavaResource
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
@@ -75,8 +75,8 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:lintAnalyzeDebugAndroidTest
-> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:testDebugUnitTest
 > Task :app:finalizeTestRoborazziDebug
 > Task :app:recordRoborazziDebug
@@ -85,7 +85,7 @@ w: file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspec
 Wrote HTML report to file:///home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/android/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793876014040.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793878297678.json
 
-BUILD SUCCESSFUL in 2m 31s
+BUILD SUCCESSFUL in 2m 13s
 60 actionable tasks: 60 executed

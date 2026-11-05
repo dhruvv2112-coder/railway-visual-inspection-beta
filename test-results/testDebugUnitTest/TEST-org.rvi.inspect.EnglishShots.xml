@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.EnglishShots" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-05T10:54:49" hostname="runnervm48cm3" time="66.073">
+<testsuite name="org.rvi.inspect.EnglishShots" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-05T11:32:48" hostname="runnervm48cm3" time="32.237">
   <properties/>
-  <testcase name="s01_signin" classname="org.rvi.inspect.EnglishShots" time="61.124"/>
-  <testcase name="s01b_signin_server" classname="org.rvi.inspect.EnglishShots" time="0.609"/>
-  <testcase name="s06_urgent" classname="org.rvi.inspect.EnglishShots" time="0.495"/>
-  <testcase name="s02_home" classname="org.rvi.inspect.EnglishShots" time="0.478"/>
-  <testcase name="s07_note" classname="org.rvi.inspect.EnglishShots" time="0.375"/>
-  <testcase name="s10_report" classname="org.rvi.inspect.EnglishShots" time="0.413"/>
-  <testcase name="s09_patrols" classname="org.rvi.inspect.EnglishShots" time="0.434"/>
-  <testcase name="s12_profile" classname="org.rvi.inspect.EnglishShots" time="0.434"/>
-  <testcase name="s04_hud" classname="org.rvi.inspect.EnglishShots" time="0.296"/>
-  <testcase name="s08_end" classname="org.rvi.inspect.EnglishShots" time="0.39"/>
-  <testcase name="s03_start" classname="org.rvi.inspect.EnglishShots" time="0.385"/>
-  <testcase name="s11_alerts" classname="org.rvi.inspect.EnglishShots" time="0.35"/>
-  <testcase name="s05_retake" classname="org.rvi.inspect.EnglishShots" time="0.288"/>
+  <testcase name="s01_signin" classname="org.rvi.inspect.EnglishShots" time="22.036"/>
+  <testcase name="s01b_signin_server" classname="org.rvi.inspect.EnglishShots" time="1.369"/>
+  <testcase name="s06_urgent" classname="org.rvi.inspect.EnglishShots" time="0.97"/>
+  <testcase name="s02_home" classname="org.rvi.inspect.EnglishShots" time="0.944"/>
+  <testcase name="s07_note" classname="org.rvi.inspect.EnglishShots" time="0.898"/>
+  <testcase name="s10_report" classname="org.rvi.inspect.EnglishShots" time="0.662"/>
+  <testcase name="s09_patrols" classname="org.rvi.inspect.EnglishShots" time="0.97"/>
+  <testcase name="s12_profile" classname="org.rvi.inspect.EnglishShots" time="1.014"/>
+  <testcase name="s04_hud" classname="org.rvi.inspect.EnglishShots" time="0.646"/>
+  <testcase name="s08_end" classname="org.rvi.inspect.EnglishShots" time="0.691"/>
+  <testcase name="s03_start" classname="org.rvi.inspect.EnglishShots" time="0.721"/>
+  <testcase name="s11_alerts" classname="org.rvi.inspect.EnglishShots" time="0.685"/>
+  <testcase name="s05_retake" classname="org.rvi.inspect.EnglishShots" time="0.62"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
