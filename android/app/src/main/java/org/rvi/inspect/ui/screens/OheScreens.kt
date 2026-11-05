@@ -732,20 +732,30 @@ fun PatrolsScreen(rows: List<PatrolRow>, offline: Boolean, onOpen: (PatrolRow) -
 // ---------------------------------------------------------------------------------------------------------------- report
 
 data class ReportUi(val title: String, val sub: String, val reached: Int, val signedBy: String?, val amendments: List<String>,
-                    val findings: List<Pair<String, Boolean>>, val error: String?)
+                    val findings: List<Pair<String, Boolean>>, val error: String?,
+                    val patrollerSignoff: Boolean = false, val canSignOff: Boolean = false, val signing: Boolean = false)
 
 @Composable
-fun ReportScreen(r: ReportUi, onBack: () -> Unit, onRefresh: () -> Unit) {
-    val steps = listOf(R.string.g_step_captured, R.string.g_step_uploaded, R.string.g_step_checked, R.string.g_step_reviewed, R.string.g_step_signed)
-    val signed = r.reached >= 5
+fun ReportScreen(r: ReportUi, onBack: () -> Unit, onRefresh: () -> Unit, onSignOff: () -> Unit = {}) {
+    // patroller mode (draft): AI analysis + the patroller signs off; SSE mode adds "Reviewed by SSE"
+    val steps = if (r.patrollerSignoff) listOf(R.string.g_step_captured, R.string.g_step_uploaded, R.string.g_step_checked, R.string.g_step_signed_off)
+        else listOf(R.string.g_step_captured, R.string.g_step_uploaded, R.string.g_step_checked, R.string.g_step_reviewed, R.string.g_step_signed)
+    val signed = r.reached >= steps.size
     Aura(glows = GlowsCool, base = Ink.Mist2) {
         Column(Edge.fillMaxSize().verticalScroll(rememberScrollState())) {
             BackBar(r.title, r.sub, onBack)
             Column(Modifier.padding(12.dp).fillMaxWidth().clip(RoundedCornerShape(30.dp)).background(Brush.linearGradient(listOf(Ink.Ink, if (signed) Color(0xFF0B4D3A) else Color(0xFF1B2470))))
                 .padding(18.dp)) {
                 Text(stringResource(R.string.g_report_now).uppercase(), style = MaterialTheme.typography.labelSmall, color = Color(0xFFB8BCD0))
-                Text(if (signed) stringResource(R.string.g_signed_by, r.signedBy ?: "SSE") else stringResource(R.string.g_with_sse), style = MaterialTheme.typography.headlineSmall, color = Ink.White)
-                Text(r.error ?: stringResource(R.string.g_review_time), style = MaterialTheme.typography.bodyMedium, color = Color(0xFFD3D6E6))
+                Text(when { signed -> stringResource(R.string.g_signed_by, r.signedBy ?: "SSE"); r.patrollerSignoff -> stringResource(R.string.g_await_signoff)
+                    else -> stringResource(R.string.g_with_sse) }, style = MaterialTheme.typography.headlineSmall, color = Ink.White)
+                Text(r.error ?: stringResource(if (r.patrollerSignoff && !signed) R.string.g_signoff_hint else R.string.g_review_time),
+                    style = MaterialTheme.typography.bodyMedium, color = Color(0xFFD3D6E6))
+                if (r.canSignOff) {
+                    Spacer(Modifier.height(14.dp))
+                    Pill(stringResource(if (r.signing) R.string.g_signing_off else R.string.g_sign_off), onSignOff, Modifier.fillMaxWidth(),
+                        PillKind.Signal, Icons.Outlined.Check, enabled = !r.signing)
+                }
             }
             Column(Modifier.padding(horizontal = 12.dp).fillMaxWidth().glass(RoundedCornerShape(28.dp)).padding(16.dp, 8.dp)) {
                 steps.forEachIndexed { i, res ->

@@ -135,6 +135,14 @@ class DiscoveryTest {
         assertTrue(org.rvi.inspect.data.isSigned(amendedSigned.status)); assertEquals("SSE-2", amendedSigned.signedBy)
     }
 
+    @Test fun patrollerSignOffMode() {
+        fun rep(json: String) = org.rvi.inspect.data.parseReport(Json.parseToJsonElement(json) as kotlinx.serialization.json.JsonObject)
+        val open = rep("""{"id":"r1","status":"READY_FOR_REVIEW","signoff":"patroller","can_sign":true,"content":{},"latest":{"id":"r2","revision":2,"status":"READY_FOR_REVIEW"}}""")
+        assertTrue(open.patrollerSignoff && open.canSign); assertEquals("r2", open.latestId)
+        val done = rep("""{"id":"r1","status":"PATROLLER_SIGNED","signed_by":"TRACKMEN","signoff":"patroller","content":{},"latest":{"id":"r1","revision":1,"status":"PATROLLER_SIGNED","signed_by":"TRACKMEN"}}""")
+        assertTrue(org.rvi.inspect.data.isSigned(done.status)); assertEquals("TRACKMEN", done.signedBy)
+    }
+
     @Test fun relaySignatureMatchesServer() {
         // same HMAC-SHA256("url|ts") the server computes in remote.sign
         val key = "k3y"; val url = "https://brave-words.trycloudflare.com/"; val ts = 1762300000L

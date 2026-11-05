@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     max_clipped_fraction: float = 0.25  # share of pixels >= 253 (glare)
     # Sign-in (OHE service). 'header' trusts X-Actor/X-Role (development, tests); 'token' requires sign-in.
     auth_mode: str = "header"
+    # who closes a patrol report: "patroller" (AI analysis + the patroller signs off; SSE review optional) or "sse"
+    signoff: str = "patroller"
     secret_key: str = "change-me"     # set RVI_SECRET_KEY in production
     token_hours: int = 12
     users_file: Path = Path("./users.yaml")

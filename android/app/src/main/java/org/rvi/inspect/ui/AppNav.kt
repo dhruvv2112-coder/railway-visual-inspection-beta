@@ -225,9 +225,13 @@ fun AppNav(ovm: OheViewModel = viewModel(), openAlerts: Boolean = false) {
             val err by ovm.reportError.collectAsState()
             LaunchedEffect(rid) { while (true) { ovm.loadReport(rid); delay(20_000) } }
             val r = d?.takeIf { it.id == rid }
-            val reached = when { r == null -> 3; org.rvi.inspect.data.isSigned(r.status) -> 5; r.status == "REVIEWED" || r.status == "SUPERSEDED" -> 4; else -> 3 }
+            val signing by ovm.signingOff.collectAsState()
+            val patroller = r?.patrollerSignoff == true
+            val signedNow = org.rvi.inspect.data.isSigned(r?.status)
+            val reached = when { r == null -> 3; patroller -> if (signedNow) 4 else 3; signedNow -> 5; r.status == "REVIEWED" || r.status == "SUPERSEDED" -> 4; else -> 3 }
             ReportScreen(ReportUi("RPT-01 · ${rid.take(8)}", listOfNotNull(r?.masts?.let { "$it masts" }, r?.alerts?.let { "$it urgent" }).joinToString(" · ").ifBlank { null } ?: "",
-                reached, r?.signedBy, r?.amendments.orEmpty(), r?.findings.orEmpty(), err), onBack = { nav.popBackStack() }, onRefresh = { ovm.loadReport(rid) })
+                reached, r?.signedBy, r?.amendments.orEmpty(), r?.findings.orEmpty(), err, patroller, r != null && r.canSign && !signedNow, signing),
+                onBack = { nav.popBackStack() }, onRefresh = { ovm.loadReport(rid) }, onSignOff = { r?.let { ovm.signOff(rid, it.latestId) } })
         }
         composable("alerts") {
             LaunchedEffect(Unit) { ovm.loadAlerts() }

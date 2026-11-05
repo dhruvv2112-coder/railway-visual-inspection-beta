@@ -144,7 +144,8 @@ def test_v11_signed_revision_is_immutable(client, models):
     _upload(client, sid, _jpeg(10), **NEAR_12)
     rep = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()
     rid = rep["report_id"]
-    assert client.post(f"/ohe/reports/{rid}/sign", headers=PATROL).status_code == 403
+    other = PATROL | {"X-Actor": "PT-OTHER"}
+    assert client.post(f"/ohe/reports/{rid}/sign", headers=other).status_code == 403   # not their patrol
     signed = client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER).json()
     fid = client.get(f"/ohe/reports/{rid}").json()["content"]["RPT-06_findings"][0]["id"]
     new = client.post(f"/ohe/reports/{rid}/amend", json={"finding_id": fid, "field": "priority", "new_value": "review",
@@ -192,7 +193,7 @@ def test_token_mode_requires_sign_in(client, tmp_path, monkeypatch):
     assert client.post("/ohe/auth/login", json={"id": "SSE-1", "pin": "0000"}).status_code == 401
     tok = client.post("/ohe/auth/login", json={"id": "SSE-1", "pin": "4826"}).json()["token"]
     me = client.get("/ohe/me", headers={"Authorization": f"Bearer {tok}"}).json()
-    assert me == {"id": "SSE-1", "role": "SSE", "can_sign": True}
+    assert me == {"id": "SSE-1", "role": "SSE", "can_sign": True, "signoff": "patroller"}
     bad = tok[:-2] + ("AA" if not tok.endswith("AA") else "BB")
     assert client.get("/ohe/me", headers={"Authorization": f"Bearer {bad}"}).status_code == 401
 
@@ -520,3 +521,28 @@ def test_real_detector_numpy_scores_are_stored(client, models):
     sid = _session(client)
     r = _upload(client, sid, _jpeg(777)).json()
     assert r["media"]["status"] == "assessed" and r["analysis"]["assessments"][0]["condition"] == "vegetation_near_ohe"
+
+
+
+def test_patroller_signs_off_own_patrol(client, models, monkeypatch):
+    models.detector, models.ocr = FixDet([INS, DEFECT]), FixOCR(["1205/12"])
+    sid = _session(client)
+    _upload(client, sid, _jpeg(901), **NEAR_12)
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    assert client.get(f"/ohe/reports/{rid}", headers=PATROL).json()["can_sign"] is True
+    r = client.post(f"/ohe/reports/{rid}/sign", headers=PATROL | {"X-Actor": PATROL["X-Actor"].lower()}).json()
+    assert r["status"] == "PATROLLER_SIGNED"
+    got = client.get(f"/ohe/reports/{rid}").json()
+    assert got["status"] == "PATROLLER_SIGNED" and got["signoff"] == "patroller"
+    assert client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER).status_code == 409   # already closed
+
+
+def test_sse_mode_needs_authorised_signer(client, models, monkeypatch):
+    from app.ohe import api
+    monkeypatch.setattr(api.settings, "signoff", "sse")
+    models.detector, models.ocr = FixDet([INS]), FixOCR(["1205/12"])
+    sid = _session(client)
+    _upload(client, sid, _jpeg(902), **NEAR_12)
+    rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+    assert client.post(f"/ohe/reports/{rid}/sign", headers=PATROL).status_code == 403
+    assert client.post(f"/ohe/reports/{rid}/sign", headers=SIGNER).json()["status"] == "AUTHORISED_SIGNED"

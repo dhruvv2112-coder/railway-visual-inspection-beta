@@ -163,7 +163,7 @@
     const rows = reports.filter((r) => !q || [r.territory, r.status, r.id, r.session, r.created_by].join(' ').toLowerCase().includes(q));
     $('#reports').innerHTML = rows.length ? rows.map((r) => `<button class="item" data-id="${esc(r.id)}" aria-current="${current?.id === r.id}">
       <div class="row" style="justify-content:space-between"><span class="t">${esc(r.territory)}</span>
-      <span class="chip ${r.status === 'AUTHORISED_SIGNED' ? 'signed' : ''}">${esc(human(r.status).toLowerCase())}</span></div>
+      <span class="chip ${['AUTHORISED_SIGNED','PATROLLER_SIGNED'].includes(r.status) ? 'signed' : ''}">${esc(human(r.status).toLowerCase())}</span></div>
       <div class="s">${esc(when(r.ended_at))} · rev ${r.revision} · ${r.summary.evidenced_assets ?? 0}/${r.summary.expected_assets ?? 0} masts ·
       ${r.summary.with_findings ?? 0} with findings${r.summary.alerts ? ` · <b>${r.summary.alerts} urgent</b>` : ''}</div></button>`).join('')
       : '<div class="empty">No reports yet. A report appears when a patroller ends a patrol.</div>';

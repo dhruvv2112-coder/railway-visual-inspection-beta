@@ -122,7 +122,7 @@
     <string name="ohe_with_findings">कमी वाले मस्त</string>
     <string name="ohe_not_assessable">जाँच योग्य नहीं</string>
     <string name="ohe_report_id">रिपोर्ट %1$s</string>
-    <string name="ohe_next_step">SSE या ADEE रिपोर्ट की समीक्षा कर हस्ताक्षर करेंगे। तत्काल कमियाँ दिखते ही भेज दी गईं।</string>
+    <string name="ohe_next_step">AI जाँच तैयार है। रिपोर्ट खोलें, कमियाँ देखें और साइन-ऑफ करें। तत्काल कमियाँ दिखते ही भेज दी गईं।</string>
     <string name="ohe_retry">फिर से अपलोड करें</string>
     <string name="ohe_done">हो गया</string>
     <string name="prompt_zoom">स्थिर रहें और पुर्जे पर ज़ूम करें। OHE के पास न जाएँ।</string>
@@ -205,7 +205,7 @@
     <string name="g_patrols_title">मेरी गश्तें</string>
     <string name="g_search">सेक्शन या मस्त खोजें</string>
     <string name="g_st_uploading">अपलोड</string>
-    <string name="g_st_review">जाँच में</string>
+    <string name="g_st_review">साइन-ऑफ बाकी</string>
     <string name="g_st_signed">हस्ताक्षरित</string>
     <string name="g_empty_patrols">अभी कोई गश्त नहीं। होम से शुरू करें।</string>
     <string name="g_this_phone">इस फ़ोन पर</string>
@@ -253,4 +253,9 @@
     <string name="g_notif_channel">तत्काल OHE कमियाँ</string>
     <string name="g_notif_title">तत्काल: %1$s</string>
     <string name="g_notif_mast">मास्ट %1$s</string>
+    <string name="g_step_signed_off">पेट्रोलर द्वारा साइन-ऑफ</string>
+    <string name="g_await_signoff">आपके साइन-ऑफ की प्रतीक्षा</string>
+    <string name="g_signoff_hint">AI जाँच पूरी हुई। नीचे कमियाँ देखें, फिर पेट्रोल बंद करने के लिए साइन-ऑफ करें।</string>
+    <string name="g_sign_off">पेट्रोल साइन-ऑफ करें</string>
+    <string name="g_signing_off">साइन-ऑफ हो रहा है…</string>
 </resources>

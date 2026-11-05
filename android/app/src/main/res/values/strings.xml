@@ -122,7 +122,7 @@
     <string name="ohe_with_findings">Masts with findings</string>
     <string name="ohe_not_assessable">Not assessable</string>
     <string name="ohe_report_id">Report %1$s</string>
-    <string name="ohe_next_step">The SSE or ADEE reviews and signs the report. Urgent findings were raised as soon as they were seen.</string>
+    <string name="ohe_next_step">AI analysis is ready. Open the report, check the findings and sign off. Urgent findings were raised as soon as they were seen.</string>
     <string name="ohe_retry">Retry upload</string>
     <string name="ohe_done">Done</string>
     <string name="prompt_zoom">Hold still and use zoom on the part. Do not move closer to the OHE.</string>
@@ -205,7 +205,7 @@
     <string name="g_patrols_title">My patrols</string>
     <string name="g_search">Search section or mast</string>
     <string name="g_st_uploading">Uploading</string>
-    <string name="g_st_review">Under review</string>
+    <string name="g_st_review">Awaiting sign-off</string>
     <string name="g_st_signed">Signed</string>
     <string name="g_empty_patrols">No patrols yet. Start one from Home.</string>
     <string name="g_this_phone">On this phone</string>
@@ -253,4 +253,9 @@
     <string name="g_notif_channel">Urgent OHE findings</string>
     <string name="g_notif_title">Urgent: %1$s</string>
     <string name="g_notif_mast">Mast %1$s</string>
+    <string name="g_step_signed_off">Signed off by patroller</string>
+    <string name="g_await_signoff">Waiting for your sign-off</string>
+    <string name="g_signoff_hint">AI analysis is done. Check the findings below, then sign off to close this patrol.</string>
+    <string name="g_sign_off">Sign off patrol</string>
+    <string name="g_signing_off">Signing off…</string>
 </resources>

@@ -141,6 +141,14 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
         reportError.value = null
         runCatching { repo.report(rid) }.onSuccess { report.value = it }.onFailure { reportError.value = it.message ?: "Not reachable" }
     }
+    val signingOff = MutableStateFlow(false)
+    fun signOff(rid: String, latestId: String) = viewModelScope.launch {
+        signingOff.value = true
+        runCatching { repo.signOff(latestId) }.onFailure { reportError.value = it.message }
+        runCatching { repo.report(rid) }.onSuccess { report.value = it }
+        signingOff.value = false
+        loadReports()
+    }
     fun markAlertsRead() { readAlerts.value = readAlerts.value + (alerts.value.orEmpty().map { it.findingId }) }
     fun markAlertRead(id: String) { readAlerts.value = readAlerts.value + id }
     fun setInspector(id: String) = viewModelScope.launch { c.repository.setText("inspector", id) }

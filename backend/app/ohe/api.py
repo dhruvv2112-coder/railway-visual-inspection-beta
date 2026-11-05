@@ -341,7 +341,7 @@ def _temporal(sess: OheSession, findings: list[dict], register: list[dict], s: S
         for f in findings:
             f["temporal"] = "first_cycle"
         return {"state": "first_cycle", "statement": "No earlier patrol of this section on this server; nothing to compare."}
-    signed = [r for r in reps if r.status in ("AUTHORISED_SIGNED", "SIGNED")]
+    signed = [r for r in reps if r.status in SIGNED]
     base = max(signed or reps, key=lambda r: r.revision)
     before = json.loads(base.content_json).get("RPT-06_findings", [])
     old = {_fkey(f): f for f in before if _fkey(f)}
@@ -358,7 +358,7 @@ def _temporal(sess: OheSession, findings: list[dict], register: list[dict], s: S
             for k, f in old.items() if k not in now_keys]
     n = lambda st: sum(f.get("temporal") == st for f in findings)
     return {"state": "compared", "previous_session": prev_sess.id, "previous_report": base.id,
-            "previous_revision": base.revision, "previous_signed": base.status in ("AUTHORISED_SIGNED", "SIGNED"),
+            "previous_revision": base.revision, "previous_signed": base.status in SIGNED,
             "previous_capture_end": prev_sess.ended_at, "new": n("new"), "persistent": n("persistent"),
             "not_comparable": n("not_comparable"), "not_seen_again": gone,
             "statement": f"Compared with the patrol of {str(prev_sess.ended_at)[:10]}: {n('new')} new, {n('persistent')} "
@@ -393,6 +393,7 @@ def get_report(rid: str, s: SessionDep, a: ActorDep):
     # The phone keeps the id of the first revision; after an amendment it follows to the newest one.
     latest = s.exec(select(OheReport).where(OheReport.session_id == r.session_id).order_by(OheReport.revision.desc())).first() or r
     return {"id": r.id, "revision": r.revision, "status": r.status, "sha256": r.sha256, "signed_by": r.signed_by,
+            "signoff": settings.signoff, "can_sign": a["role"] in SIGNER_ROLES or (settings.signoff == "patroller" and _owns(latest, a, s)),
             "content": json.loads(r.content_json), "RPT-11_review": _review_record(r, s),
             "latest": {"id": latest.id, "revision": latest.revision, "status": latest.status, "signed_by": latest.signed_by,
                        "signed_at": latest.signed_at, "RPT-11_review": _review_record(latest, s) if latest.id != r.id else None}}
@@ -410,16 +411,29 @@ def _review_record(r: OheReport, s: Session) -> dict:
             "report_checksum": r.sha256, "amendments": amendments, "revisions": chain[::-1]}
 
 
+def _owns(r: OheReport, a: dict, s: Session) -> bool:
+    sess = s.get(OheSession, r.session_id)
+    return bool(sess and sess.created_by and sess.created_by.strip().upper() == str(a["id"]).strip().upper())
+
+
+SIGNED = ("AUTHORISED_SIGNED", "PATROLLER_SIGNED", "SIGNED")
+
+
 @router.post("/reports/{rid}/sign")
 def sign(rid: str, s: SessionDep, a: ActorDep):
     r = s.get(OheReport, rid)
     if not r:
         raise HTTPException(404, "Report not found")
-    if a["role"] not in SIGNER_ROLES:
-        raise HTTPException(403, "Authorised signer role required")
+    if a["role"] in SIGNER_ROLES:
+        status = "AUTHORISED_SIGNED"
+    elif settings.signoff == "patroller" and _owns(r, a, s):
+        status = "PATROLLER_SIGNED"     # patroller confirms the AI-analysed report of their own patrol
+    else:
+        raise HTTPException(403, "Authorised signer role required" if settings.signoff != "patroller"
+                            else "Only the patroller who did this patrol, or an SSE, can sign it off")
     if r.status != "READY_FOR_REVIEW":
         raise HTTPException(409, f"Report is {r.status}")
-    r.status, r.signed_by, r.signed_at = "AUTHORISED_SIGNED", a["id"], now()
+    r.status, r.signed_by, r.signed_at = status, a["id"], now()
     audit(s, "ohe_report", r.id, "report.signed", a["id"], {"sha256": r.sha256})
     s.commit()
     return {"id": r.id, "status": r.status, "sha256": r.sha256}
@@ -529,7 +543,7 @@ def login(body: LoginIn, request: Request):
 
 @router.get("/me")
 def me(a: ActorDep):
-    return a | {"can_sign": a["role"] in SIGNER_ROLES}
+    return a | {"can_sign": a["role"] in SIGNER_ROLES, "signoff": settings.signoff}
 
 
 @router.get("/reports")

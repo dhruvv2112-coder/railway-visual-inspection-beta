@@ -181,6 +181,9 @@ interface OheApi {
     @POST("ohe/sessions/{sid}/notes")
     suspend fun note(@Path("sid") sid: String, @Body body: OheNoteIn, @Header("X-Actor") actor: String, @Header("X-Role") role: String): OheIdOut
 
+    @POST("ohe/reports/{rid}/sign")
+    suspend fun signReport(@Path("rid") rid: String, @Header("X-Actor") actor: String, @Header("X-Role") role: String): JsonObject
+
     @POST("ohe/sessions/{sid}/end")
     suspend fun end(@Path("sid") sid: String, @Header("X-Actor") actor: String, @Header("X-Role") role: String): OheEndOut
 
@@ -222,7 +225,8 @@ data class AlertRow(val findingId: String, val territory: String, val assetId: S
 /** Report status for the tracker: steps reached, who reviewed, amendments. */
 data class ReportDetail(val id: String, val status: String, val signedBy: String?, val signedAt: String?, val amendments: List<String>,
                         val photos: Int?, val masts: Int?, val withFindings: Int?, val alerts: Int?, val notAssessable: Int?,
-                        val findings: List<Pair<String, Boolean>>)
+                        val findings: List<Pair<String, Boolean>>,
+                        val latestId: String = id, val patrollerSignoff: Boolean = false, val canSign: Boolean = false)
 
 private fun JsonObject.s(k: String) = (this[k] as? kotlinx.serialization.json.JsonPrimitive)?.takeIf { it.isString }?.content
 private fun JsonObject.i(k: String) = (this[k] as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
@@ -244,7 +248,7 @@ fun parseAlerts(a: kotlinx.serialization.json.JsonArray): List<AlertRow> = a.map
 }
 
 /** Server statuses: READY_FOR_REVIEW, AUTHORISED_SIGNED, SUPERSEDED (an amended revision replaced it). */
-fun isSigned(status: String?) = status == "AUTHORISED_SIGNED" || status == "SIGNED"
+fun isSigned(status: String?) = status == "AUTHORISED_SIGNED" || status == "PATROLLER_SIGNED" || status == "SIGNED"
 
 fun parseReport(r: JsonObject): ReportDetail {
     val c = r.o("content") ?: JsonObject(emptyMap())
@@ -263,7 +267,8 @@ fun parseReport(r: JsonObject): ReportDetail {
     val reviewed = am.isNotEmpty() || (latest?.i("revision") ?: 1) > 1
     return ReportDetail(r.s("id") ?: "", if (reviewed && !isSigned(status)) "REVIEWED" else status,
         latest?.s("signed_by") ?: r.s("signed_by"), latest?.s("signed_at") ?: rv.s("signed_at"), am, sm.i("photos") ?: sm.i("media"),
-        sm.i("expected_assets"), sm.i("with_findings"), sm.i("alerts"), sm.i("not_assessable"), fs)
+        sm.i("expected_assets"), sm.i("with_findings"), sm.i("alerts"), sm.i("not_assessable"), fs,
+        latest?.s("id") ?: r.s("id") ?: "", r.s("signoff") == "patroller", (r["can_sign"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
 }
 
 /** What the phone keeps from the server's analysis of one photo (pure function: unit-tested). */
@@ -348,6 +353,14 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
     private suspend fun api(): Pair<OheApi, UserSettings> { val s = settings(); return OheApi.create(baseUrl(), s.token) to s }
     suspend fun reports(): List<ReportRow> { val (a, s) = api(); return parseReports(a.reports(s.inspectorId, s.role)) }
     suspend fun alerts(): List<AlertRow> { val (a, s) = api(); return parseAlerts(a.alerts(s.inspectorId, s.role)) }
+    /** Patroller (or SSE) signs off the newest revision of a report. Throws with a readable message. */
+    suspend fun signOff(rid: String) {
+        val (a, s) = api()
+        try { a.signReport(rid, s.inspectorId, s.role) } catch (e: retrofit2.HttpException) {
+            throw IllegalStateException(when (e.code()) { 403 -> "Only the patroller of this patrol or an SSE can sign it off"
+                409 -> "Already signed off"; else -> "Server error ${e.code()}" })
+        }
+    }
     suspend fun report(rid: String): ReportDetail { val (a, s) = api(); return parseReport(a.report(rid, s.inspectorId, s.role)) }
 
     suspend fun addCapture(c: OheCaptureEntity) { dao.insertCapture(c); schedule() }
