@@ -268,23 +268,34 @@ def _boxes_from_yolo_txt(txt: str, names: list) -> list:
     return out
 
 
-def yolo_tree(w: Writer, src: str, root: Path, manifest: list, lic: str, label: str, hash_split: bool = False):
-    """Any YOLO export: data.yaml somewhere for names; images/ + labels/ siblings; split from the path."""
+def yolo_tree(w: Writer, src: str, root: Path, manifest: list, lic: str, label: str, hash_split: bool = False,
+              force: str | None = None):
+    """Any YOLO export: data.yaml somewhere for names; images/ + labels/ siblings; split from the path.
+    force: every source class means this target class (e.g. MPID 'iso-su', 'iso_poly', '1' are all insulators).
+    An image whose label file is MISSING is skipped (missing labels are not 'nothing here')."""
     ymls = sorted(root.rglob("data.yaml")) or sorted(root.rglob("*.yaml"))
     raw = yaml.safe_load(ymls[0].read_text()) if ymls else {}
     names = raw.get("names", [])
     names = [names[k] for k in sorted(names)] if isinstance(names, dict) else list(names)
-    n = 0
+    src_names = list(names)
+    if force:
+        names = [force] * max(1, len(names))
+    n = missing = 0
     for img in sorted(p for p in root.rglob("*") if p.suffix.lower() in (".jpg", ".jpeg", ".png") and "images" in p.parts):
         parts = list(img.parts)
         i = len(parts) - 1 - parts[::-1].index("images")
         lab = Path(*parts[:i], "labels", *parts[i + 1:]).with_suffix(".txt")
-        boxes = _boxes_from_yolo_txt(lab.read_text(), names) if lab.exists() else []
+        if not lab.exists():
+            missing += 1
+            continue
+        boxes = _boxes_from_yolo_txt(lab.read_text(), names)
         sp = next((s for s in ("train", "valid", "val", "test") if s in [x.lower() for x in parts]), None)
         sp = split_for(f"{src}-{img.stem}") if hash_split else ({"valid": "val"}.get(sp, sp) or split_for(f"{src}-{img.stem}"))
         w.add(src, sp, re.sub(r"[^A-Za-z0-9]+", "-", img.stem)[:60] + f"-{n}", img.read_bytes(), boxes)
         n += 1
-    manifest.append({"source": label, "licence": lic, "source_names": names, "files_seen": n})
+    manifest.append({"source": label, "licence": lic, "source_names": src_names, "mapped_to": force, "files_seen": n,
+                     "skipped_no_label_file": missing})
+    print(f"yolo_tree {src}: {n} images, {missing} skipped (no label file)", flush=True)
 
 
 def hf_files(repo: str, patterns: list[str], dest: Path, per_dir_cap: int) -> Path:
@@ -302,7 +313,8 @@ def hf_files(repo: str, patterns: list[str], dest: Path, per_dir_cap: int) -> Pa
                 continue
             seen[k] = seen.get(k, 0) + 1
             stem = str(Path(f).with_suffix(""))
-            pick += [f] + [x for x in files if x.startswith(stem.replace("/images/", "/labels/")) and x.endswith(".txt")]
+            lab_stem = re.sub(r"(^|/)images/", r"\1labels/", stem)   # also for top-level images/ (ToXiN0)
+            pick += [f] + [x for x in files if x.startswith(lab_stem) and x.endswith(".txt")]
         elif f.endswith((".yaml", ".md", ".json")) and f.count("/") <= 3:
             pick.append(f)
     print("hf_files", repo, len(pick), "files", dict(list(seen.items())[:12]), flush=True)
@@ -360,7 +372,8 @@ def mpid(w: Writer, manifest: list):
         with zipfile.ZipFile(z) as zz:
             zz.extractall(root)
         z.unlink()
-        yolo_tree(w, "mpid" + f.split("_")[0][:4], root, manifest, "CC BY 4.0", f"zenodo:14604384/{f}")
+        yolo_tree(w, "mpid" + f.split("_")[0][:4], root, manifest, "CC BY 4.0", f"zenodo:14604384/{f}",
+                  hash_split=True, force="insulator")
         shutil.rmtree(root, ignore_errors=True)
 
 
@@ -488,6 +501,10 @@ def main():
                                                    "test": "test/images", "names": used}))
     out = {"target_names": used, "sources": manifest, "stats": w.stats}
     (OUT / "manifest.json").write_text(json.dumps(out, indent=1))
+    # a big source with no labelled objects would teach the model that its objects are background: stop here
+    empty = [k for k, v in w.stats.items() if sum(v["images"].values()) >= 200 and sum(v["instances"].values()) == 0]
+    if empty:
+        raise SystemExit(f"sources with images but no labelled objects (fix the loader): {empty}")
     print(json.dumps(out, indent=1))
 
 
