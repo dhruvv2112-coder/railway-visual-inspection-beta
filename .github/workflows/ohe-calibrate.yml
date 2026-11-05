@@ -1,0 +1,45 @@
+name: ohe-calibrate
+# Fits per-class confidence calibration for the trained detector on the held-out TEST split of the full training run
+# (dataset artifact "state" kept by ohe-train-long) and publishes reports/ohe_calibration.json to branch ci-ohe-calib.
+on:
+  workflow_dispatch:
+    inputs:
+      run_id: {description: "ohe-train-long run that holds the dataset artifact", default: "41418986799"}
+  push:
+    branches: [main]
+    paths: ["ml/ohe/calibrate.py", ".github/workflows/ohe-calibrate.yml"]
+permissions:
+  contents: write
+  actions: read
+defaults:
+  run:
+    shell: bash
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install onnxruntime opencv-python-headless numpy pyyaml fastapi sqlmodel pydantic-settings python-multipart
+      - name: Dataset from the full training run
+        uses: actions/download-artifact@v4
+        with: {name: state, path: state, run-id: "${{ github.event.inputs.run_id || '41418986799' }}", github-token: "${{ github.token }}"}
+      - name: Trained detector
+        run: |
+          mkdir -p model && git fetch -q --depth 1 origin ci-ohe-train-long
+          git show FETCH_HEAD:reports/ohe_detector.onnx > model/ohe_detector.onnx
+          git show FETCH_HEAD:reports/ohe_detector.names.json > model/ohe_detector.names.json
+          Y=$(dirname "$(find state -type d -path '*test/images' | head -1)"); Y=$(dirname "$Y"); echo "dataset: $Y"; ls "$Y"
+          echo "Y=$Y" >> "$GITHUB_ENV"
+      - name: Fit calibration on held-out test photos
+        run: mkdir -p reports && python ml/ohe/calibrate.py model "$Y" reports/ohe_calibration.json
+      - name: Publish to branch ci-ohe-calib
+        run: |
+          cd /tmp && rm -rf pub && mkdir pub && cd pub && git init -q -b ci-ohe-calib && mkdir reports
+          cp "$GITHUB_WORKSPACE/reports/ohe_calibration.json" reports/
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "calibration ${{ github.sha }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-ohe-calib

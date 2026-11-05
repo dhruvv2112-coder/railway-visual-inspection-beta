@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val repo = (application as RviApp).container.repository
         setContent {
             val s by repo.settings.collectAsState(initial = null)
-            RviTheme(largeText = s?.largeText == true) { AppNav() }
+            RviTheme(largeText = s?.largeText == true) { AppNav(openAlerts = intent?.getStringExtra(org.rvi.inspect.data.AlertNotifier.EXTRA_OPEN) == "alerts") }
         }
     }
 }

@@ -250,4 +250,7 @@
     <string name="g_cls_mast">मास्ट</string>
     <string name="g_cls_foreign_object">तार पर बाहरी वस्तु</string>
     <string name="g_cls_corrosion">जंग</string>
+    <string name="g_notif_channel">तत्काल OHE कमियाँ</string>
+    <string name="g_notif_title">तत्काल: %1$s</string>
+    <string name="g_notif_mast">मास्ट %1$s</string>
 </resources>

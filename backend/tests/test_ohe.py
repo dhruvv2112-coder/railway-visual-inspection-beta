@@ -1,5 +1,6 @@
 """End-to-end scenarios from the OHE HLD §15.2 (V01–V07, V09, V11) with fixture model adapters."""
 import hashlib
+import math
 from datetime import UTC, datetime
 
 import cv2
@@ -228,7 +229,7 @@ def test_v10_no_improvement_claim_without_comparison(client, models):
     _upload(client, sid, _jpeg(22), **NEAR_12)
     rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
     c = client.get(f"/ohe/reports/{rid}", headers=SIGNER).json()["content"]
-    assert c["RPT-07_temporal"]["state"] == "not_comparable"
+    assert c["RPT-07_temporal"]["state"] in ("first_cycle", "compared")   # compared now, but never as improvement
     import json as _j
     text = _j.dumps(c["RPT-06_findings"]).lower()
     assert "improv" not in text and "resolved since" not in text
@@ -410,3 +411,102 @@ def test_sign_in_ignores_id_case(tmp_path, monkeypatch):
         assert r.status_code == 200, typed
         assert r.json()["id"] == "pt-0007"
     assert c.post("/ohe/auth/login", json={"id": "PT-0007", "pin": "9999"}).status_code == 401
+
+
+# ---------------------------------------------------------------- mast lean, corrosion, vegetation, calibration
+def _mast_img(angle_deg: float, w=900, h=1200):
+    import cv2
+    img = np.full((h, w, 3), 200, np.uint8)
+    t = math.radians(angle_deg)
+    cx, top, bot = w // 2, 100, h - 50
+    dx = (bot - top) * math.tan(t)          # top leans right for positive angle
+    pts = np.array([[cx - 30 + dx / 2, top], [cx + 30 + dx / 2, top], [cx + 30 - dx / 2, bot], [cx - 30 - dx / 2, bot]], np.int32)
+    cv2.fillPoly(img, [pts], (60, 60, 60))
+    rng = np.random.default_rng(0)  # sensor-like texture so the photo passes the sharpness gate
+    img = np.clip(img.astype(int) + rng.integers(-25, 25, img.shape), 0, 255).astype(np.uint8)
+    return img, (cx - 200, top - 10, cx + 200, bot + 10)
+
+
+def test_mast_lean_measured_and_corrected_for_phone_tilt():
+    from app.ohe.pipeline import mast_lean
+    img, box = _mast_img(5.0)
+    lean, _ = mast_lean(img, box, 0.0)
+    assert lean is not None and abs(lean - 5.0) < 1.0
+    lean2, _ = mast_lean(img, box, -5.0)    # phone itself was turned: the apparent lean was the phone, not the mast
+    assert abs(lean2) < 1.0
+    assert mast_lean(img, box, None)[0] is None
+    assert mast_lean(img, box, 45.0)[0] is None
+
+
+def test_mast_lean_raises_review_finding():
+    from app.ohe import pipeline
+    img, box = _mast_img(6.0)
+    reg = pipeline.load_registry()
+
+    class D:
+        version = "t"
+        def detect(self, _):
+            return [pipeline.Det("mast", 0.9, box)]
+    r = pipeline.assess_image(img, reg, D(), pipeline.NullOCR(), roll_deg=0.0)
+    o = r["observations"][0]
+    assert o["state"] == "assessable_defect" and o["condition"] == "mast_lean"
+    a = pipeline.decide(o, r["identity"], True, reg)
+    assert a["rule_id"] == "R-LEAN-01" and a["priority"] == "review" and not a["alert"]
+    r0 = pipeline.assess_image(_mast_img(0.5)[0], reg, D(), pipeline.NullOCR(), roll_deg=0.0)
+    assert r0["observations"][0]["state"] == "assessable_no_visible_defect"
+
+
+def test_corrosion_and_vegetation_are_routine_findings():
+    from app.ohe import pipeline
+    reg = pipeline.load_registry()
+    img = np.full((800, 800, 3), 128, np.uint8)
+    img[::7] = 30
+
+    class D:
+        version = "t"
+        def detect(self, _):
+            return [pipeline.Det("corrosion", 0.8, (100, 100, 400, 400)), pipeline.Det("vegetation", 0.7, (400, 400, 780, 780))]
+    r = pipeline.assess_image(img, reg, D(), pipeline.NullOCR())
+    asm = {a["component"]: pipeline.decide(a, r["identity"], True, reg) for a in r["observations"]}
+    assert asm["corrosion"]["rule_id"] == "R-COR-01" and asm["vegetation"]["rule_id"] == "R-VEG-01"
+    assert all(a["priority"] == "routine" and not a["alert"] for a in asm.values())
+
+
+def test_calibration_applied_when_fitted():
+    from app.ohe import pipeline
+    cal = {"classes": {"insulator": {"a": 1.0, "b": 0.0}}}
+    assert abs(pipeline.calibrate(0.7, "insulator", cal) - 0.7) < 1e-3
+    assert pipeline.calibrate(0.7, "mast", cal) is None and pipeline.calibrate(0.7, "insulator", None) is None
+
+
+def test_existing_database_gets_new_columns(tmp_path):
+    from sqlalchemy import create_engine, inspect, text
+    from app import db
+    eng = create_engine(f"sqlite:///{tmp_path/'old.db'}")
+    with eng.begin() as c:
+        c.execute(text('CREATE TABLE ohemedia (id VARCHAR PRIMARY KEY, session_id VARCHAR)'))
+    old, db.engine = db.engine, eng
+    try:
+        db._add_missing_columns()
+    finally:
+        db.engine = old
+    assert "roll_deg" in {c["name"] for c in inspect(eng).get_columns("ohemedia")}
+
+
+def test_report_compares_with_previous_patrol_of_same_section(client, models):
+    terr = {"territory": "SEC-CMP-" + datetime.now(UTC).strftime("%H%M%S%f")}
+    def cycle(dets, seed):
+        models.detector, models.ocr = FixDet(dets), FixOCR(["1205/12"])
+        sid = client.post("/ohe/sessions", json=terr | {"expected_assets": ["1205/12"]}, headers=PATROL).json()["id"]
+        _upload(client, sid, _jpeg(seed), **NEAR_12)
+        rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
+        return client.get(f"/ohe/reports/{rid}").json()["content"]
+    first = cycle([INS, DEFECT], 501)
+    assert first["RPT-07_temporal"]["state"] == "first_cycle"
+    second = cycle([INS, DEFECT], 502)
+    t = second["RPT-07_temporal"]
+    assert t["state"] == "compared" and t["persistent"] == 1 and t["new"] == 0
+    assert second["RPT-06_findings"][0]["temporal"] == "persistent"
+    third = cycle([INS], 503)                       # mast assessed clean this time
+    g = third["RPT-07_temporal"]["not_seen_again"]
+    assert len(g) == 1 and g[0]["state"] == "not_seen_this_cycle" and "not proof of repair" in third["RPT-07_temporal"]["statement"]

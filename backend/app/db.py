@@ -12,6 +12,22 @@ engine = create_engine(settings.database_url, connect_args={"check_same_thread":
 
 def init_db() -> None:
     SQLModel.metadata.create_all(engine)
+    _add_missing_columns()
+
+
+def _add_missing_columns() -> None:
+    """Upgrade an existing database in place: add nullable columns introduced by newer versions (the laptop server
+    keeps its data across updates). Never drops or changes existing columns."""
+    from sqlalchemy import inspect, text
+    insp = inspect(engine)
+    with engine.begin() as con:
+        for t in SQLModel.metadata.sorted_tables:
+            if not insp.has_table(t.name):
+                continue
+            have = {c["name"] for c in insp.get_columns(t.name)}
+            for c in t.columns:
+                if c.name not in have:
+                    con.execute(text(f'ALTER TABLE "{t.name}" ADD COLUMN "{c.name}" {c.type.compile(engine.dialect)}'))
 
 
 def get_session():

@@ -18,12 +18,13 @@ components:
   insulator_defect: {scope: "Insulators", symptom_of: insulator}
   bird_nest: {scope: "Vegetation, nests and loose material", supported_conditions: [foreign_object], presence_is_condition: true}
   foreign_object: {scope: "Vegetation, nests and loose material", supported_conditions: [foreign_object], presence_is_condition: true}
-  vegetation: {scope: "Vegetation, nests and loose material", supported_conditions: []}
+  vegetation: {scope: "Vegetation, nests and loose material", supported_conditions: [vegetation_near_ohe], presence_is_condition: true}
   dropper: {scope: "Droppers", supported_conditions: []}
   number_plate: {scope: "Number plates and painted identifiers", supported_conditions: []}
   # detected for evidence and identity; no condition is claimed until validated on railway OHE images (HLD §15.1)
-  mast: {scope: "Masts and structures", supported_conditions: []}
-  corrosion: {scope: "Masts and structures", supported_conditions: []}
+  mast: {scope: "Masts and structures", supported_conditions: [mast_lean], lean_check: true}
+  corrosion: {scope: "Masts and structures", supported_conditions: [visible_corrosion], presence_is_condition: true}
+  # mast lean is measured geometrically on the mast box (pipeline.mast_lean), corrected for the phone roll at capture
 min_target_px: 48          # minimum short side of a component crop before condition is assessable (§2.2; tune empirically)
 rules:
   - id: R-INS-01
@@ -59,4 +60,38 @@ rules:
     limitations: "Anomaly score is not a defect diagnosis"
     priority: review
     route: {primary: "OHE coordinator", contributors: []}
+  - id: R-VEG-01
+    authority: "HLD §7 visual screening (clause reference to be confirmed by TRD before field use)"
+    decision_type: visual_screening
+    condition: vegetation_near_ohe
+    observed: "Vegetation is visible near the OHE in the marked region"
+    hypothesis: "Possible vegetation encroachment towards live equipment"
+    action_family: planned_maintenance
+    action: "Check clearance on site and plan trimming with the vegetation owner if needed"
+    limitations: "2D image overlap does not measure electrical clearance"
+    priority: routine
+    route: {primary: "OHE coordinator", contributors: ["Works / vegetation owner"]}
+  - id: R-COR-01
+    authority: "HLD §7 visual screening (clause reference to be confirmed by TRD before field use)"
+    decision_type: visual_screening
+    condition: visible_corrosion
+    observed: "Surface rust is visible on the structure or fitting in the marked region"
+    hypothesis: "Corrosion of mast, structure or fitting"
+    action_family: planned_maintenance
+    action: "Record for the next maintenance block; competent assessment of section loss if heavy"
+    limitations: "Surface appearance only; section loss and strength are not assessed"
+    priority: routine
+    route: {primary: "OHE coordinator", contributors: []}
+  - id: R-LEAN-01
+    authority: "HLD §7 visual screening (tolerance to be confirmed by TRD before field use)"
+    decision_type: visual_screening
+    condition: mast_lean
+    observed: "The mast axis in the photo leans beyond the configured screening angle after correcting for phone tilt"
+    hypothesis: "Possible mast lean / out of plumb"
+    action_family: competent_closer_inspection
+    action: "Measure verticality with a plumb or theodolite under the applicable instructions"
+    limitations: "Single photo, 2D angle only; lean along the camera axis is not visible; screening, not measurement"
+    priority: review
+    route: {primary: "OHE coordinator", contributors: ["Civil / foundations"]}
+mast_lean_screen_deg: 3.0   # screening angle after phone-roll correction (configurable; not a code tolerance)
 unresolved_owner_queue: "OHE coordination queue"

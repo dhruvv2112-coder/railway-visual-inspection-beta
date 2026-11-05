@@ -45,7 +45,7 @@ private fun whenText(ms: Long?) = ms?.let { Instant.ofEpochMilli(it).atZone(Zone
 private fun whenIso(iso: String?) = iso?.let { runCatching { java.time.LocalDateTime.parse(iso.take(19)).atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault()).format(dayFmt) }.getOrNull() } ?: ""
 
 @Composable
-fun AppNav(ovm: OheViewModel = viewModel()) {
+fun AppNav(ovm: OheViewModel = viewModel(), openAlerts: Boolean = false) {
     val nav = rememberNavController()
     val context = LocalContext.current
     val view = LocalView.current
@@ -64,7 +64,8 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
     val readAlerts by ovm.readAlerts.collectAsState()
     val unread = alertsList.orEmpty().count { it.findingId !in readAlerts }
     val perms = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
-    LaunchedEffect(Unit) { perms.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION)) }
+    LaunchedEffect(Unit) { perms.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION) +
+        (if (android.os.Build.VERSION.SDK_INT >= 33) arrayOf(Manifest.permission.POST_NOTIFICATIONS) else emptyArray())) }
     DisposableEffect(Unit) { onDispose { voice.release() } }
     // Keep an eye on the server: reachability every 20 s, alerts every 30 s.
     LaunchedEffect(settings?.serverUrl, settings?.token) {
@@ -110,6 +111,7 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
     val signedIn = !settings?.token.isNullOrBlank()
     if (settings == null) return
     val start = remember { if (signedIn) "home" else "signin" }
+    LaunchedEffect(openAlerts) { if (openAlerts && signedIn) nav.navigate("alerts") }   // tapped an alert notification
     NavHost(nav, startDestination = start) {
         composable("signin") {
             var id by remember(settings?.inspectorId) { mutableStateOf(settings?.inspectorId?.takeIf { it != "CP-0412" } ?: "") }

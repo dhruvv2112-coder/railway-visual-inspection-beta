@@ -250,4 +250,7 @@
     <string name="g_cls_mast">Mast</string>
     <string name="g_cls_foreign_object">Object on wire</string>
     <string name="g_cls_corrosion">Rust</string>
+    <string name="g_notif_channel">Urgent OHE findings</string>
+    <string name="g_notif_title">Urgent: %1$s</string>
+    <string name="g_notif_mast">Mast %1$s</string>
 </resources>

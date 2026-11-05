@@ -42,6 +42,9 @@ fun summaryFrom(session: OheSessionEntity?, caps: List<OheCaptureEntity>, notes:
 class OheViewModel(app: Application) : AndroidViewModel(app) {
     private val c = (app as RviApp).container
     private val repo = c.ohe
+    /** Phone roll from the gravity sensor (degrees, + = top of phone turned clockwise), for the mast lean check. */
+    private val tilt = org.rvi.inspect.data.Tilt(app).also { it.start() }
+    override fun onCleared() { tilt.stop(); super.onCleared() }
     val settings: StateFlow<UserSettings?> = c.repository.settings.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val active: StateFlow<OheSessionEntity?> = repo.active.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val latest: StateFlow<OheSessionEntity?> = repo.latest.stateIn(viewModelScope, SharingStarted.Eagerly, null)
@@ -129,7 +132,11 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
     val readAlerts = MutableStateFlow<Set<String>>(emptySet())
 
     fun loadReports() = viewModelScope.launch { reports.value = runCatching { repo.reports() }.getOrNull() ?: reports.value }
-    fun loadAlerts() = viewModelScope.launch { alerts.value = runCatching { repo.alerts() }.getOrNull() ?: alerts.value }
+    fun loadAlerts() = viewModelScope.launch {
+        val rows = runCatching { repo.alerts() }.getOrNull()
+        if (rows != null) org.rvi.inspect.data.AlertNotifier.notifyNew(getApplication(), rows)
+        alerts.value = rows ?: alerts.value
+    }
     fun loadReport(rid: String) = viewModelScope.launch {
         reportError.value = null
         runCatching { repo.report(rid) }.onSuccess { report.value = it }.onFailure { reportError.value = it.message ?: "Not reachable" }
@@ -170,11 +177,12 @@ class OheViewModel(app: Application) : AndroidViewModel(app) {
      *  classification and no confirmation: the server decides what the photo shows (HLD: no per-asset confirmation). */
     fun onCaptured(file: File) = viewModelScope.launch {
         val s = active.value ?: return@launch
+        val roll = tilt.rollDeg()   // read at once: the phone is still where the photo was taken
         val q = PatrolViewModel.assessFile(file)
         prompt.value = if (q.passed) null else Prompt.fromLocal(q.reasons)
         val loc = locate()
         repo.addCapture(OheCaptureEntity(sessionId = s.id, path = file.absolutePath, sha256 = Hashing.sha256(file),
-            lat = loc?.first, lon = loc?.second, accuracyM = loc?.third, localQualityOk = q.passed, localReasons = q.reasons.joinToString(",")))
+            lat = loc?.first, lon = loc?.second, accuracyM = loc?.third, localQualityOk = q.passed, localReasons = q.reasons.joinToString(","), rollDeg = roll))
     }
 
     /** Server prompt for the newest uploaded photo, if any (shown until the next capture). */

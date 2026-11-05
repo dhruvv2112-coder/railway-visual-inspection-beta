@@ -205,6 +205,10 @@
         : '<div class="empty">Nothing waiting for a decision.</div>'}
       <h3>Findings (${findings.length})</h3>
       ${findings.length ? findings.map(findingCard).join('') : '<div class="empty">No findings in this patrol.</div>'}
+      ${(() => { const t = c['RPT-07_temporal'] || {}; const g = t.not_seen_again || [];
+        return `<h3>Compared with the last patrol</h3><p class="small">${esc(t.statement || 'Not compared.')}</p>` + (g.length ?
+        `<div class="tbl"><table><tr><th>Mast</th><th>Earlier finding</th><th>Now</th></tr>${g.map((x) =>
+        `<tr><td>${esc(x.asset_id)}</td><td>${esc(human(x.condition || x.component))}</td><td>${esc(human(x.state))}</td></tr>`).join('')}</table></div>` : ''); })()}
       <h3>Mast register</h3>
       <div class="tbl"><table><tr><th>Mast</th><th>State</th><th>Findings</th></tr>
         ${reg.map((x) => `<tr><td>${esc(x.asset_id)}</td><td>${esc(human(x.state))}</td><td>${x.findings.length}</td></tr>`).join('')}</table></div>
@@ -220,7 +224,7 @@
     const conf = f.confidence || {};
     return `<div class="finding ${f.alert ? 'urgent' : ''}">
       <div class="row" style="justify-content:space-between"><b>${esc(f.hypothesis || human(f.condition || f.state))}</b>
-        <span>${f.alert ? '<span class="chip urgent">urgent</span> ' : ''}<span class="chip">${esc(f.priority || 'review')}</span></span></div>
+        <span>${f.alert ? '<span class="chip urgent">urgent</span> ' : ''}<span class="chip">${esc(f.priority || 'review')}</span>${f.temporal && f.temporal !== 'first_cycle' ? ` <span class="chip">${esc(human(f.temporal))}</span>` : ''}</span></div>
       <div class="small muted">Finding ${esc(f.id)} · mast ${esc(f.asset_id || 'unresolved')} · ${esc(f.component)} · seen in ${f.observations} photo(s) · rule ${esc(f.rule_id || '—')}</div>
       <dl class="claim small">
         <dt>Observed</dt><dd>${esc(f.observed_feature || human(f.state))}</dd>

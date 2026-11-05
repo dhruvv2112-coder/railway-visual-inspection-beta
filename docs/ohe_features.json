@@ -173,11 +173,11 @@
  {
   "id": "B09",
   "area": "Inspection service",
-  "feature": "Mast lean, corrosion, vegetation clearance findings",
+  "feature": "Mast lean, corrosion, vegetation findings",
   "hld_ref": "Cascade stage 4",
-  "status": "Not started",
-  "built": "Detected only, reported as unsupported",
-  "next": "EPDCL lean labels; railway validation"
+  "status": "Built",
+  "built": "Lean: mast edges measured in the mast box, corrected for phone roll (gravity sensor), screening angle 3 deg (R-LEAN-01, review). Corrosion R-COR-01 and vegetation R-VEG-01 as routine findings. Clause references and lean tolerance to be confirmed by TRD",
+  "next": "Validate on railway photos; confirm tolerances"
  },
  {
   "id": "B10",
@@ -221,8 +221,8 @@
   "feature": "Immediate alert for urgent findings",
   "hld_ref": "§8.4",
   "status": "Built",
-  "built": "Alert feed /ohe/alerts + optional webhook, raised on upload",
-  "next": "Connect SMS/push gateway"
+  "built": "Alert feed + webhook; phone notification for each new urgent finding (in-app every 20 s, background every 15 min), tap opens Alerts",
+  "next": "SMS gateway if wanted"
  },
  {
   "id": "B15",
@@ -265,18 +265,18 @@
   "area": "Inspection service",
   "feature": "Calibrated confidence scores",
   "hld_ref": "Confidence vector",
-  "status": "Not started",
-  "built": "Scores marked uncalibrated",
-  "next": "Calibrate on pilot set"
+  "status": "Built",
+  "built": "Platt scaling per class fitted on the held-out public test split (ohe-calibrate workflow); holdout ECE reported; scores labelled calibrated",
+  "next": "Recalibrate on railway pilot photos"
  },
  {
   "id": "B20",
   "area": "Inspection service",
   "feature": "Compare with previous cycles (new / persistent)",
   "hld_ref": "§11 (Release C)",
-  "status": "Deferred",
-  "built": "—",
-  "next": "After identity is stable"
+  "status": "Built",
+  "built": "RPT-07: each finding new / also in last patrol vs the previous patrol of the same section; earlier findings marked not seen this cycle or not re-checked; shown on reviewer page, print and app",
+  "next": "—"
  },
  {
   "id": "B21",

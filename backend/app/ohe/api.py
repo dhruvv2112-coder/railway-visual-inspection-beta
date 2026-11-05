@@ -54,6 +54,7 @@ class OheMedia(SQLModel, table=True):
     path: str = ""
     analysis_json: str = "{}"             # model run outputs, versions included
     status: str = "persisted"             # persisted | assessed | failed
+    roll_deg: float | None = None         # phone roll at capture from the gravity sensor (mast lean correction)
 
 
 class OheFinding(SQLModel, table=True):
@@ -96,6 +97,7 @@ class Models:
     ocr: pipeline.OCR = pipeline.NullOCR()
     anomaly = None
     view: pipeline.ViewCheck | None = None
+    calib: dict | None = None   # per-class confidence calibration (ohe_calibration.json), None = uncalibrated
 
     @classmethod
     def load(cls):
@@ -108,6 +110,8 @@ class Models:
             meta = settings.model_dir / "ohe_assess.json"
             thr = json.loads(meta.read_text()).get("threshold", 0.5) if meta.exists() else 0.5
             cls.view = pipeline.OnnxViewCheck(str(vc), thr)
+        cal = settings.model_dir / "ohe_calibration.json"
+        cls.calib = json.loads(cal.read_text()) if cal.exists() else None
         try:
             cls.ocr = pipeline.RapidOcrAdapter()
         except ImportError:  # optional dependency (installed in the server image)
@@ -147,7 +151,8 @@ def _finding_key(ident: dict, a: dict) -> str:
 async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, image: Annotated[UploadFile, File()],
                  sha256: Annotated[str, Form()], captured_at: Annotated[datetime, Form()],
                  lat: Annotated[float | None, Form()] = None, lon: Annotated[float | None, Form()] = None,
-                 accuracy_m: Annotated[float | None, Form()] = None, device: Annotated[str, Form()] = ""):
+                 accuracy_m: Annotated[float | None, Form()] = None, device: Annotated[str, Form()] = "",
+                 roll_deg: Annotated[float | None, Form()] = None):
     sess = s.get(OheSession, sid)
     if not sess or sess.ended_at:
         raise HTTPException(409, "Session not open")
@@ -162,7 +167,8 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, imag
     path = d / f"{sha256.lower()}.jpg"
     path.write_bytes(data)
     m = OheMedia(session_id=sid, sha256=sha256.lower(), captured_at=captured_at, lat=lat, lon=lon, accuracy_m=accuracy_m,
-                 location_source="capture" if lat is not None else "none", device=device, path=str(path))
+                 location_source="capture" if lat is not None else "none", device=device, path=str(path),
+                 roll_deg=roll_deg)
     s.add(m)
     audit(s, "ohe_media", m.id, "persisted", a["id"], {"sha256": m.sha256})
     try:
@@ -199,7 +205,7 @@ def process(m: OheMedia, s: Session) -> list:
     reg = pipeline.load_registry()
     img = quality.decode(Path(m.path).read_bytes())
     res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m,
-                                Models.view)
+                                Models.view, roll_deg=m.roll_deg, calib=Models.calib)
     if res["identity"]["selected_asset_id"] and m.lat is None:
         m.location_source = "registry_inherited"
     res["assessments"] = [pipeline.decide(o, res["identity"], res["quality"]["passed"], reg) for o in res["observations"]]
@@ -297,15 +303,14 @@ def _reconcile(sess: OheSession, s: Session) -> dict:
         "RPT-04_special_attention": [f for f in findings if f["alert"]],
         "RPT-05_asset_register": register,
         "RPT-06_findings": findings,
-        "RPT-07_temporal": {"state": "not_comparable",
-                            "statement": "Comparison with earlier cycles is not part of this release (HLD Release C). "
-                                         "No change, improvement or deterioration is claimed."},
+        "RPT-07_temporal": _temporal(sess, findings, register, s),
         "RPT-08_actions": [{"finding": f["id"], "primary": f.get("routing", {}).get("primary", "OHE coordination queue"),
                             "contributors": f.get("routing", {}).get("contributors", []), "action_family": f.get("action_family"),
                             "urgency_basis": f.get("rule_id"), "action": f.get("recommendation"),
                             "status": "suggested – not adopted until the authorised organisation assigns it"} for f in findings],
         "RPT-09_limitations": ["Visual-only inspection: no electrical, thermal, tension or dimensional claims",
-                               "Model scores are uncalibrated until a calibration set is fitted",
+                               "Model scores are uncalibrated until a calibration set is fitted" if not Models.calib else
+                               "Confidence is calibrated on public test photos, not yet on railway photos",
                                *[f"Finding {f['id']} not associated to a single asset" for f in findings if f["asset_id"] is None],
                                *[f"Photo {m.id} could not be processed ({_an(m).get('error', 'error')}); evidence kept, "
                                  "its masts are not assessed from it" for m in media if m.status == "failed"],
@@ -318,6 +323,47 @@ def _reconcile(sess: OheSession, s: Session) -> dict:
         "RPT-13_evidence_manifest": [{"media_id": m.id, "sha256": m.sha256, "captured_at": m.captured_at,
                                       "location_source": m.location_source} for m in media],
     }
+
+
+def _fkey(f: dict) -> str | None:
+    return f"{f['asset_id']}|{f.get('component')}|{f.get('condition')}" if f.get("asset_id") else None
+
+
+def _temporal(sess: OheSession, findings: list[dict], register: list[dict], s: Session) -> dict:
+    """RPT-07: compare with the previous cycle of the same section (its signed revision if signed, else its newest).
+    Only findings tied to one mast are compared; a finding not seen again is 'not seen this cycle' only when that mast
+    was assessed clean now, otherwise 'not re-checked'. Visual comparison only: no deterioration rate is claimed."""
+    prev_sess = s.exec(select(OheSession).where(OheSession.territory == sess.territory, OheSession.id != sess.id,
+                                                OheSession.ended_at != None, OheSession.started_at < sess.started_at)  # noqa: E711
+                       .order_by(OheSession.started_at.desc())).first()
+    reps = s.exec(select(OheReport).where(OheReport.session_id == prev_sess.id)).all() if prev_sess else []
+    if not reps:
+        for f in findings:
+            f["temporal"] = "first_cycle"
+        return {"state": "first_cycle", "statement": "No earlier patrol of this section on this server; nothing to compare."}
+    signed = [r for r in reps if r.status in ("AUTHORISED_SIGNED", "SIGNED")]
+    base = max(signed or reps, key=lambda r: r.revision)
+    before = json.loads(base.content_json).get("RPT-06_findings", [])
+    old = {_fkey(f): f for f in before if _fkey(f)}
+    now_keys = set()
+    for f in findings:
+        k = _fkey(f)
+        f["temporal"] = "not_comparable" if not k else ("persistent" if k in old else "new")
+        if k:
+            now_keys.add(k)
+    state_now = {r["asset_id"]: r["state"] for r in register}
+    gone = [{"asset_id": f["asset_id"], "component": f.get("component"), "condition": f.get("condition"),
+             "previous_finding": f.get("id"),
+             "state": "not_seen_this_cycle" if state_now.get(f["asset_id"]) == "assessable_no_visible_defect" else "not_rechecked"}
+            for k, f in old.items() if k not in now_keys]
+    n = lambda st: sum(f.get("temporal") == st for f in findings)
+    return {"state": "compared", "previous_session": prev_sess.id, "previous_report": base.id,
+            "previous_revision": base.revision, "previous_signed": base.status in ("AUTHORISED_SIGNED", "SIGNED"),
+            "previous_capture_end": prev_sess.ended_at, "new": n("new"), "persistent": n("persistent"),
+            "not_comparable": n("not_comparable"), "not_seen_again": gone,
+            "statement": f"Compared with the patrol of {str(prev_sess.ended_at)[:10]}: {n('new')} new, {n('persistent')} "
+                         f"still present, {sum(g['state'] == 'not_seen_this_cycle' for g in gone)} not seen this cycle, "
+                         f"{sum(g['state'] == 'not_rechecked' for g in gone)} not re-checked. 'Not seen' is not proof of repair."}
 
 
 def _hash(content: dict) -> str:
@@ -419,8 +465,13 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
     row = lambda *v: "<tr>" + "".join(f"<td>{esc(x)}</td>" for x in v) + "</tr>"
     reg = "".join(row(x["asset_id"], x["state"].replace("_", " "), len(x["findings"])) for x in c["RPT-05_asset_register"])
     fnd = "".join(row(f["id"], f["asset_id"] or "unresolved: " + ", ".join(x["asset_id"] for x in f["candidates"][:3]),
-                      f.get("observed_feature", f["state"]), f.get("priority", "review"), f.get("routing", {}).get("primary", ""))
+                      f.get("observed_feature", f["state"]), f.get("priority", "review"), f.get("routing", {}).get("primary", ""),
+                      f.get("temporal", "—").replace("_", " "))
                   for f in c["RPT-06_findings"])
+    tmp = c.get("RPT-07_temporal", {})
+    gone = "".join(row(g["asset_id"], f"{g.get('component')} · {g.get('condition')}", g["state"].replace("_", " "))
+                   for g in tmp.get("not_seen_again", []))
+    gone = f"<table><tr><th>Mast</th><th>Earlier finding</th><th>Now</th></tr>{gone}</table>" if gone else ""
     css = ("body{font-family:Montserrat,Arial,sans-serif;color:#222;background:#fff;margin:24px}table{border-collapse:collapse;"
            "width:100%;font-size:12px}td,th{border:1px solid #bbb;padding:4px 6px;text-align:left}h1{font-size:20px}")
     sm = c["RPT-02_summary"]
@@ -434,12 +485,12 @@ def report_html(rid: str, s: SessionDep, a: ActorDep):
             f" · territory {esc(c['RPT-01_document_control']['territory'])} · SHA-256 {r.sha256}</p>"
             f"<h2>Summary</h2><table>{''.join(row(k.replace('_', ' '), v) for k, v in sm.items())}</table>"
             f"<h2>Asset register</h2><table><tr><th>Asset</th><th>State</th><th>Findings</th></tr>{reg}</table>"
-            f"<h2>Findings</h2><table><tr><th>ID</th><th>Asset</th><th>Observed</th><th>Priority</th><th>Route</th></tr>{fnd}</table>"
+            f"<h2>Findings</h2><table><tr><th>ID</th><th>Asset</th><th>Observed</th><th>Priority</th><th>Route</th><th>Vs last patrol</th></tr>{fnd}</table>"
             f"<h2>Coverage</h2><p>{esc(cov.get('statement', ''))}</p><p>Photos: {len(cov.get('captures', []))} · not linked to one mast: "
             f"{len(cov.get('ambiguous_captures', []))} · masts with no photo: {esc(', '.join(cov.get('evidence_gaps', [])) or 'none')}"
             f" · registry {esc(cov.get('registry_version', ''))}</p>"
             f"<h2>Suggested actions</h2><table><tr><th>Finding</th><th>Primary</th><th>Action</th><th>Status</th></tr>{act}</table>"
-            f"<h2>Comparison with earlier cycles</h2><p>{esc(c.get('RPT-07_temporal', {}).get('statement', ''))}</p>"
+            f"<h2>Comparison with earlier cycles</h2><p>{esc(tmp.get('statement', ''))}</p>{gone}"
             f"<h2>Limitations</h2><ul>{''.join(f'<li>{esc(x)}</li>' for x in c['RPT-09_limitations'])}</ul>"
             f"<h2>Review and authorisation</h2><p>Signed by {esc(r.signed_by or '—')} at {esc(r.signed_at or '—')} · "
             f"checksum {r.sha256}</p>{notes}</body></html>")

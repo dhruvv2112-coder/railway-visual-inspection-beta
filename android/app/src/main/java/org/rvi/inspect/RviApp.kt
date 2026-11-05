@@ -21,5 +21,7 @@ class RviApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        org.rvi.inspect.data.AlertNotifier.channel(this)
+        runCatching { org.rvi.inspect.data.AlertNotifier.schedule(this) }  // background alert check; never blocks start-up
     }
 }

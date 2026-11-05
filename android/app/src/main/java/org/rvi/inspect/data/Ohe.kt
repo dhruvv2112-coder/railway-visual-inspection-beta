@@ -81,6 +81,7 @@ data class OheCaptureEntity(
     val alert: Boolean = false,
     val seen: String = "",               // what the detector saw, "insulator:2,mast:1" (shown to the inspector)
     val assessed: Int = 0,               // parts whose condition the models could judge on this photo
+    val rollDeg: Float? = null,          // phone roll at capture (gravity sensor), for the mast lean check
 )
 
 @Entity(tableName = "ohe_note")
@@ -172,6 +173,7 @@ interface OheApi {
         @Part("lon") lon: RequestBody?,
         @Part("accuracy_m") accuracy: RequestBody?,
         @Part("device") device: RequestBody,
+        @Part("roll_deg") roll: RequestBody?,
         @Header("X-Actor") actor: String,
         @Header("X-Role") role: String,
     ): JsonObject
@@ -254,7 +256,8 @@ fun parseReport(r: JsonObject): ReportDetail {
     val fs = (c["RPT-06_findings"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }.map { f ->
         val label = findingLabel(f)
         val asset = f.s("asset_id")
-        (if (asset != null) "$label · $asset" else label) to ((f["alert"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
+        val vs = when (f.s("temporal")) { "new" -> " · new since last patrol"; "persistent" -> " · also in last patrol"; else -> "" }
+        ((if (asset != null) "$label · $asset" else label) + vs) to ((f["alert"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
     }
     val status = latest?.s("status") ?: r.s("status") ?: ""
     val reviewed = am.isNotEmpty() || (latest?.i("revision") ?: 1) > 1
@@ -385,7 +388,7 @@ class OheRepository(private val context: Context, private val db: RviDatabase, p
             val body = try {
                 api.media(sid, MultipartBody.Part.createFormData("image", file.name, file.asRequestBody("image/jpeg".toMediaType())),
                     text(c.sha256), text(Instant.ofEpochMilli(c.capturedAt).toString()), c.lat?.let { text(it.toString()) },
-                    c.lon?.let { text(it.toString()) }, c.accuracyM?.let { text(it.toString()) }, text(android.os.Build.MODEL ?: ""),
+                    c.lon?.let { text(it.toString()) }, c.accuracyM?.let { text(it.toString()) }, text(android.os.Build.MODEL ?: ""), c.rollDeg?.let { text(it.toString()) },
                     s.inspectorId, s.role)
             } catch (e: HttpException) {
                 if (e.code() == 422) { dao.updateCapture(c.copy(uploaded = true, imageState = "checksum_rejected")); continue }

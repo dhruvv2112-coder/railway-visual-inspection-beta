@@ -59,6 +59,9 @@ jobs:
           git fetch -q --depth 1 origin ci-ohe-assess
           git show FETCH_HEAD:reports/ohe_assess.onnx > models/ohe_assess.onnx
           git show FETCH_HEAD:reports/ohe_assess.json > models/ohe_assess.json
+          if git fetch -q --depth 1 origin ci-ohe-calib 2>/dev/null; then
+            git show FETCH_HEAD:reports/ohe_calibration.json > models/ohe_calibration.json && echo "calibration included"
+          fi
           ls -la models
       - uses: actions/upload-artifact@v4
         with: {name: app, path: "OnTrack.AI.apk\nlatest.json"}

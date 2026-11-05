@@ -50,6 +50,20 @@ class OheTest {
         assertEquals(1, ok.assessed)
     }
 
+    @Test fun onlyNewAlertsNotify() {
+        val a = org.rvi.inspect.data.AlertRow("f1", "SEC", "1205/12", "Insulator", null, "s")
+        val b = a.copy(findingId = "f2")
+        assertTrue(org.rvi.inspect.data.AlertNotifier.fresh(null, listOf(a, b)).isEmpty())   // first check: no flood
+        assertEquals(listOf(b), org.rvi.inspect.data.AlertNotifier.fresh(setOf("f1"), listOf(a, b)))
+    }
+
+    @Test fun phoneRollFromGravity() {
+        assertEquals(0f, org.rvi.inspect.data.Tilt.rollFrom(0f, 9.8f, 0f)!!, 0.01f)
+        val t = Math.toRadians(10.0)
+        assertEquals(10f, org.rvi.inspect.data.Tilt.rollFrom((-9.8 * Math.sin(t)).toFloat(), (9.8 * Math.cos(t)).toFloat(), 0f)!!, 0.01f)
+        assertNull(org.rvi.inspect.data.Tilt.rollFrom(0f, 1f, 9.7f))  // lying flat
+    }
+
     @Test fun failedAnalysisIsNotShownAsNoDefect() {
         val r = parseUpload(obj("""{"analysis":{"error":"RuntimeError: model","assessments":[]}}"""))
         assertEquals(org.rvi.inspect.data.ANALYSIS_FAILED, r.imageState); assertEquals(0, r.assessed)

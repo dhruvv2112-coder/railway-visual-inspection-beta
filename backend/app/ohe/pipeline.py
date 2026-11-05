@@ -190,8 +190,57 @@ class OnnxViewCheck:
         return float(e[1] / e.sum())   # classes: [valid, perspective_distorted]
 
 
+def mast_lean(img: np.ndarray, box, roll_deg: float | None) -> tuple[float | None, str]:
+    """Screening angle of a mast from vertical (degrees, + = top leans right in the photo), corrected for the
+    phone's roll at capture. Uses the long straight edges inside the mast box (OpenCV Hough). Returns (None, reason)
+    when it cannot be measured honestly: no phone tilt reading, phone not upright, mast too small or off-centre
+    (perspective makes off-centre verticals converge), or no clear straight edges."""
+    import cv2
+    if roll_deg is None:
+        return None, "no phone tilt reading for this photo"
+    if abs(roll_deg) > 30:
+        return None, "phone was not held upright"
+    h, w = img.shape[:2]
+    x1, y1, x2, y2 = (int(max(0, v)) for v in box)
+    x2, y2 = min(x2, w), min(y2, h)
+    if y2 - y1 < max(160, 0.3 * h):
+        return None, "mast too small in the photo to measure lean"
+    if abs((x1 + x2) / 2 - w / 2) > 0.2 * w:
+        return None, "mast off-centre; take it square-on in the middle of the photo"
+    crop = cv2.cvtColor(img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(cv2.GaussianBlur(crop, (5, 5), 0), 50, 150)
+    lines = cv2.HoughLinesP(edges, 2, np.pi / 360, threshold=60, minLineLength=int(0.4 * (y2 - y1)), maxLineGap=25)
+    if lines is None:
+        return None, "no clear mast edges"
+    angs, wts = [], []
+    for lx1, ly1, lx2, ly2 in np.asarray(lines).reshape(-1, 4).tolist():
+        if ly2 < ly1:
+            lx1, ly1, lx2, ly2 = lx2, ly2, lx1, ly1
+        a = math.degrees(math.atan2(lx1 - lx2, ly2 - ly1))  # angle from vertical, + = top to the right
+        if abs(a) <= 20:
+            angs.append(a)
+            wts.append(math.hypot(lx2 - lx1, ly2 - ly1))
+    if len(angs) < 2:
+        return None, "no clear mast edges"
+    order = np.argsort(angs)
+    cw = np.cumsum(np.array(wts)[order])
+    measured = float(np.array(angs)[order][np.searchsorted(cw, cw[-1] / 2)])  # length-weighted median
+    return round(measured + roll_deg, 2), "mast edges, corrected for phone tilt"
+
+
+def calibrate(score: float, cls: str, calib: dict | None) -> float | None:
+    """Platt scaling per class fitted on the held-out test split (ohe_calibration.json): p = 1/(1+e^-(a*logit(s)+b))."""
+    c = (calib or {}).get("classes", {}).get(cls)
+    if not c:
+        return None
+    s = min(max(score, 1e-6), 1 - 1e-6)
+    z = c["a"] * math.log(s / (1 - s)) + c["b"]
+    return round(1 / (1 + math.exp(-z)), 4)
+
+
 def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: Anomaly | None = None,
-                 lat=None, lon=None, acc=None, view: ViewCheck | None = None) -> dict:
+                 lat=None, lon=None, acc=None, view: ViewCheck | None = None, roll_deg: float | None = None,
+                 calib: dict | None = None) -> dict:
     q = quality.assess(img)
     view_res = None
     if view is not None and img is not None:
@@ -208,6 +257,9 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
         if spec is not None and spec.get("symptom_of"):
             continue  # symptom boxes are attached to their component below
         o = Observation(d.cls, tuple(round(v, 1) for v in d.box), "", raw_scores={"detector": round(d.score, 4)})
+        cal = calibrate(d.score, d.cls, calib)
+        if cal is not None:
+            o.raw_scores["calibrated"] = cal
         if spec is None:  # a design or part the registry does not know: never a generic pass (HLD V12)
             o.state, o.reasons = "unsupported_class", ["component or design not in the asset registry"]
         elif not spec.get("supported_conditions"):
@@ -217,6 +269,17 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
         elif not q.passed and set(q.reasons) & {"blurred", "too_dark", "overexposed"}:
             o.state, o.reasons = "insufficient_resolution", q.reasons
         else:
+            if spec.get("lean_check"):
+                lean, why = mast_lean(img, d.box, roll_deg)
+                o.raw_scores["lean_deg"] = lean
+                if lean is None:
+                    o.state, o.reasons = "occluded_or_missing_view", [why]
+                elif abs(lean) > reg.get("mast_lean_screen_deg", 3.0):
+                    o.state, o.condition, o.reasons = "assessable_defect", "mast_lean", [f"{why}: {lean:+.1f} deg"]
+                else:
+                    o.state, o.reasons = "assessable_no_visible_defect", [f"{why}: {lean:+.1f} deg"]
+                obs.append(o)
+                continue
             hits = [s for s in defects if comps[s.cls]["symptom_of"] == d.cls and _overlap(d.box, s.box) > 0.5]
             if spec.get("presence_is_condition"):  # e.g. a nest or foreign object: its presence is the finding
                 o.state, o.condition = "assessable_defect", spec["supported_conditions"][0]
@@ -268,8 +331,10 @@ def decide(obs: dict, ident: dict, q_passed: bool, reg: dict) -> dict:
     """Assessment for one observation: three claim types, confidence vector, priority as a consequence rule and
     deterministic routing (HLD §2.1, §8.1, §8.3). Raw scores are reported as 'uncalibrated'."""
     rule = next((r for r in reg["rules"] if r["condition"] == obs["condition"]), None) if obs["condition"] else None
-    conf = {"Q": 1.0 if q_passed else 0.5, "A": ident["A"], "V": None, "C": obs["raw_scores"].get("defect")
-            or obs["raw_scores"].get("detector"), "T": None, "R": 1.0 if rule else None, "calibration": "uncalibrated"}
+    cal = obs["raw_scores"].get("calibrated")
+    conf = {"Q": 1.0 if q_passed else 0.5, "A": ident["A"], "V": None, "C": cal if cal is not None else
+            (obs["raw_scores"].get("defect") or obs["raw_scores"].get("detector")), "T": None, "R": 1.0 if rule else None,
+            "calibration": "platt-per-class (public test split)" if cal is not None else "uncalibrated"}
     out = {"component": obs["component"], "state": obs["state"], "condition": obs["condition"], "box": obs["box"],
            "confidence": conf, "reasons": obs["reasons"]}
     if rule:
