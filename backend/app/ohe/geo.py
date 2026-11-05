@@ -35,12 +35,11 @@ def from_exif(data: bytes) -> dict:
         off = sub.get(36881) or sub.get(36880)                # OffsetTimeOriginal / OffsetTime, e.g. "+05:30"
         if t:
             import time
-            dt = datetime(*time.strptime(str(t).strip("\x00 "), "%Y:%m:%d %H:%M:%S")[:6])   # EXIF has no zone; set below
-            tz = IST
+            tz = IST   # EXIF time has no zone unless OffsetTime is set; Indian photos default to IST
             if off and re.fullmatch(r"[+-]\d{2}:\d{2}", str(off)):
                 sign = 1 if str(off)[0] == "+" else -1
                 tz = timezone(sign * timedelta(hours=int(str(off)[1:3]), minutes=int(str(off)[4:6])))
-            out["taken_at"] = dt.replace(tzinfo=tz)
+            out["taken_at"] = datetime(*time.strptime(str(t).strip("\x00 "), "%Y:%m:%d %H:%M:%S")[:6], tzinfo=tz)
     except Exception:  # noqa: BLE001, S110 - unreadable EXIF just means no GPS tag
         pass
     return out
