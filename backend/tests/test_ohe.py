@@ -481,6 +481,7 @@ def test_calibration_applied_when_fitted():
 
 def test_existing_database_gets_new_columns(tmp_path):
     from sqlalchemy import create_engine, inspect, text
+
     from app import db
     eng = create_engine(f"sqlite:///{tmp_path/'old.db'}")
     with eng.begin() as c:

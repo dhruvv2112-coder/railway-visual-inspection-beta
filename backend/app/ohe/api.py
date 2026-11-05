@@ -334,7 +334,7 @@ def _temporal(sess: OheSession, findings: list[dict], register: list[dict], s: S
     Only findings tied to one mast are compared; a finding not seen again is 'not seen this cycle' only when that mast
     was assessed clean now, otherwise 'not re-checked'. Visual comparison only: no deterioration rate is claimed."""
     prev_sess = s.exec(select(OheSession).where(OheSession.territory == sess.territory, OheSession.id != sess.id,
-                                                OheSession.ended_at != None, OheSession.started_at < sess.started_at)  # noqa: E711
+                                                OheSession.ended_at != None, OheSession.started_at < sess.started_at)
                        .order_by(OheSession.started_at.desc())).first()
     reps = s.exec(select(OheReport).where(OheReport.session_id == prev_sess.id)).all() if prev_sess else []
     if not reps:
