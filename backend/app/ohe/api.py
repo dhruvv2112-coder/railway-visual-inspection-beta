@@ -222,7 +222,7 @@ def process(m: OheMedia, s: Session) -> list:
             f.media_ids_json = json.dumps(json.loads(f.media_ids_json) + [m.id])
         else:
             f = OheFinding(session_id=m.session_id, key=key, asset_id=res["identity"]["selected_asset_id"],
-                           candidates_json=json.dumps(res["identity"]["candidates"]), payload_json=json.dumps(asm),
+                           candidates_json=json.dumps(res["identity"]["candidates"]), payload_json=json.dumps(asm, default=float),
                            media_ids_json=json.dumps([m.id]), alert=asm.get("alert", False))
             if f.alert:
                 audit(s, "ohe_finding", f.id, "concern.flagged", "system", {"key": key})  # immediate, before signing

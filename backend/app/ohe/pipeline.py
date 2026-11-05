@@ -100,7 +100,8 @@ class OnnxYoloDetector:
         res = []
         for i in np.array(idx).flatten():
             x0, y0, bw, bh = boxes[i]
-            res.append(Det(self.names[int(cid[keep][i])], float(sc[keep][i]), (x0, y0, x0 + bw, y0 + bh)))
+            res.append(Det(self.names[int(cid[keep][i])], float(sc[keep][i]),
+                           (float(x0), float(y0), float(x0 + bw), float(y0 + bh))))  # plain floats: JSON-safe
         return res
 
 

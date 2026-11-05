@@ -511,3 +511,12 @@ def test_report_compares_with_previous_patrol_of_same_section(client, models):
     third = cycle([INS], 503)                       # mast assessed clean this time
     g = third["RPT-07_temporal"]["not_seen_again"]
     assert len(g) == 1 and g[0]["state"] == "not_seen_this_cycle" and "not proof of repair" in third["RPT-07_temporal"]["statement"]
+
+
+def test_real_detector_numpy_scores_are_stored(client, models):
+    """The ONNX adapter yields numpy numbers; a finding built from them must save (Windows smoke test caught this)."""
+    box = tuple(np.float32(v) for v in (100, 100, 400, 400))
+    models.detector, models.ocr = FixDet([Det("vegetation", np.float32(0.8), box)]), FixOCR([])
+    sid = _session(client)
+    r = _upload(client, sid, _jpeg(777)).json()
+    assert r["media"]["status"] == "assessed" and r["analysis"]["assessments"][0]["condition"] == "vegetation_near_ohe"
