@@ -1,1 +1,19 @@
-All checks passed!
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_ohe.py:561:5
+    |
+560 |   def test_rotation_merge_finds_sideways_parts():
+561 | /     import cv2
+562 | |     from app.ohe import pipeline
+    | |________________________________^
+563 |
+564 |       class Upright:   # finds a tall bar only when it stands upright, like a detector trained on upright insulators
+    |
+help: Organize imports
+    |
+561 |     import cv2
+562 +
+563 |     from app.ohe import pipeline
+    |
+
+Found 1 error.
+[*] 1 fixable with `--fix`.
