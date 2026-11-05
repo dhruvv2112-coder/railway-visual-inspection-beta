@@ -151,6 +151,9 @@ def test_v11_signed_revision_is_immutable(client, models):
     assert new["revision"] == 2 and new["supersedes"] == rid
     assert client.get(f"/ohe/reports/{new['report_id']}").json()["sha256"] != signed["sha256"]
     assert "OHE visual patrol report" in client.get(f"/ohe/reports/{rid}/html").text
+    # the phone keeps the first revision's id and follows "latest" to the amended one
+    assert old["latest"]["id"] == new["report_id"] and old["latest"]["revision"] == 2
+    assert old["latest"]["status"] == "READY_FOR_REVIEW"
 
 
 # ---- sign-in, reviewer lists, alert feed and evidence images ----

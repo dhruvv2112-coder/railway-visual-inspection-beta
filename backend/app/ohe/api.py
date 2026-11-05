@@ -344,8 +344,12 @@ def get_report(rid: str, s: SessionDep, a: ActorDep):
     r = s.get(OheReport, rid)
     if not r:
         raise HTTPException(404, "Report not found")
+    # The phone keeps the id of the first revision; after an amendment it follows to the newest one.
+    latest = s.exec(select(OheReport).where(OheReport.session_id == r.session_id).order_by(OheReport.revision.desc())).first() or r
     return {"id": r.id, "revision": r.revision, "status": r.status, "sha256": r.sha256, "signed_by": r.signed_by,
-            "content": json.loads(r.content_json), "RPT-11_review": _review_record(r, s)}
+            "content": json.loads(r.content_json), "RPT-11_review": _review_record(r, s),
+            "latest": {"id": latest.id, "revision": latest.revision, "status": latest.status, "signed_by": latest.signed_by,
+                       "signed_at": latest.signed_at, "RPT-11_review": _review_record(latest, s) if latest.id != r.id else None}}
 
 
 def _review_record(r: OheReport, s: Session) -> dict:

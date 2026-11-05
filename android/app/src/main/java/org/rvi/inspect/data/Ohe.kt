@@ -239,10 +239,14 @@ fun parseAlerts(a: kotlinx.serialization.json.JsonArray): List<AlertRow> = a.map
     AlertRow(r.s("finding") ?: "", r.s("territory") ?: "", r.s("asset_id"), what, r.s("raised_at"), r.s("session") ?: "")
 }
 
+/** Server statuses: READY_FOR_REVIEW, AUTHORISED_SIGNED, SUPERSEDED (an amended revision replaced it). */
+fun isSigned(status: String?) = status == "AUTHORISED_SIGNED" || status == "SIGNED"
+
 fun parseReport(r: JsonObject): ReportDetail {
     val c = r.o("content") ?: JsonObject(emptyMap())
     val sm = c.o("RPT-02_summary") ?: JsonObject(emptyMap())
-    val rv = r.o("RPT-11_review") ?: JsonObject(emptyMap())
+    val latest = r.o("latest")
+    val rv = latest?.o("RPT-11_review") ?: r.o("RPT-11_review") ?: JsonObject(emptyMap())
     val am = (rv["amendments"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }
         .map { a -> listOfNotNull(a.s("reason"), a.s("new")?.let { "now: $it" }).joinToString(" · ").ifBlank { "Amended" } }
     val fs = (c["RPT-06_findings"] as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { it as? JsonObject }.map { f ->
@@ -250,7 +254,10 @@ fun parseReport(r: JsonObject): ReportDetail {
         val asset = f.s("asset_id")
         (if (asset != null) "$label · $asset" else label) to ((f["alert"] as? kotlinx.serialization.json.JsonPrimitive)?.content == "true")
     }
-    return ReportDetail(r.s("id") ?: "", r.s("status") ?: "", r.s("signed_by"), rv.s("signed_at"), am, sm.i("photos") ?: sm.i("media"),
+    val status = latest?.s("status") ?: r.s("status") ?: ""
+    val reviewed = am.isNotEmpty() || (latest?.i("revision") ?: 1) > 1
+    return ReportDetail(r.s("id") ?: "", if (reviewed && !isSigned(status)) "REVIEWED" else status,
+        latest?.s("signed_by") ?: r.s("signed_by"), latest?.s("signed_at") ?: rv.s("signed_at"), am, sm.i("photos") ?: sm.i("media"),
         sm.i("expected_assets"), sm.i("with_findings"), sm.i("alerts"), sm.i("not_assessable"), fs)
 }
 

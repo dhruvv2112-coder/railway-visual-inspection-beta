@@ -195,13 +195,13 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
             val server = reports.orEmpty().associateBy { it.id }
             val rows = sessions.map { s ->
                 val r = s.reportId?.let { server[it] }
-                val signed = r?.status == "SIGNED"
+                val signed = org.rvi.inspect.data.isSigned(r?.status)
                 val (st, tone) = when { s.reportId == null -> stUp to Tone.Info; signed -> stSig to Tone.Ok; else -> stRev to Tone.Urgent }
                 val sub = r?.let { listOfNotNull(it.masts?.let { m -> "$m masts" }, it.alerts?.takeIf { a -> a > 0 }?.let { a -> "$a urgent" },
                     it.signedBy?.let { b -> "signed by $b" }).joinToString(" · ") } ?: "$onPhone · ${whenText(s.startedAt)}"
                 PatrolRow(s.id, "${s.territory} · ${whenText(s.endedAt ?: s.startedAt)}", sub, st, tone, !signed, s.reportId)
             } + reports.orEmpty().filter { r -> sessions.none { it.reportId == r.id } }.map { r ->
-                val signed = r.status == "SIGNED"
+                val signed = org.rvi.inspect.data.isSigned(r.status)
                 PatrolRow(r.id, "${r.territory} · ${whenIso(r.endedAt)}", listOfNotNull(r.masts?.let { "$it masts" }, r.signedBy?.let { "signed by $it" }).joinToString(" · "),
                     if (signed) stSig else stRev, if (signed) Tone.Ok else Tone.Urgent, !signed, r.id)
             }
@@ -213,9 +213,9 @@ fun AppNav(ovm: OheViewModel = viewModel()) {
             val rid = e.arguments?.getString("rid") ?: ""
             val d by ovm.report.collectAsState()
             val err by ovm.reportError.collectAsState()
-            LaunchedEffect(rid) { ovm.loadReport(rid) }
+            LaunchedEffect(rid) { while (true) { ovm.loadReport(rid); delay(20_000) } }
             val r = d?.takeIf { it.id == rid }
-            val reached = when { r == null -> 3; r.status == "SIGNED" -> 5; r.amendments.isNotEmpty() || r.status == "SUPERSEDED" -> 4; else -> 3 }
+            val reached = when { r == null -> 3; org.rvi.inspect.data.isSigned(r.status) -> 5; r.status == "REVIEWED" || r.status == "SUPERSEDED" -> 4; else -> 3 }
             ReportScreen(ReportUi("RPT-01 · ${rid.take(8)}", listOfNotNull(r?.masts?.let { "$it masts" }, r?.alerts?.let { "$it urgent" }).joinToString(" · ").ifBlank { null } ?: "",
                 reached, r?.signedBy, r?.amendments.orEmpty(), r?.findings.orEmpty(), err), onBack = { nav.popBackStack() }, onRefresh = { ovm.loadReport(rid) })
         }

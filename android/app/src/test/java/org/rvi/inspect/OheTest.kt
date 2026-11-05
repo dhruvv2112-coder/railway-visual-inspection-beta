@@ -94,6 +94,18 @@ class DiscoveryTest {
         assertEquals("", org.rvi.inspect.data.Discovery.normalise("  "))
     }
 
+    @Test fun reportTrackerFollowsSignatureAndAmendments() {
+        fun rep(json: String) = org.rvi.inspect.data.parseReport(Json.parseToJsonElement(json) as kotlinx.serialization.json.JsonObject)
+        val waiting = rep("""{"id":"r1","status":"READY_FOR_REVIEW","content":{},"latest":{"id":"r1","revision":1,"status":"READY_FOR_REVIEW"}}""")
+        assertFalse(org.rvi.inspect.data.isSigned(waiting.status)); assertEquals("READY_FOR_REVIEW", waiting.status)
+        val signed = rep("""{"id":"r1","status":"AUTHORISED_SIGNED","signed_by":"SSE-1","content":{},"latest":{"id":"r1","revision":1,"status":"AUTHORISED_SIGNED","signed_by":"SSE-1"}}""")
+        assertTrue(org.rvi.inspect.data.isSigned(signed.status)); assertEquals("SSE-1", signed.signedBy)
+        val amended = rep("""{"id":"r1","status":"SUPERSEDED","content":{},"latest":{"id":"r2","revision":2,"status":"READY_FOR_REVIEW"}}""")
+        assertEquals("REVIEWED", amended.status)
+        val amendedSigned = rep("""{"id":"r1","status":"SUPERSEDED","content":{},"latest":{"id":"r2","revision":2,"status":"AUTHORISED_SIGNED","signed_by":"SSE-2"}}""")
+        assertTrue(org.rvi.inspect.data.isSigned(amendedSigned.status)); assertEquals("SSE-2", amendedSigned.signedBy)
+    }
+
     @Test fun relaySignatureMatchesServer() {
         // same HMAC-SHA256("url|ts") the server computes in remote.sign
         val key = "k3y"; val url = "https://brave-words.trycloudflare.com/"; val ts = 1762300000L

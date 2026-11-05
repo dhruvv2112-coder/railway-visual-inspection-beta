@@ -23,6 +23,9 @@ jobs:
         with: {distribution: temurin, java-version: "17"}
       - uses: gradle/actions/setup-gradle@v4
         with: {gradle-version: "8.11.1"}
+      - name: Reuse one draft signing key across builds (so draft updates install over each other)
+        uses: actions/cache@v4
+        with: {path: ~/.android/debug.keystore, key: ontrack-draft-debug-keystore-v1}
       - id: b
         name: Build the app (signed Beta key when the secret exists, else debug key)
         working-directory: android
