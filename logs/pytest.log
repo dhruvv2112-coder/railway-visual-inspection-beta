@@ -2,7 +2,7 @@
 =================================== FAILURES ===================================
 ____________ test_gallery_photo_located_by_exif_without_mast_number ____________
 
-client = <starlette.testclient.TestClient object at 0x7fea6830fcd0>
+client = <starlette.testclient.TestClient object at 0x7f83f1685950>
 models = <class 'app.ohe.api.Models'>
 
     def test_gallery_photo_located_by_exif_without_mast_number(client, models):
@@ -90,4 +90,4 @@ PASSED tests/test_quality.py::test_low_resolution_rejected
 PASSED tests/test_quality.py::test_unreadable
 PASSED tests/test_quality.py::test_mildly_dark_but_usable_image_passes
 FAILED tests/test_ohe.py::test_gallery_photo_located_by_exif_without_mast_number - ModuleNotFoundError: No module named 'PIL'
-1 failed, 52 passed, 1 warning in 4.73s
+1 failed, 52 passed, 1 warning in 5.09s
