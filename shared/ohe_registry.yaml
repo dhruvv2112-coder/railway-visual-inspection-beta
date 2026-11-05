@@ -24,6 +24,15 @@ components:
   # detected for evidence and identity; no condition is claimed until validated on railway OHE images (HLD §15.1)
   mast: {scope: "Masts and structures", supported_conditions: [mast_lean], lean_check: true}
   corrosion: {scope: "Masts and structures", supported_conditions: [visible_corrosion], presence_is_condition: true}
+  # whole-photo inventory (open-vocabulary scene model): out-of-place articles found anywhere in the photo
+  scene_foreign_object: {scope: "Vegetation, nests and loose material", supported_conditions: [scene_foreign_object], presence_is_condition: true}
+  loose_stone: {scope: "Track and surroundings", supported_conditions: [loose_stone], presence_is_condition: true}
+  scrap_metal: {scope: "Track and surroundings", supported_conditions: [scrap_metal], presence_is_condition: true}
+  animal_near_track: {scope: "Track and surroundings", supported_conditions: [animal_near_track], presence_is_condition: true}
+  branch_near_ohe: {scope: "Vegetation, nests and loose material", supported_conditions: [branch_near_ohe], presence_is_condition: true}
+  creeper_on_structure: {scope: "Vegetation, nests and loose material", supported_conditions: [creeper_on_structure], presence_is_condition: true}
+  fire_or_smoke: {scope: "Track and surroundings", supported_conditions: [fire_or_smoke], presence_is_condition: true}
+  waterlogging: {scope: "Track and surroundings", supported_conditions: [waterlogging], presence_is_condition: true}
   # mast lean is measured geometrically on the mast box (pipeline.mast_lean), corrected for the phone roll at capture
 min_target_px: 48          # minimum short side of a component crop before condition is assessable (§2.2; tune empirically)
 rules:
@@ -93,5 +102,93 @@ rules:
     limitations: "Single photo, 2D angle only; lean along the camera axis is not visible; screening, not measurement"
     priority: review
     route: {primary: "OHE coordinator", contributors: ["Civil / foundations"]}
+  - id: R-SCN-01
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: scene_foreign_object
+    observed: "A loose article is visible in the photo (see the inventory label)"
+    hypothesis: "Foreign object near track or OHE"
+    action_family: planned_maintenance
+    action: "Check on site; remove if it can foul the OHE or track"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: review
+    route: {primary: "OHE coordinator", contributors: []}
+  - id: R-SCN-02
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: loose_stone
+    observed: "Stones or boulders are visible outside normal ballast"
+    hypothesis: "Loose stone / boulder that may roll onto the track"
+    action_family: planned_maintenance
+    action: "Check on site and clear if it can foul the track"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: routine
+    route: {primary: "P.Way supervisor", contributors: []}
+  - id: R-SCN-03
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: scrap_metal
+    observed: "Scrap metal, rods, pipes or wire coils are visible"
+    hypothesis: "Metal debris that can foul the track or be blown onto the OHE"
+    action_family: planned_maintenance
+    action: "Clear the material; check for theft or left-over work material"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: review
+    route: {primary: "OHE coordinator", contributors: []}
+  - id: R-SCN-04
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: animal_near_track
+    observed: "An animal is visible near the track"
+    hypothesis: "Animal near the track"
+    action_family: planned_maintenance
+    action: "Inform the station / caution as per local instructions"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: review
+    route: {primary: "Station / section controller", contributors: []}
+  - id: R-SCN-05
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: branch_near_ohe
+    observed: "A tree branch is visible in the photo"
+    hypothesis: "Branch that may fall on or grow towards the OHE"
+    action_family: planned_maintenance
+    action: "Check clearance on site; plan trimming"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: routine
+    route: {primary: "OHE coordinator", contributors: []}
+  - id: R-SCN-06
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: creeper_on_structure
+    observed: "Creeper vegetation is visible"
+    hypothesis: "Creeper climbing a structure"
+    action_family: planned_maintenance
+    action: "Plan removal before it reaches live equipment"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: routine
+    route: {primary: "OHE coordinator", contributors: []}
+  - id: R-SCN-07
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: fire_or_smoke
+    observed: "Fire or smoke is visible"
+    hypothesis: "Fire or smoke near the track or OHE"
+    action_family: planned_maintenance
+    action: "Inform TPC and the station immediately"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: urgent
+    route: {primary: "TPC", contributors: []}
+  - id: R-SCN-08
+    authority: "HLD §7 visual screening, open-vocabulary scene model (not validated on railway photos; clause to be confirmed by TRD)"
+    decision_type: visual_screening
+    condition: waterlogging
+    observed: "Standing water is visible"
+    hypothesis: "Waterlogging near track or foundations"
+    action_family: planned_maintenance
+    action: "Check drainage and foundation condition"
+    limitations: "Open-vocabulary model: names what it sees in plain words; a person must confirm"
+    priority: routine
+    route: {primary: "P.Way supervisor", contributors: []}
 mast_lean_screen_deg: 3.0   # screening angle after phone-roll correction (configurable; not a code tolerance)
 unresolved_owner_queue: "OHE coordination queue"

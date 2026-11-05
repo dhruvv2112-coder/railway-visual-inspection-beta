@@ -19,7 +19,7 @@ from .. import quality
 from ..config import settings
 from ..db import audit, get_session
 from ..models import now
-from . import auth, pipeline
+from . import auth, geo, pipeline
 
 router = APIRouter(prefix="/ohe", tags=["ohe"])
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -49,12 +49,14 @@ class OheMedia(SQLModel, table=True):
     lat: float | None = None
     lon: float | None = None
     accuracy_m: float | None = None
-    location_source: str = "capture"      # capture | registry_inherited | none
+    location_source: str = "capture"      # capture | exif | photo_stamp | registry_inherited | none
     device: str = ""
     path: str = ""
     analysis_json: str = "{}"             # model run outputs, versions included
     status: str = "persisted"             # persisted | assessed | failed
     roll_deg: float | None = None         # phone roll at capture from the gravity sensor (mast lean correction)
+    origin: str | None = "camera"         # camera (taken in the app) | gallery (uploaded from the phone's photos)
+    time_source: str | None = "phone"     # phone | exif | photo_stamp
 
 
 class OheFinding(SQLModel, table=True):
@@ -106,7 +108,9 @@ class Models:
         if p.exists() and names.exists():
             base = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
             n = max(1, settings.rotation_views)   # look at each photo at n rotations: parts are found at any angle
-            cls.detector = pipeline.RotationTTA(base, angles=tuple(round(i * 360 / n) for i in range(n))) if n > 1 else base
+            angles = tuple(round(i * 360 / n) for i in range(n))
+            cls.detector = (pipeline.Sectioned(base, full_angles=angles) if settings.sections else
+                            pipeline.RotationTTA(base, angles=angles)) if n > 1 else base
         vc = settings.model_dir / "ohe_assess.onnx"
         if vc.exists():
             meta = settings.model_dir / "ohe_assess.json"
@@ -144,8 +148,11 @@ def start(body: SessionIn, s: SessionDep, a: ActorDep):
     return o
 
 
-def _finding_key(ident: dict, a: dict) -> str:
-    where = ident["selected_asset_id"] or "cand:" + ",".join(c["asset_id"] for c in ident["candidates"][:3])
+def _finding_key(ident: dict, a: dict, m: "OheMedia | None" = None) -> str:
+    where = ident["selected_asset_id"] or ("cand:" + ",".join(c["asset_id"] for c in ident["candidates"][:3])
+                                           if ident["candidates"] else
+                                           ("geo:" + geo.cell(m.lat, m.lon) if m is not None and m.lat is not None else
+                                            f"photo:{m.id}" if m is not None else "unlocated"))
     return f"{where}|{a['component']}|{a['condition']}"
 
 
@@ -154,7 +161,7 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, imag
                  sha256: Annotated[str, Form()], captured_at: Annotated[datetime, Form()],
                  lat: Annotated[float | None, Form()] = None, lon: Annotated[float | None, Form()] = None,
                  accuracy_m: Annotated[float | None, Form()] = None, device: Annotated[str, Form()] = "",
-                 roll_deg: Annotated[float | None, Form()] = None):
+                 roll_deg: Annotated[float | None, Form()] = None, origin: Annotated[str, Form()] = "camera"):
     sess = s.get(OheSession, sid)
     if not sess or sess.ended_at:
         raise HTTPException(409, "Session not open")
@@ -168,9 +175,15 @@ async def ingest(sid: str, s: SessionDep, a: ActorDep, bg: BackgroundTasks, imag
     d.mkdir(parents=True, exist_ok=True)
     path = d / f"{sha256.lower()}.jpg"
     path.write_bytes(data)
+    src, tsrc = ("capture" if lat is not None else "none"), "phone"
+    ex = geo.from_exif(data)
+    if lat is None and "lat" in ex:          # photo from another camera / gallery: its own GPS tag
+        lat, lon, accuracy_m, src = ex["lat"], ex["lon"], None, "exif"
+    if origin == "gallery" and ex.get("taken_at"):
+        captured_at, tsrc = ex["taken_at"], "exif"   # when the photo was taken, not when it was uploaded
     m = OheMedia(session_id=sid, sha256=sha256.lower(), captured_at=captured_at, lat=lat, lon=lon, accuracy_m=accuracy_m,
-                 location_source="capture" if lat is not None else "none", device=device, path=str(path),
-                 roll_deg=roll_deg)
+                 location_source=src, device=device, path=str(path), roll_deg=roll_deg if origin == "camera" else None,
+                 origin=origin, time_source=tsrc)
     s.add(m)
     audit(s, "ohe_media", m.id, "persisted", a["id"], {"sha256": m.sha256})
     try:
@@ -208,8 +221,18 @@ def process(m: OheMedia, s: Session) -> list:
     img = quality.decode(Path(m.path).read_bytes())
     res = pipeline.assess_image(img, reg, Models.detector, Models.ocr, Models.anomaly, m.lat, m.lon, m.accuracy_m,
                                 Models.view, roll_deg=m.roll_deg, calib=Models.calib)
+    if m.lat is None or (m.origin == "gallery" and m.time_source == "phone"):
+        st = geo.from_stamp(res.get("ocr_texts", []))   # time / place printed on the photo by a GPS-camera app
+        if m.lat is None and "lat" in st:
+            m.lat, m.lon, m.location_source = st["lat"], st["lon"], "photo_stamp"
+            res["identity"] = pipeline.resolve_identity(reg, pipeline.candidates(reg, m.lat, m.lon, None),
+                                                        [(t, 1.0) for t in res.get("ocr_texts", [])])
+        if m.origin == "gallery" and m.time_source == "phone" and st.get("taken_at"):
+            m.captured_at, m.time_source = st["taken_at"], "photo_stamp"
     if res["identity"]["selected_asset_id"] and m.lat is None:
         m.location_source = "registry_inherited"
+    res["where"] = {"lat": m.lat, "lon": m.lon, "location_source": m.location_source, "captured_at": str(m.captured_at),
+                    "time_source": m.time_source}
     res["assessments"] = [pipeline.decide(o, res["identity"], res["quality"]["passed"], reg) for o in res["observations"]]
     m.analysis_json = json.dumps(res, default=str)
     m.status = "assessed"
@@ -217,7 +240,8 @@ def process(m: OheMedia, s: Session) -> list:
     for asm in res["assessments"]:
         if asm["state"] not in ("assessable_defect", "anomalous_unclassified"):
             continue
-        key = _finding_key(res["identity"], asm)
+        asm["where"] = res["where"]   # without a mast number a finding is still placed by GPS and time
+        key = _finding_key(res["identity"], asm, m)
         f = s.exec(select(OheFinding).where(OheFinding.session_id == m.session_id, OheFinding.key == key)).first()
         if f:
             f.observations += 1

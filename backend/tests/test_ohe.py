@@ -39,6 +39,7 @@ class FixOCR:
 
 
 INS = Det("insulator", 0.91, (400, 200, 520, 420))
+NEST = Det("bird_nest", 0.88, (300, 300, 520, 480))
 DEFECT = Det("insulator_defect", 0.83, (430, 260, 500, 330))
 
 
@@ -577,3 +578,50 @@ def test_rotation_merge_finds_sideways_parts():
     assert len(d) == 1 and d[0].cls == "insulator"
     x1, y1, x2, y2 = d[0].box
     assert x1 < 130 and x2 > 470 and 150 < y1 < 200 and 200 < y2 < 250   # box mapped back onto the original photo
+
+
+def _exif_jpeg(seed, lat=None, lon=None, when=None):
+    import io
+    from PIL import Image
+    from PIL.TiffImagePlugin import IFDRational as R
+    im = Image.fromarray(cv2.cvtColor(cv2.imdecode(np.frombuffer(_jpeg(seed), np.uint8), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
+    ex = im.getexif()
+    def dms(v):
+        d = int(v); m = int((v - d) * 60); return (R(d), R(m), R(round(((v - d) * 60 - m) * 60, 2)))
+    if lat is not None:
+        ex[0x8825] = {1: "N", 2: dms(lat), 3: "E", 4: dms(lon)}
+    if when:
+        ex[306] = when
+    b = io.BytesIO()
+    im.save(b, "JPEG", exif=ex, quality=95)
+    return b.getvalue()
+
+
+def test_gallery_photo_located_by_exif_without_mast_number(client, models):
+    models.detector, models.ocr = FixDet([NEST]), FixOCR([])
+    sid = _session(client)
+    data = _exif_jpeg(601, 26.9124, 75.7873, "2026:11:05 10:45:00")
+    r = _upload(client, sid, data, origin="gallery").json()
+    m = r["media"]
+    assert m["location_source"] == "exif" and abs(m["lat"] - 26.9124) < 1e-3 and m["time_source"] == "exif"
+    assert str(m["captured_at"]).startswith("2026-11-05")
+    f = r["analysis"]["assessments"][0]
+    assert f["state"] == "assessable_defect"
+    proc = client.get(f"/ohe/sessions/{sid}/processing", headers=PATROL).json()
+    assert proc["findings"][0]["assessment"]["where"]["location_source"] == "exif"
+
+
+def test_stamped_location_read_from_photo_text(client, models):
+    models.detector, models.ocr = FixDet([NEST]), FixOCR(["Lat26.912400", "Long75.787300", "05/11/202610:45AM"])
+    sid = _session(client)
+    r = _upload(client, sid, _jpeg(602), origin="gallery").json()
+    w = r["analysis"]["where"]
+    assert w["location_source"] == "photo_stamp" and abs(w["lat"] - 26.9124) < 1e-6 and w["time_source"] == "photo_stamp"
+
+
+def test_unlocated_findings_on_different_photos_stay_separate(client, models):
+    models.detector, models.ocr = FixDet([NEST]), FixOCR([])
+    sid = _session(client)
+    _upload(client, sid, _jpeg(603))
+    _upload(client, sid, _jpeg(604))
+    assert len(client.get(f"/ohe/sessions/{sid}/processing", headers=PATROL).json()["findings"]) == 2

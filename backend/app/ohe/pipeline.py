@@ -243,6 +243,63 @@ class RotationTTA:
         return sorted(out, key=lambda d: -d.score)
 
 
+class Sectioned:
+    """Inspect the whole photo AND each overlapping section of it (a grid sized to the photo), so small or partial
+    parts anywhere in a large photo are seen at a useful size. Every section is inspected at several orientations;
+    boxes are mapped back onto the full photo and merged (a part cut by a section edge keeps its largest box).
+    `last_sections` records what each section held, for the report."""
+
+    def __init__(self, base, full_angles=(0, 90, 180, 270, 45, 135, 225, 315), tile_angles=(0, 90, 270),
+                 tile_px: int = 900, overlap: float = 0.25, iou: float = 0.45):
+        self.full = RotationTTA(base, full_angles, iou)
+        self.tile = RotationTTA(base, tile_angles, iou)
+        self.tile_px, self.overlap, self.iou = tile_px, overlap, iou
+        self.version = f"{getattr(base, 'version', 'detector')}+sections+rot{len(full_angles)}"
+        self.conf = getattr(base, "conf", None)
+        self.last_sections: list[dict] = []
+
+    def grid(self, w: int, h: int) -> list[tuple[int, int, int, int]]:
+        nx, ny = max(1, round(w / self.tile_px)), max(1, round(h / self.tile_px))
+        if nx == 1 and ny == 1:
+            return []
+        tw, th = w / nx, h / ny
+        ox, oy = tw * self.overlap / 2, th * self.overlap / 2
+        return [(int(max(0, i * tw - ox)), int(max(0, j * th - oy)), int(min(w, (i + 1) * tw + ox)), int(min(h, (j + 1) * th + oy)))
+                for j in range(ny) for i in range(nx)]
+
+    def detect(self, img):
+        h, w = img.shape[:2]
+        found = [(d, -1) for d in self.full.detect(img)]
+        secs = self.grid(w, h)
+        for k, (x1, y1, x2, y2) in enumerate(secs):
+            for d in self.tile.detect(img[y1:y2, x1:x2]):
+                b = d.box
+                found.append((Det(d.cls, d.score, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)), k))
+        out, where = [], []
+        for cls in {d.cls for d, _ in found}:
+            cand = sorted((f for f in found if f[0].cls == cls), key=lambda f: -f[0].score)
+            while cand:
+                best = cand.pop(0)
+                group = [best] + [f for f in cand if _iou(f[0].box, best[0].box) >= self.iou or _inside(f[0].box, best[0].box) > 0.8
+                                  or _inside(best[0].box, f[0].box) > 0.8]
+                cand = [f for f in cand if f not in group]
+                bx = (min(g[0].box[0] for g in group), min(g[0].box[1] for g in group),
+                      max(g[0].box[2] for g in group), max(g[0].box[3] for g in group)) if len(group) > 1 else best[0].box
+                out.append(Det(cls, best[0].score, tuple(float(v) for v in bx)))
+                where.append(sorted({g[1] for g in group}))
+        self.last_sections = [{"section": k, "box": list(b), "found": sorted(d.cls for d, ks in zip(out, where) if k in ks)}
+                              for k, b in enumerate(secs)]
+        return [d for d, _ in sorted(zip(out, where), key=lambda t: -t[0].score)]
+
+
+def _inside(a, b) -> float:
+    """Share of box a that lies inside box b."""
+    ix = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    area = (a[2] - a[0]) * (a[3] - a[1])
+    return ix * iy / area if area > 0 else 0.0
+
+
 def _iou(a, b) -> float:
     ix = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
     iy = max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
@@ -309,7 +366,8 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
     comps = reg["components"]
     dets = det.detect(img) if img is not None else []
     cands = candidates(reg, lat, lon, acc)
-    ident = resolve_identity(reg, cands, ocr.read(img) if img is not None else [])
+    reads = ocr.read(img) if img is not None else []
+    ident = resolve_identity(reg, cands, reads)
     obs: list[Observation] = []
     defects = [d for d in dets if comps.get(d.cls, {}).get("symptom_of")]
     for d in dets:
@@ -367,8 +425,10 @@ def assess_image(img: np.ndarray, reg: dict, det: Detector, ocr: OCR, anomaly: A
     if not obs:
         image_state = "insufficient_resolution" if not q.passed else "occluded_or_missing_view"
     return {"quality": asdict(q) | {"passed": q.passed}, "detections": [asdict(d) for d in dets], "identity": ident,
+            "ocr_texts": [t for t, _ in reads],
             "observations": [asdict(o) for o in obs], "image_state": image_state,
             "view_check": view_res,
+            "sections": {"inspected": 1 + len(getattr(det, "last_sections", [])), "grid": getattr(det, "last_sections", [])},
             "recapture_prompt": recapture_prompt(q, obs, ident, image_state),   # view check is information only now
             "model_versions": {"detector": det.version, "ocr": ocr.version,
                                "anomaly": anomaly.version if anomaly else "none", "quality": "opencv-rules-v2",

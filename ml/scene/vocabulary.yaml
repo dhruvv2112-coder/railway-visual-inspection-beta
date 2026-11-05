@@ -1,7 +1,7 @@
 # Whole-photo inventory (open-vocabulary detector). Every object the model can name is listed in the photo's
 # inventory; items marked 'finding' raise a finding (out of place near the track / OHE); 'infra' items are
 # railway equipment seen in the photo. Prompts are plain English phrases (YOLO-World / CLIP text space).
-version: scene-v1
+version: scene-v2
 classes:
   # railway / OHE infrastructure
   - {prompt: "electric pole", group: infra}
@@ -19,11 +19,11 @@ classes:
   - {prompt: "concrete foundation", group: infra}
   # vegetation and living things
   - {prompt: "tree", group: vegetation}
-  - {prompt: "tree branch", group: vegetation, finding: fallen_or_overhanging_branch}
+  - {prompt: "tree branch", group: vegetation, finding: branch_near_ohe}
   - {prompt: "bush", group: vegetation}
   - {prompt: "creeper vine", group: vegetation, finding: creeper_on_structure}
   - {prompt: "grass", group: vegetation}
-  - {prompt: "bird nest", group: living, finding: bird_nest}
+  - {prompt: "bird nest", group: living, finding: scene_foreign_object}
   - {prompt: "bird", group: living}
   - {prompt: "animal", group: living, finding: animal_near_track}
   - {prompt: "cow", group: living, finding: animal_near_track}
@@ -37,18 +37,31 @@ classes:
   - {prompt: "scrap metal", group: debris, finding: scrap_metal}
   - {prompt: "metal rod", group: debris, finding: scrap_metal}
   - {prompt: "wire coil", group: debris, finding: scrap_metal}
-  - {prompt: "plastic bag", group: debris, finding: foreign_object}
-  - {prompt: "plastic bottle", group: debris, finding: foreign_object}
-  - {prompt: "cloth", group: debris, finding: foreign_object}
-  - {prompt: "rope", group: debris, finding: foreign_object}
-  - {prompt: "kite", group: debris, finding: foreign_object}
-  - {prompt: "balloon", group: debris, finding: foreign_object}
-  - {prompt: "tyre", group: debris, finding: foreign_object}
-  - {prompt: "wooden plank", group: debris, finding: foreign_object}
-  - {prompt: "cardboard box", group: debris, finding: foreign_object}
-  - {prompt: "garbage", group: debris, finding: foreign_object}
-  - {prompt: "broken glass", group: debris, finding: foreign_object}
-  - {prompt: "tool", group: debris, finding: foreign_object}
+  - {prompt: "plastic bag", group: debris, finding: scene_foreign_object}
+  - {prompt: "plastic bottle", group: debris, finding: scene_foreign_object}
+  - {prompt: "cloth", group: debris, finding: scene_foreign_object}
+  - {prompt: "rope", group: debris, finding: scene_foreign_object}
+  - {prompt: "kite", group: debris, finding: scene_foreign_object}
+  - {prompt: "balloon", group: debris, finding: scene_foreign_object}
+  - {prompt: "tyre", group: debris, finding: scene_foreign_object}
+  - {prompt: "wooden plank", group: debris, finding: scene_foreign_object}
+  - {prompt: "cardboard box", group: debris, finding: scene_foreign_object}
+  - {prompt: "garbage", group: debris, finding: scene_foreign_object}
+  - {prompt: "broken glass", group: debris, finding: scene_foreign_object}
+  - {prompt: "tool", group: debris, finding: scene_foreign_object}
   - {prompt: "fire", group: hazard, finding: fire_or_smoke}
   - {prompt: "smoke", group: hazard, finding: fire_or_smoke}
   - {prompt: "water puddle", group: hazard, finding: waterlogging}
+  - {prompt: "bamboo pole", group: debris, finding: scene_foreign_object}
+  - {prompt: "ladder", group: debris, finding: scene_foreign_object}
+  - {prompt: "pipe", group: debris, finding: scrap_metal}
+  - {prompt: "barrel", group: debris, finding: scene_foreign_object}
+  - {prompt: "paper", group: debris, finding: scene_foreign_object}
+  - {prompt: "flag", group: debris, finding: scene_foreign_object}
+  - {prompt: "debris", group: debris, finding: scene_foreign_object}
+  - {prompt: "vehicle", group: other}
+  - {prompt: "bicycle", group: other}
+  - {prompt: "building", group: other}
+  - {prompt: "wall", group: other}
+  # catch-all: any article the vocabulary has no name for is still listed (inventory only, never a finding)
+  - {prompt: "object", group: other}
