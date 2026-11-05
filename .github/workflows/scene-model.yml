@@ -1,0 +1,45 @@
+name: scene-model
+# Builds the open-vocabulary whole-photo inventory model (YOLO-World v2 + ml/scene/vocabulary.yaml) as ONNX,
+# checks it runs through the backend adapter, and publishes it to branch ci-scene-model.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["ml/scene/**", ".github/workflows/scene-model.yml"]
+permissions:
+  contents: write
+defaults:
+  run:
+    shell: bash
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: |
+          pip install --index-url https://download.pytorch.org/whl/cpu torch torchvision
+          pip install "ultralytics>=8.3" onnx onnxslim onnxruntime "git+https://github.com/ultralytics/CLIP.git" pyyaml opencv-python-headless
+      - run: python ml/scene/export_scene.py scene
+      - name: Smoke test through the backend adapter
+        run: |
+          pip install fastapi sqlmodel pydantic-settings python-multipart numpy
+          wget -q https://ultralytics.com/images/bus.jpg -O bus.jpg || curl -sL https://github.com/ultralytics/assets/releases/download/v0.0.0/bus.jpg -o bus.jpg
+          python - <<'PY'
+          import json, sys, cv2
+          sys.path.insert(0, "backend")
+          from app.ohe.pipeline import OnnxYoloDetector
+          d = OnnxYoloDetector("scene/scene_detector.onnx", json.load(open("scene/scene_detector.names.json")), conf=0.15)
+          r = d.detect(cv2.imread("bus.jpg"))
+          print([(x.cls, round(x.score, 2)) for x in r])
+          assert any(x.cls == "person" for x in r), "open-vocabulary model found no person in bus.jpg"
+          PY
+      - name: Publish to branch ci-scene-model
+        run: |
+          cd /tmp && rm -rf pub && mkdir pub && cd pub && git init -q -b ci-scene-model && mkdir reports
+          cp "$GITHUB_WORKSPACE"/scene/scene_* reports/ && ls -la reports
+          git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
+          git add -A && git commit -qm "scene model ${{ github.sha }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-scene-model

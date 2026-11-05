@@ -1,0 +1,54 @@
+# Whole-photo inventory (open-vocabulary detector). Every object the model can name is listed in the photo's
+# inventory; items marked 'finding' raise a finding (out of place near the track / OHE); 'infra' items are
+# railway equipment seen in the photo. Prompts are plain English phrases (YOLO-World / CLIP text space).
+version: scene-v1
+classes:
+  # railway / OHE infrastructure
+  - {prompt: "electric pole", group: infra}
+  - {prompt: "steel lattice mast", group: infra}
+  - {prompt: "overhead power line", group: infra}
+  - {prompt: "insulator", group: infra}
+  - {prompt: "metal bracket", group: infra}
+  - {prompt: "cable", group: infra}
+  - {prompt: "railway track", group: infra}
+  - {prompt: "railway sleeper", group: infra}
+  - {prompt: "signal light", group: infra}
+  - {prompt: "sign board", group: infra}
+  - {prompt: "number plate", group: infra}
+  - {prompt: "transformer", group: infra}
+  - {prompt: "concrete foundation", group: infra}
+  # vegetation and living things
+  - {prompt: "tree", group: vegetation}
+  - {prompt: "tree branch", group: vegetation, finding: fallen_or_overhanging_branch}
+  - {prompt: "bush", group: vegetation}
+  - {prompt: "creeper vine", group: vegetation, finding: creeper_on_structure}
+  - {prompt: "grass", group: vegetation}
+  - {prompt: "bird nest", group: living, finding: bird_nest}
+  - {prompt: "bird", group: living}
+  - {prompt: "animal", group: living, finding: animal_near_track}
+  - {prompt: "cow", group: living, finding: animal_near_track}
+  - {prompt: "dog", group: living, finding: animal_near_track}
+  - {prompt: "monkey", group: living, finding: animal_near_track}
+  - {prompt: "person", group: living}
+  # loose articles, debris, foreign objects
+  - {prompt: "stone", group: debris, finding: loose_stone}
+  - {prompt: "rock", group: debris, finding: loose_stone}
+  - {prompt: "boulder", group: debris, finding: loose_stone}
+  - {prompt: "scrap metal", group: debris, finding: scrap_metal}
+  - {prompt: "metal rod", group: debris, finding: scrap_metal}
+  - {prompt: "wire coil", group: debris, finding: scrap_metal}
+  - {prompt: "plastic bag", group: debris, finding: foreign_object}
+  - {prompt: "plastic bottle", group: debris, finding: foreign_object}
+  - {prompt: "cloth", group: debris, finding: foreign_object}
+  - {prompt: "rope", group: debris, finding: foreign_object}
+  - {prompt: "kite", group: debris, finding: foreign_object}
+  - {prompt: "balloon", group: debris, finding: foreign_object}
+  - {prompt: "tyre", group: debris, finding: foreign_object}
+  - {prompt: "wooden plank", group: debris, finding: foreign_object}
+  - {prompt: "cardboard box", group: debris, finding: foreign_object}
+  - {prompt: "garbage", group: debris, finding: foreign_object}
+  - {prompt: "broken glass", group: debris, finding: foreign_object}
+  - {prompt: "tool", group: debris, finding: foreign_object}
+  - {prompt: "fire", group: hazard, finding: fire_or_smoke}
+  - {prompt: "smoke", group: hazard, finding: fire_or_smoke}
+  - {prompt: "water puddle", group: hazard, finding: waterlogging}
