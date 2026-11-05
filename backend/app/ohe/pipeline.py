@@ -267,7 +267,7 @@ class Sectioned:
         return [(int(max(0, i * tw - ox)), int(max(0, j * th - oy)), int(min(w, (i + 1) * tw + ox)), int(min(h, (j + 1) * th + oy)))
                 for j in range(ny) for i in range(nx)]
 
-    max_side = 2560   # sections are cut from the photo at most this size (12 MP phone photos: ~12 sections)
+    max_side = 4096   # full resolution for 12 MP phone photos (a cap at 2560 missed 11 of 12 small parts in tests)
 
     def detect(self, img):
         import cv2
