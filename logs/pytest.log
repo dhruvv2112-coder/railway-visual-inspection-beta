@@ -1,31 +1,7 @@
-.......................................F.............                    [100%]
-=================================== FAILURES ===================================
-____________ test_gallery_photo_located_by_exif_without_mast_number ____________
-
-client = <starlette.testclient.TestClient object at 0x7f83f1685950>
-models = <class 'app.ohe.api.Models'>
-
-    def test_gallery_photo_located_by_exif_without_mast_number(client, models):
-        models.detector, models.ocr = FixDet([NEST]), FixOCR([])
-        sid = _session(client)
->       data = _exif_jpeg(601, 26.9124, 75.7873, "2026:11:05 10:45:00")
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-tests/test_ohe.py:605: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-seed = 601, lat = 26.9124, lon = 75.7873, when = '2026:11:05 10:45:00'
-
-    def _exif_jpeg(seed, lat=None, lon=None, when=None):
-        import io
-    
->       from PIL import Image
-E       ModuleNotFoundError: No module named 'PIL'
-
-tests/test_ohe.py:587: ModuleNotFoundError
+.....................................................                    [100%]
 =============================== warnings summary ===============================
 tests/test_api.py::test_health_and_taxonomy_hindi
-  /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  /opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -76,6 +52,7 @@ PASSED tests/test_ohe.py::test_patroller_signs_off_own_patrol
 PASSED tests/test_ohe.py::test_sse_mode_needs_authorised_signer
 PASSED tests/test_ohe.py::test_no_framing_demands_for_partial_views
 PASSED tests/test_ohe.py::test_rotation_merge_finds_sideways_parts
+PASSED tests/test_ohe.py::test_gallery_photo_located_by_exif_without_mast_number
 PASSED tests/test_ohe.py::test_stamped_location_read_from_photo_text
 PASSED tests/test_ohe.py::test_unlocated_findings_on_different_photos_stay_separate
 PASSED tests/test_ohe.py::test_whole_photo_inventory_lists_everything_and_raises_out_of_place_articles
@@ -89,5 +66,4 @@ PASSED tests/test_quality.py::test_overexposed_image_rejected
 PASSED tests/test_quality.py::test_low_resolution_rejected
 PASSED tests/test_quality.py::test_unreadable
 PASSED tests/test_quality.py::test_mildly_dark_but_usable_image_passes
-FAILED tests/test_ohe.py::test_gallery_photo_located_by_exif_without_mast_number - ModuleNotFoundError: No module named 'PIL'
-1 failed, 52 passed, 1 warning in 5.09s
+53 passed, 1 warning in 4.47s
