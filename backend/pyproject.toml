@@ -13,6 +13,7 @@ dependencies = [
   "opencv-python-headless>=4.10",
   "onnxruntime>=1.19",
   "pyyaml>=6",
+  "pillow>=10",   # EXIF time / GPS of gallery photos
 ]
 
 [project.optional-dependencies]
