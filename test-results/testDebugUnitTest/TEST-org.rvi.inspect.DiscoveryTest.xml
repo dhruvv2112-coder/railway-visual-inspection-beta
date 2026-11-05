@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.rvi.inspect.DiscoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-05T04:09:48" hostname="runnervm7aw5e" time="0.397">
+<testsuite name="org.rvi.inspect.DiscoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-05T04:40:45" hostname="runnervm48cm3" time="0.499">
   <properties/>
-  <testcase name="normalisesTypedAddresses" classname="org.rvi.inspect.DiscoveryTest" time="0.359"/>
-  <testcase name="parsesReportsAndAlertsFromServer" classname="org.rvi.inspect.DiscoveryTest" time="0.022"/>
-  <testcase name="reportTrackerFollowsSignatureAndAmendments" classname="org.rvi.inspect.DiscoveryTest" time="0.001"/>
-  <testcase name="relaySignatureMatchesServer" classname="org.rvi.inspect.DiscoveryTest" time="0.012"/>
+  <testcase name="normalisesTypedAddresses" classname="org.rvi.inspect.DiscoveryTest" time="0.458"/>
+  <testcase name="parsesReportsAndAlertsFromServer" classname="org.rvi.inspect.DiscoveryTest" time="0.017"/>
+  <testcase name="reportTrackerFollowsSignatureAndAmendments" classname="org.rvi.inspect.DiscoveryTest" time="0.002"/>
+  <testcase name="relaySignatureMatchesServer" classname="org.rvi.inspect.DiscoveryTest" time="0.02"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
