@@ -306,6 +306,12 @@ def hf_files(repo: str, patterns: list[str], dest: Path, per_dir_cap: int) -> Pa
         elif f.endswith((".yaml", ".md", ".json")) and f.count("/") <= 3:
             pick.append(f)
     print("hf_files", repo, len(pick), "files", dict(list(seen.items())[:12]), flush=True)
+    try:   # parallel download of exactly the picked files (one-at-a-time took hours for big repos)
+        from huggingface_hub import snapshot_download
+        snapshot_download(repo, repo_type="dataset", local_dir=str(dest), allow_patterns=pick, max_workers=8)
+        return dest
+    except Exception as e:
+        print("hf_files parallel download failed, falling back to one by one:", str(e)[:200], flush=True)
     for f in pick:
         for attempt in range(6):
             try:
@@ -339,7 +345,7 @@ def toxin0(w: Writer, manifest: list):
     """ToXiN0/Powerlines-detection (Apache-2.0): ~8,000 power-line photos, YOLO; festoon / polymer insulators,
     bad / damaged insulators, nests (other classes are dropped by map_name). Only train/val in the source: hash split."""
     d = hf_files("ToXiN0/Powerlines-detection", [r"^images/", r"^dataset\.yaml$"], BASE / "toxin0",
-                 per_dir_cap=max(CAP, EVAL_CAP) * 2)
+                 per_dir_cap=max(CAP, EVAL_CAP))
     yolo_tree(w, "toxin0", d, manifest, "Apache-2.0", "hf:ToXiN0/Powerlines-detection", hash_split=True)
 
 
