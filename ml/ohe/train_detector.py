@@ -41,10 +41,15 @@ def main():
         if tr.last.exists():
             shutil.copy(tr.last, RESUME)
 
+    marks = [t]
+
     def budget(tr):
+        marks.append(time.perf_counter())
         if state["paused"] or not BUDGET_MIN or tr.epoch + 1 >= tr.epochs:
             return
-        if (time.perf_counter() - t) / 60 > BUDGET_MIN:
+        # stop BEFORE an epoch that would not finish inside the budget (an 86-min epoch overran the 6-h job limit)
+        per_epoch = (marks[-1] - marks[0]) / 60 / max(1, len(marks) - 1)
+        if (marks[-1] - t) / 60 + per_epoch * 1.1 > BUDGET_MIN:
             tr.stop, state["paused"], state["epoch"] = True, True, tr.epoch + 1
 
     if os.environ.get("OHE_RESUME") == "1" and RESUME.exists():
