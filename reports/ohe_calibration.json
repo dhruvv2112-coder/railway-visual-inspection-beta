@@ -1,0 +1,89 @@
+{
+ "method": "platt-per-class",
+ "data": "public held-out test split (training sources); not railway photos",
+ "detector": "onnx:ohe_detector.onnx",
+ "images": 2723,
+ "iou": 0.5,
+ "min_score": 0.25,
+ "classes": {
+  "insulator": {
+   "a": 1.65546,
+   "b": 0.72551
+  },
+  "insulator_defect": {
+   "a": 1.15888,
+   "b": 0.21891
+  },
+  "bird_nest": {
+   "a": 2.01937,
+   "b": 1.25309
+  },
+  "vegetation": {
+   "a": 1.09808,
+   "b": -0.49047
+  },
+  "mast": {
+   "a": 0.87458,
+   "b": 1.23969
+  },
+  "foreign_object": {
+   "a": 1.92979,
+   "b": 0.54165
+  },
+  "corrosion": {
+   "a": 1.71421,
+   "b": -0.90613
+  }
+ },
+ "report": {
+  "insulator": {
+   "detections": 2368,
+   "precision_at_threshold": 0.7082,
+   "missed_boxes": 983,
+   "ece_raw_holdout": 0.1295,
+   "ece_calibrated_holdout": 0.045
+  },
+  "insulator_defect": {
+   "detections": 344,
+   "precision_at_threshold": 0.436,
+   "missed_boxes": 224,
+   "ece_raw_holdout": 0.0481,
+   "ece_calibrated_holdout": 0.0413
+  },
+  "bird_nest": {
+   "detections": 265,
+   "precision_at_threshold": 0.966,
+   "missed_boxes": 21,
+   "ece_raw_holdout": 0.1654,
+   "ece_calibrated_holdout": 0.0464
+  },
+  "vegetation": {
+   "detections": 873,
+   "precision_at_threshold": 0.4135,
+   "missed_boxes": 421,
+   "ece_raw_holdout": 0.0934,
+   "ece_calibrated_holdout": 0.0492
+  },
+  "mast": {
+   "detections": 311,
+   "precision_at_threshold": 0.6752,
+   "missed_boxes": 329,
+   "ece_raw_holdout": 0.3301,
+   "ece_calibrated_holdout": 0.0474
+  },
+  "foreign_object": {
+   "detections": 875,
+   "precision_at_threshold": 0.8229,
+   "missed_boxes": 90,
+   "ece_raw_holdout": 0.1442,
+   "ece_calibrated_holdout": 0.0394
+  },
+  "corrosion": {
+   "detections": 191,
+   "precision_at_threshold": 0.5236,
+   "missed_boxes": 64,
+   "ece_raw_holdout": 0.1967,
+   "ece_calibrated_holdout": 0.1199
+  }
+ }
+}
