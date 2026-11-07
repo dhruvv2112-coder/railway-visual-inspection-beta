@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backend"))
-from app.ohe.pipeline import OnnxYoloDetector, RotationTTA, Routed  # noqa: E402
+from app.ohe.pipeline import OnnxYoloDetector, RotationTTA, Routed, Sectioned  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from calibrate import iou  # noqa: E402
@@ -93,9 +93,11 @@ def main():
             det = Routed(load(a), load(b), set(cls.split("|")))
         else:
             det = load(d)
-        if tta:
+        if name.endswith("+sections"):   # sections only (no rotation merge), as the server with rotation_views=1
+            det = Sectioned(det, full_angles=(0,), tile_angles=(0,))
+        elif tta:
             det = RotationTTA(det)
-        det.names = getattr(det, "names", None) or det.base.names
+        det.names = getattr(det, "names", None) or getattr(getattr(det, "base", None), "names", None) or det.full.base.names
         res[name] = {"upright": score(det, data, False), "rotated_90": score(det, data, True)}
         print(name, "upright mAP50", res[name]["upright"]["mAP50"], "rotated mAP50", res[name]["rotated_90"]["mAP50"], flush=True)
     outp.write_text(json.dumps(res, indent=1))
