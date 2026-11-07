@@ -15,6 +15,7 @@ defaults:
     shell: bash
 env:
   OHE_DATA: ${{ github.workspace }}/.cache/ohe
+  RVI_REPORTS: ${{ github.workspace }}/reports
   OHE_TIME_BUDGET_MIN: ${{ inputs.budget }}
   PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
 jobs:

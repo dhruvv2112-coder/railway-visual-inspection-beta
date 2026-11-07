@@ -52,7 +52,9 @@ def main():
         if (marks[-1] - t) / 60 + per_epoch * 1.1 > BUDGET_MIN:
             tr.stop, state["paused"], state["epoch"] = True, True, tr.epoch + 1
 
-    if os.environ.get("OHE_RESUME") == "1" and RESUME.exists():
+    if os.environ.get("OHE_FINALIZE_ONLY") == "1":
+        m, kw = None, {}
+    elif os.environ.get("OHE_RESUME") == "1" and RESUME.exists():
         m = YOLO(str(RESUME))
         kw = {"resume": True}
         print("resuming from", RESUME, flush=True)
@@ -63,14 +65,17 @@ def main():
                   plots=False, verbose=False, project=str(DATA / "runs"), name="det", exist_ok=True,
                   # any orientation: random rotation and up-down flips (field photos of parts at any angle)
                   degrees=float(os.environ.get("OHE_DEGREES", "0")), flipud=float(os.environ.get("OHE_FLIPUD", "0")))
-    m.add_callback("on_model_save", keep_resume)
-    m.add_callback("on_fit_epoch_end", budget)
-    m.train(**kw)
-    minutes = (time.perf_counter() - t) / 60
+    finalize_only = os.environ.get("OHE_FINALIZE_ONLY") == "1"   # training done: only test + export from best.pt
+    if not finalize_only:
+        m.add_callback("on_model_save", keep_resume)
+        m.add_callback("on_fit_epoch_end", budget)
+        m.train(**kw)
+    minutes = 0.0 if finalize_only else (time.perf_counter() - t) / 60
     prog = RUN / "progress.json"
     done_before = json.loads(prog.read_text())["minutes"] if prog.exists() else 0
-    prog.write_text(json.dumps({"epochs_done": state["epoch"], "epochs": EPOCHS, "paused": state["paused"],
-                                "minutes": done_before + minutes}))
+    if not finalize_only:
+        prog.write_text(json.dumps({"epochs_done": state["epoch"], "epochs": EPOCHS, "paused": state["paused"],
+                                    "minutes": done_before + minutes}))
     if state["paused"]:
         print(f"PAUSED after epoch {state['epoch']} of {EPOCHS}; resume in the next job", flush=True)
         (RUN / "PAUSED").write_text(str(state["epoch"]))
