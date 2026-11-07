@@ -287,33 +287,30 @@ class Sectioned:
     def detect(self, img):
         import cv2
         H, W = img.shape[:2]
-        k = min(1.0, self.max_side / max(H, W))
-        work = cv2.resize(img, (round(W * k), round(H * k)), interpolation=cv2.INTER_AREA) if k < 1 else img
+        k_scale = min(1.0, self.max_side / max(H, W))
+        work = cv2.resize(img, (round(W * k_scale), round(H * k_scale)), interpolation=cv2.INTER_AREA) if k_scale < 1 else img
         h, w = work.shape[:2]
-        found = [(d, -1) for d in self.full.detect(work)]
+        kept = [(d, -1) for d in self.full.detect(work)]       # the whole-photo pass is never altered
         secs = self.grid(w, h)
-        img = work
+        extra = []
         for k, (x1, y1, x2, y2) in enumerate(secs):
-            for d in self.tile.detect(img[y1:y2, x1:x2]):
+            tw, th = x2 - x1, y2 - y1
+            for d in self.tile.detect(work[y1:y2, x1:x2]):
                 b = d.box
-                found.append((Det(d.cls, d.score, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)), k))
-        out, where = [], []
-        for cls in {d.cls for d, _ in found}:
-            cand = sorted((f for f in found if f[0].cls == cls), key=lambda f: -f[0].score)
-            while cand:
-                best = cand.pop(0)
-                group = [best] + [f for f in cand if _iou(f[0].box, best[0].box) >= self.iou or _inside(f[0].box, best[0].box) > 0.8
-                                  or _inside(best[0].box, f[0].box) > 0.8]
-                cand = [f for f in cand if f not in group]
-                bx = (min(g[0].box[0] for g in group), min(g[0].box[1] for g in group),
-                      max(g[0].box[2] for g in group), max(g[0].box[3] for g in group)) if len(group) > 1 else best[0].box
-                out.append(Det(cls, best[0].score, tuple(float(v) for v in bx)))
-                where.append(sorted({g[1] for g in group}))
-        inv = 1 / k
-        self.last_sections = [{"section": i, "box": [round(v * inv) for v in b], "found": sorted(d.cls for d, ks in zip(out, where) if i in ks)}
-                              for i, b in enumerate(secs)]
-        res = [Det(d.cls, d.score, tuple(float(v * inv) for v in d.box)) for d, _ in sorted(zip(out, where), key=lambda t: -t[0].score)]
-        return res
+                m = 0.02
+                cut = ((b[0] < m * tw and x1 > 0) or (b[1] < m * th and y1 > 0) or
+                       (b[2] > (1 - m) * tw and x2 < w) or (b[3] > (1 - m) * th and y2 < h))
+                if cut:          # cut by a section edge: the whole-photo pass or the neighbouring section has it whole
+                    continue
+                extra.append((Det(d.cls, d.score, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)), k))
+        for d, k in sorted(extra, key=lambda t: -t[0].score):   # sections only ADD parts nobody found yet
+            if all(e.cls != d.cls or (_iou(e.box, d.box) < 0.3 and _inside(d.box, e.box) < 0.5 and _inside(e.box, d.box) < 0.5)
+                   for e, _ in kept):
+                kept.append((d, k))
+        inv = 1 / k_scale
+        self.last_sections = [{"section": i, "box": [round(v * inv) for v in b],
+                               "added": sorted(d.cls for d, s_ in kept if s_ == i)} for i, b in enumerate(secs)]
+        return [Det(d.cls, d.score, tuple(float(v * inv) for v in d.box)) for d, _ in sorted(kept, key=lambda t: -t[0].score)]
 
 
 def _inside(a, b) -> float:
