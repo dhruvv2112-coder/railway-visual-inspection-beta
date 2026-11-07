@@ -95,6 +95,8 @@ def main():
             det = load(d)
         if name.endswith("+sections"):   # sections only (no rotation merge), as the server with rotation_views=1
             det = Sectioned(det, full_angles=(0,), tile_angles=(0,))
+        elif name.endswith("+rot4"):    # four right-angle views only (no 45-degree views)
+            det = RotationTTA(det, angles=(0, 90, 180, 270))
         elif tta:
             det = RotationTTA(det)
         det.names = getattr(det, "names", None) or getattr(getattr(det, "base", None), "names", None) or det.full.base.names
