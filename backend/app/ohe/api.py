@@ -116,10 +116,17 @@ class Models:
             if pb.exists() and nb.exists() and route.exists():   # second detector for the classes it is better at
                 base = cls.routed = pipeline.Routed(base, pipeline.OnnxYoloDetector(str(pb), json.loads(nb.read_text())),
                                                     set(json.loads(route.read_text())["from_b"]))
-            n = max(1, settings.rotation_views)   # look at each photo at n rotations: parts are found at any angle
+            # how to look at each photo is a property of the model shipped with it (ohe_runtime.json): a model trained
+            # with rotation needs no rotation merge (which adds false alarms); an upright-trained one needs it
+            rt = settings.model_dir / "ohe_runtime.json"
+            rcfg = json.loads(rt.read_text()) if rt.exists() else {}
+            n = max(1, int(rcfg.get("rotation_views", settings.rotation_views)))
+            secs = bool(rcfg.get("sections", settings.sections))
             angles = tuple(round(i * 360 / n) for i in range(n))
-            cls.detector = (pipeline.Sectioned(base, full_angles=angles) if settings.sections else
-                            pipeline.RotationTTA(base, angles=angles)) if n > 1 else base
+            if secs:
+                cls.detector = pipeline.Sectioned(base, full_angles=angles, tile_angles=(0, 90) if n > 1 else (0,))
+            else:
+                cls.detector = pipeline.RotationTTA(base, angles=angles) if n > 1 else base
         vc = settings.model_dir / "ohe_assess.onnx"
         if vc.exists():
             meta = settings.model_dir / "ohe_assess.json"
