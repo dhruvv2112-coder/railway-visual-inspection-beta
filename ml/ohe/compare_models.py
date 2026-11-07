@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backend"))
-from app.ohe.pipeline import OnnxYoloDetector  # noqa: E402
+from app.ohe.pipeline import OnnxYoloDetector, RotationTTA, Routed  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from calibrate import iou  # noqa: E402
@@ -83,10 +83,19 @@ def score(det, data: Path, rotate: bool, conf_server: float = 0.25):
 def main():
     data, outp = Path(sys.argv[1]), Path(sys.argv[2])
     res = {}
+    import os
+    tta = os.environ.get("CMP_TTA") == "1"   # deployment mode: 8 rotations merged, as the laptop server runs
+    load = lambda d: OnnxYoloDetector(str(Path(d) / "ohe_detector.onnx"), json.loads((Path(d) / "ohe_detector.names.json").read_text()), conf=0.05)
     for arg in sys.argv[3:]:
         name, d = arg.split("=", 1)
-        d = Path(d)
-        det = OnnxYoloDetector(str(d / "ohe_detector.onnx"), json.loads((d / "ohe_detector.names.json").read_text()), conf=0.05)
+        if d.startswith("route:"):   # route:<dirA>,<dirB>,<classes from B separated by |>
+            a, b, cls = d[6:].split(",")
+            det = Routed(load(a), load(b), set(cls.split("|")))
+        else:
+            det = load(d)
+        if tta:
+            det = RotationTTA(det)
+        det.names = getattr(det, "names", None) or det.base.names
         res[name] = {"upright": score(det, data, False), "rotated_90": score(det, data, True)}
         print(name, "upright mAP50", res[name]["upright"]["mAP50"], "rotated mAP50", res[name]["rotated_90"]["mAP50"], flush=True)
     outp.write_text(json.dumps(res, indent=1))

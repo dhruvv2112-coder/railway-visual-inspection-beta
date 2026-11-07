@@ -191,6 +191,21 @@ class OnnxViewCheck:
         return float(e[1] / e.sum())   # classes: [valid, perspective_distorted]
 
 
+class Routed:
+    """Two detectors with the same classes: take classes `from_b` from detector b and every other class from a
+    (each model keeps the classes it is measured to be better at)."""
+
+    def __init__(self, a, b, from_b: set[str]):
+        self.a, self.b, self.from_b = a, b, set(from_b)
+        self.names = getattr(a, "names", None)
+        self.conf = getattr(a, "conf", None)
+        self.version = f"{getattr(a, 'version', 'a')}+{getattr(b, 'version', 'b')}[{','.join(sorted(self.from_b))}]"
+
+    def detect(self, img):
+        return [d for d in self.a.detect(img) if d.cls not in self.from_b] + \
+               [d for d in self.b.detect(img) if d.cls in self.from_b]
+
+
 class RotationTTA:
     """Looks at the photo at several rotations and merges what it finds, so a part is found whatever way the phone
     or the part is turned (sideways cantilever insulators, tilted shots, upside-down photos). Each rotated view is
