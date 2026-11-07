@@ -1,0 +1,33 @@
+name: ohe-compare
+# Scores the released detector (ci-ohe-train-long) and, when present, the new one (ci-ohe-train-v2) on the same
+# held-out test photos (dataset from a training run's 'state' artifact), upright and turned 90 degrees.
+on:
+  workflow_dispatch:
+    inputs:
+      state_run: {description: "Run id whose 'state' artifact holds the dataset", required: true}
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install onnxruntime opencv-python-headless numpy pyyaml fastapi sqlmodel pydantic-settings python-multipart
+      - uses: actions/download-artifact@v4
+        with: {name: state, path: state, run-id: "${{ inputs.state_run }}", github-token: "${{ github.token }}"}
+      - name: Models
+        run: |
+          mkdir -p old new
+          git fetch -q --depth 1 origin ci-ohe-train-long && for f in ohe_detector.onnx ohe_detector.names.json; do git show FETCH_HEAD:reports/$f > old/$f; done
+          if git fetch -q --depth 1 origin ci-ohe-train-v2 && git show FETCH_HEAD:reports/ohe_detector.onnx > new/ohe_detector.onnx 2>/dev/null; then
+            git show FETCH_HEAD:reports/ohe_detector.names.json > new/ohe_detector.names.json; echo "MODELS=current=old v2=new" >> "$GITHUB_ENV"
+          else echo "MODELS=current=old" >> "$GITHUB_ENV"; fi
+          Y=$(dirname "$(dirname "$(find state -type d -path '*test/images' | head -1)")"); echo "Y=$Y" >> "$GITHUB_ENV"; ls "$Y/test/images" | wc -l
+      - run: python ml/ohe/compare_models.py "$Y" compare.json $MODELS
+      - uses: actions/upload-artifact@v4
+        with: {name: compare, path: compare.json}
