@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
     inputs:
       run_id: {description: "ohe-train-long run that holds the dataset artifact", default: "41418986799"}
+      model_branch: {description: "Branch with reports/ohe_detector.onnx to calibrate", default: "ci-ohe-train-long"}
+      out_branch: {description: "Branch for the calibration", default: "ci-ohe-calib"}
   push:
     branches: [main]
     paths: ["ml/ohe/calibrate.py", ".github/workflows/ohe-calibrate.yml"]
@@ -29,7 +31,7 @@ jobs:
         with: {name: state, path: state, run-id: "${{ github.event.inputs.run_id || '41418986799' }}", github-token: "${{ github.token }}"}
       - name: Trained detector
         run: |
-          mkdir -p model && git fetch -q --depth 1 origin ci-ohe-train-long
+          mkdir -p model && git fetch -q --depth 1 origin "${{ github.event.inputs.model_branch || 'ci-ohe-train-long' }}"
           git show FETCH_HEAD:reports/ohe_detector.onnx > model/ohe_detector.onnx
           git show FETCH_HEAD:reports/ohe_detector.names.json > model/ohe_detector.names.json
           Y=$(dirname "$(find state -type d -path '*test/images' | head -1)"); Y=$(dirname "$Y"); echo "dataset: $Y"; ls "$Y"
@@ -38,8 +40,8 @@ jobs:
         run: mkdir -p reports && python ml/ohe/calibrate.py model "$Y" reports/ohe_calibration.json
       - name: Publish to branch ci-ohe-calib
         run: |
-          cd /tmp && rm -rf pub && mkdir pub && cd pub && git init -q -b ci-ohe-calib && mkdir reports
+          cd /tmp && rm -rf pub && mkdir pub && cd pub && git init -q -b "${{ github.event.inputs.out_branch || 'ci-ohe-calib' }}" && mkdir reports
           cp "$GITHUB_WORKSPACE/reports/ohe_calibration.json" reports/
           git config user.name ci-bot && git config user.email ci-bot@users.noreply.github.com
           git add -A && git commit -qm "calibration ${{ github.sha }}"
-          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-ohe-calib
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" "HEAD:${{ github.event.inputs.out_branch || 'ci-ohe-calib' }}"
