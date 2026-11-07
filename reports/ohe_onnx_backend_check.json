@@ -1,0 +1,73 @@
+{
+ "adapter": "onnx:ohe_detector.onnx",
+ "images": 20,
+ "images_with_detections": 20,
+ "sample": [
+  {
+   "image": "cplid_000.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.68
+    ],
+    [
+     "insulator_defect",
+     0.32
+    ]
+   ]
+  },
+  {
+   "image": "cplid_001.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.85
+    ],
+    [
+     "insulator_defect",
+     0.26
+    ]
+   ]
+  },
+  {
+   "image": "cplid_002.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.87
+    ],
+    [
+     "insulator_defect",
+     0.5
+    ]
+   ]
+  },
+  {
+   "image": "cplid_003.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.72
+    ],
+    [
+     "insulator_defect",
+     0.3
+    ]
+   ]
+  },
+  {
+   "image": "cplid_004.jpg",
+   "ground_truth_boxes": 2,
+   "detections": [
+    [
+     "insulator",
+     0.71
+    ]
+   ]
+  }
+ ]
+}

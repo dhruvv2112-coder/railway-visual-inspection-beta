@@ -1,0 +1,784 @@
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/home/runner/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+YOLO11n summary (fused): 100 layers, 2,583,517 parameters, 0 gradients, 6.3 GFLOPs
+Downloading https://ultralytics.com/assets/Arial.ttf to '/home/runner/.config/Ultralytics/Arial.ttf': 100% ━━━━━━━━━━━━ 755.1KB 21.7MB/s 0.0s
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4686.9±3179.1 MB/s, size: 365.1 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 2723 images, 67 backgrounds, 16 corrupt: 100% ━━━━━━━━━━━━ 2723/2723 4.7Kit/s 0.6s
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BAD-INSULATOR-DETECTION-V11I-COCO-130041-JPG-rf-a0ec15a8b7fa-16.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.147217]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BAD-INSULATOR-DETECTION-V11I-COCO-160190-JPG-rf-b09e8160b698-62.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.739997]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BAD-INSULATOR-DETECTION-V11I-COCO-170551-JPG-rf-2fa7a0863372-133.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.015964]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BGI-DATASET-YOLOV7-LABEL-su110kv-vo-553-jpg-rf-19cabfa4cd5c7-245.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.046205]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_GLASS-MPID-20231025T104913Z-001-T341-9-JPG-jpg-rf-16cd09806f-764.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.095383]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-154W1-jpg-rf-1099ba21d1b1f0d54-908.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.035088 1.0351  ]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-219W2-jpg-rf-686ac4eb9a098c0e4-992.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.013933]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-264C1-jpg-rf-27a55fbc01e68982d-1061.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.100483]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-274C2-jpg-rf-9c4ed8a66ea316df8-1078.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.012767]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-284W2-jpg-rf-29fb4ef307f5cdb3b-1089.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.023083]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-301W1-jpg-rf-dfeb8386e26f198f9-1102.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.024017]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-561-jpg-rf-1de65c9b98a-1675.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.121359]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-617-jpg-rf-a72fedbe138-1691.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.012859]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-736-jpg-rf-7545b381b09-1725.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.065469]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-738-jpg-rf-e6af3188d53-1727.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.098906]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_MONITORING-VL-DETAL-2024-01-17-170259-JPG-rf-92b7db0af559c68-1862.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.278149]
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 170/170 1.3it/s 2:14
+                   all       2707       5569      0.619      0.632      0.636      0.389
+Speed: 1.2ms preprocess, 44.3ms inference, 0.0ms loss, 0.5ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 5387.3±946.2 MB/s, size: 72.5 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 105 images, 47 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 105/105 5.1Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 7/7 1.0it/s 6.9s
+                   all        105        164      0.757      0.555       0.63      0.317
+Speed: 1.8ms preprocess, 61.7ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 12733.0±2162.5 MB/s, size: 546.8 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 136 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 136/136 3.6Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 9/9 1.3it/s 6.7s
+                   all        136        268      0.747      0.782      0.846      0.498
+Speed: 1.4ms preprocess, 42.3ms inference, 0.0ms loss, 0.4ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 8882.9±1889.5 MB/s, size: 227.0 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 179 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 179/179 4.7Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 12/12 1.7it/s 6.9s
+                   all        179        220      0.377      0.441      0.341      0.111
+Speed: 0.9ms preprocess, 33.9ms inference, 0.0ms loss, 0.3ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 9681.7±1333.2 MB/s, size: 251.2 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 294 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 294/294 5.0Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 19/19 1.5it/s 12.9s
+                   all        294        319      0.598      0.624      0.615      0.306
+Speed: 1.0ms preprocess, 38.8ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 10400.6±1106.3 MB/s, size: 381.9 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 283 images, 4 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 283/283 4.7Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 18/18 1.2it/s 14.6s
+                   all        283        771      0.603       0.46        0.5      0.284
+Speed: 1.4ms preprocess, 44.7ms inference, 0.0ms loss, 0.6ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 5298.9±3197.8 MB/s, size: 182.2 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 92 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 92/92 4.6Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 6/6 1.0s/it 6.1s
+                   all         92        128      0.837       0.72      0.811      0.506
+Speed: 1.8ms preprocess, 61.6ms inference, 0.0ms loss, 0.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 8680.7±798.7 MB/s, size: 245.0 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 258 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 258/258 4.7Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 17/17 1.2it/s 14.2s
+                   all        258        657       0.75      0.638      0.678      0.362
+Speed: 1.3ms preprocess, 49.8ms inference, 0.0ms loss, 0.3ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 7554.7±1485.5 MB/s, size: 185.9 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 374 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 374/374 4.9Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 24/24 1.4it/s 17.1s
+                   all        374        477      0.943      0.933      0.971       0.74
+Speed: 1.3ms preprocess, 40.5ms inference, 0.0ms loss, 0.3ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 5760.4±1056.7 MB/s, size: 84.8 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 41 images, 3 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 41/41 4.6Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 3/3 1.1it/s 2.6s
+                   all         41        139      0.352       0.48      0.346      0.113
+Speed: 1.6ms preprocess, 59.5ms inference, 0.0ms loss, 1.2ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 6974.6±2269.1 MB/s, size: 168.5 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 400 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 400/400 4.8Kit/s 0.1s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 25/25 1.3it/s 19.2s
+                   all        400       1073      0.941      0.878      0.944       0.68
+Speed: 1.1ms preprocess, 42.9ms inference, 0.0ms loss, 0.4ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 6822.6±1595.0 MB/s, size: 165.3 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 400 images, 9 backgrounds, 16 corrupt: 100% ━━━━━━━━━━━━ 400/400 4.7Kit/s 0.1s
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BAD-INSULATOR-DETECTION-V11I-COCO-130041-JPG-rf-a0ec15a8b7fa-16.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.147217]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BAD-INSULATOR-DETECTION-V11I-COCO-160190-JPG-rf-b09e8160b698-62.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.739997]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BAD-INSULATOR-DETECTION-V11I-COCO-170551-JPG-rf-2fa7a0863372-133.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.015964]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_BGI-DATASET-YOLOV7-LABEL-su110kv-vo-553-jpg-rf-19cabfa4cd5c7-245.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.046205]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_GLASS-MPID-20231025T104913Z-001-T341-9-JPG-jpg-rf-16cd09806f-764.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.095383]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-154W1-jpg-rf-1099ba21d1b1f0d54-908.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.035088 1.0351  ]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-219W2-jpg-rf-686ac4eb9a098c0e4-992.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.013933]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-264C1-jpg-rf-27a55fbc01e68982d-1061.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.100483]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-274C2-jpg-rf-9c4ed8a66ea316df8-1078.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.012767]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-284W2-jpg-rf-29fb4ef307f5cdb3b-1089.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.023083]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_INSULATOR-ANNOTATION-V1I-COCO-301W1-jpg-rf-dfeb8386e26f198f9-1102.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.024017]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-561-jpg-rf-1de65c9b98a-1675.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.121359]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-617-jpg-rf-a72fedbe138-1691.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.012859]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-736-jpg-rf-7545b381b09-1725.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.065469]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_IRASET-V1I-YOLOV7PYTORCH-1-su110kv-vo-738-jpg-rf-e6af3188d53-1727.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.098906]
+[34m[1mval: [0m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/images/toxin0_MONITORING-VL-DETAL-2024-01-17-170259-JPG-rf-92b7db0af559c68-1862.jpg: ignoring corrupt image/label: non-normalized or out of bounds coordinates [1.278149]
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 24/24 1.1it/s 22.5s
+                   all        384       1168      0.569      0.461      0.466      0.261
+Speed: 1.6ms preprocess, 54.0ms inference, 0.0ms loss, 0.4ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4765.4±1177.2 MB/s, size: 80.8 KB)
+[34m[1mval: [0mScanning /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels... 161 images, 4 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 161/161 4.8Kit/s 0.0s
+[34m[1mval: [0mNew cache created: /home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/test/labels.cache
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 11/11 1.0s/it 11.1s
+                   all        161        185      0.662      0.649      0.675      0.338
+Speed: 2.2ms preprocess, 63.7ms inference, 0.0ms loss, 0.9ms postprocess per image
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (AMD EPYC 9V45 96-Core Processor)
+
+[34m[1mPyTorch:[0m starting from '/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.pt' with input shape (1, 3, 640, 640) BCHW and output shape(s) (1, 11, 8400) (5.2 MB)
+
+[34m[1mONNX:[0m starting export with onnx 1.23.2 opset 22...
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/torch/onnx/_internal/torchscript_exporter/utils.py:550: OnnxExporterWarning: Exporting to ONNX opset version 22 is not supported. by 'torch.onnx.export()'. The highest opset version supported is 20. To use a newer opset version, consider 'torch.onnx.export(..., dynamo=True)'. 
+  _export(
+[34m[1mONNX:[0m slimming with onnxslim 0.1.99...
+[0;93m2026-11-07 16:42:25.782133945 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[34m[1mONNX:[0m export success ✅ 0.8s, saved as '/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.onnx' (10.1 MB)
+
+Export complete (0.9s)
+Results saved to [1m/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights[0m
+Predict:         yolo predict task=detect model=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.onnx imgsz=640  
+Validate:        yolo val task=detect model=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/runs/det/weights/best.onnx imgsz=640 data=/home/runner/work/railway-visual-inspection-beta/railway-visual-inspection-beta/.cache/ohe/ohe_yolo/data.yaml  
+Visualize:       https://netron.app
+{
+ "name": "ohe_detector",
+ "title": "OHE component detector (yolo11n, 25 ep, 640px, cpu)",
+ "summary": "Held-out test split per class. Training 1856.6 min. Sources: CPLID github.com/InsulatorData/InsulatorDataSet (undetermined (user: use for training)); hf:docmhvr/powerline-components-and-faults (MIT); hf:silera/broken-insulators-synthetic-detection (CC BY 4.0); roboflow railway catenary/panto sets (no ROBOFLOW_API_KEY); hf:EPDCL/pd-defect/pole_detection (CC BY 4.0); hf:EPDCL/pd-defect/vegetation_conductor (CC BY 4.0); hf:EPDCL/pd-defect/pole_lean_assessment/object_detection (CC BY 4.0); figshare:RailFOD23 (24180738) (CC BY 4.0); github:phd-benel/VPMBGI (CC BY 4.0); hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100) (CC BY 4.0); hf:ToXiN0/Powerlines-detection (Apache-2.0); zenodo:14604384/porcelain_MPID-20250106T111149Z-001.zip (CC BY 4.0); zenodo:14604384/composite_MPID-20250106T113900Z-001.zip (CC BY 4.0); zenodo:14604384/glass_MPID-20250106T113616Z-001.zip (CC BY 4.0). Images per source: {\"cplid\": {\"train\": 553, \"val\": 159, \"test\": 136}, \"powerline-co\": {\"train\": 1794, \"val\": 77, \"test\": 41}, \"broken-insul\": {\"train\": 162, \"val\": 41, \"test\": 0}, \"epdclpole\": {\"train\": 1665, \"val\": 293, \"test\": 294}, \"epdclvege\": {\"train\": 1245, \"val\": 253, \"test\": 283}, \"epdcllean\": {\"train\": 1441, \"val\": 181, \"test\": 179}, \"railfod\": {\"train\": 3000, \"val\": 400, \"test\": 400}, \"vpmbgi\": {\"train\": 686, \"val\": 163, \"test\": 161}, \"corros\": {\"train\": 840, \"val\": 304, \"test\": 105}, \"toxin0\": {\"train\": 3000, \"val\": 400, \"test\": 400}, \"mpidporc\": {\"train\": 1868, \"val\": 400, \"test\": 374}, \"mpidcomp\": {\"train\": 461, \"val\": 93, \"test\": 92}, \"mpidglas\": {\"train\": 1189, \"val\": 273, \"test\": 258}}",
+ "results": [
+  {
+   "class": "insulator",
+   "precision": 0.6806826350030108,
+   "recall": 0.637675655146221,
+   "AP50": 0.6693736435462526,
+   "AP50_95": 0.41268966913501026
+  },
+  {
+   "class": "insulator_defect",
+   "precision": 0.4351400500114337,
+   "recall": 0.4368131868131868,
+   "AP50": 0.4045310357918206,
+   "AP50_95": 0.2201289951016084
+  },
+  {
+   "class": "bird_nest",
+   "precision": 0.8912312445418297,
+   "recall": 0.9494584837545126,
+   "AP50": 0.9691723160075632,
+   "AP50_95": 0.7096920561786411
+  },
+  {
+   "class": "vegetation",
+   "precision": 0.43756153731986047,
+   "recall": 0.46930946291560105,
+   "AP50": 0.41155449632634733,
+   "AP50_95": 0.23428801229511423
+  },
+  {
+   "class": "mast",
+   "precision": 0.547910284357888,
+   "recall": 0.41187384044526903,
+   "AP50": 0.46556997498271846,
+   "AP50_95": 0.20167369844658847
+  },
+  {
+   "class": "foreign_object",
+   "precision": 0.7596049715034204,
+   "recall": 0.8888888888888888,
+   "AP50": 0.9034165169943379,
+   "AP50_95": 0.6282246218356058
+  },
+  {
+   "class": "corrosion",
+   "precision": 0.5832756982412094,
+   "recall": 0.6280487804878049,
+   "AP50": 0.6291099814312628,
+   "AP50_95": 0.3165050577996874
+  },
+  {
+   "class": "all",
+   "precision": 0.6193437744255218,
+   "recall": 0.6317240426359263,
+   "AP50": 0.6361039950114719,
+   "AP50_95": 0.38902887297032224
+  }
+ ],
+ "per_source_test": {
+  "corros": [
+   {
+    "class": "corrosion",
+    "precision": 0.7573226151477349,
+    "recall": 0.5548780487804879,
+    "AP50": 0.6295100944887172,
+    "AP50_95": 0.3167269357857597
+   }
+  ],
+  "cplid": [
+   {
+    "class": "insulator",
+    "precision": 0.7648948759745224,
+    "recall": 0.9385964912280702,
+    "AP50": 0.949672047350882,
+    "AP50_95": 0.6683416256817571
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.7295340730015445,
+    "recall": 0.625,
+    "AP50": 0.7418026016395374,
+    "AP50_95": 0.32825500795964835
+   }
+  ],
+  "epdcllean": [
+   {
+    "class": "mast",
+    "precision": 0.377379219871811,
+    "recall": 0.44081061459676674,
+    "AP50": 0.3405862904436857,
+    "AP50_95": 0.11146315248563274
+   }
+  ],
+  "epdclpole": [
+   {
+    "class": "mast",
+    "precision": 0.5984786805545079,
+    "recall": 0.6238244514106583,
+    "AP50": 0.6146722931518358,
+    "AP50_95": 0.30613687489001024
+   }
+  ],
+  "epdclvege": [
+   {
+    "class": "vegetation",
+    "precision": 0.6031618491678875,
+    "recall": 0.4604409857328145,
+    "AP50": 0.49971004846196193,
+    "AP50_95": 0.28395370622834865
+   }
+  ],
+  "mpidcomp": [
+   {
+    "class": "insulator",
+    "precision": 0.8366381609652473,
+    "recall": 0.7202048374069748,
+    "AP50": 0.8111958244162359,
+    "AP50_95": 0.5063056900918388
+   }
+  ],
+  "mpidglas": [
+   {
+    "class": "insulator",
+    "precision": 0.7504768834110955,
+    "recall": 0.6377473363774734,
+    "AP50": 0.6776468976499279,
+    "AP50_95": 0.3623153620570069
+   }
+  ],
+  "mpidporc": [
+   {
+    "class": "insulator",
+    "precision": 0.9428237119801222,
+    "recall": 0.9333838529260148,
+    "AP50": 0.9706701713981207,
+    "AP50_95": 0.7403158100344062
+   }
+  ],
+  "powerline-co": [
+   {
+    "class": "insulator",
+    "precision": 0.34682687934297907,
+    "recall": 0.5833333333333334,
+    "AP50": 0.44887908740072685,
+    "AP50_95": 0.1920894687655894
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.4088442865058507,
+    "recall": 0.35,
+    "AP50": 0.2328544638421687,
+    "AP50_95": 0.07488222970552037
+   },
+   {
+    "class": "vegetation",
+    "precision": 0.2999649689324264,
+    "recall": 0.5076085270971316,
+    "AP50": 0.3568397201363188,
+    "AP50_95": 0.0725828925283862
+   }
+  ],
+  "railfod": [
+   {
+    "class": "bird_nest",
+    "precision": 0.988316975941193,
+    "recall": 0.935361216730038,
+    "AP50": 0.9814195961891928,
+    "AP50_95": 0.7291414355161138
+   },
+   {
+    "class": "foreign_object",
+    "precision": 0.8946315862727308,
+    "recall": 0.8209876543209876,
+    "AP50": 0.9058146639352129,
+    "AP50_95": 0.6301126350909879
+   }
+  ],
+  "toxin0": [
+   {
+    "class": "insulator",
+    "precision": 0.7425510489619107,
+    "recall": 0.4235833032197347,
+    "AP50": 0.5213230905988567,
+    "AP50_95": 0.27587499769872476
+   },
+   {
+    "class": "insulator_defect",
+    "precision": 0.34703000048023713,
+    "recall": 0.3865546218487395,
+    "AP50": 0.33382481112551377,
+    "AP50_95": 0.2260774708801808
+   },
+   {
+    "class": "bird_nest",
+    "precision": 0.6170241129136216,
+    "recall": 0.5714285714285714,
+    "AP50": 0.5413845630826762,
+    "AP50_95": 0.2799814310134349
+   }
+  ],
+  "vpmbgi": [
+   {
+    "class": "insulator_defect",
+    "precision": 0.6621984685356385,
+    "recall": 0.6486486486486487,
+    "AP50": 0.6753730995655681,
+    "AP50_95": 0.3378037372624113
+   }
+  ]
+ },
+ "extra": {
+  "manifest": {
+   "target_names": [
+    "insulator",
+    "insulator_defect",
+    "bird_nest",
+    "vegetation",
+    "mast",
+    "foreign_object",
+    "corrosion"
+   ],
+   "sources": [
+    {
+     "source": "CPLID github.com/InsulatorData/InsulatorDataSet",
+     "licence": "undetermined (user: use for training)",
+     "source_names": [
+      "defect",
+      "insulator"
+     ]
+    },
+    {
+     "source": "hf:docmhvr/powerline-components-and-faults",
+     "licence": "MIT",
+     "source_names": [
+      "Broken Cable",
+      "Broken Insulator",
+      "Cable",
+      "Insulators",
+      "Tower",
+      "Vegetation"
+     ],
+     "bbox_column": "bboxes"
+    },
+    {
+     "source": "hf:silera/broken-insulators-synthetic-detection",
+     "licence": "CC BY 4.0",
+     "source_names": [],
+     "bbox_column": "objects"
+    },
+    {
+     "source": "roboflow railway catenary/panto sets",
+     "skipped": "no ROBOFLOW_API_KEY"
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/pole_detection",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Pole"
+     ],
+     "mapped_to": null,
+     "files_seen": 2252,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/vegetation_conductor",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Conductor",
+      "Vegetation"
+     ],
+     "files_seen": 1781
+    },
+    {
+     "source": "hf:EPDCL/pd-defect/pole_lean_assessment/object_detection",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Leaned_Pole",
+      "Straight_Pole"
+     ],
+     "mapped_to": null,
+     "files_seen": 1801,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "figshare:RailFOD23 (24180738)",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "niaocao",
+      "piaofuwu",
+      "qiqiu",
+      "suliaodai"
+     ],
+     "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"
+    },
+    {
+     "source": "github:phd-benel/VPMBGI",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "iso_broken_glass"
+     ],
+     "mapped_to": null,
+     "files_seen": 1010,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "Slippage",
+      "corrosion",
+      "crack"
+     ],
+     "mapped_to": null,
+     "files_seen": 1249,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "hf:ToXiN0/Powerlines-detection",
+     "licence": "Apache-2.0",
+     "source_names": [
+      "vibration_damper",
+      "festoon_insulators",
+      "polymer_insulators",
+      "traverse",
+      "nest",
+      "bad_insulator",
+      "damaged_insulator",
+      "safety_sign+"
+     ],
+     "mapped_to": null,
+     "files_seen": 4598,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "zenodo:14604384/porcelain_MPID-20250106T111149Z-001.zip",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "iso-su"
+     ],
+     "mapped_to": "insulator",
+     "files_seen": 2653,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "zenodo:14604384/composite_MPID-20250106T113900Z-001.zip",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "iso_poly"
+     ],
+     "mapped_to": "insulator",
+     "files_seen": 646,
+     "skipped_no_label_file": 0
+    },
+    {
+     "source": "zenodo:14604384/glass_MPID-20250106T113616Z-001.zip",
+     "licence": "CC BY 4.0",
+     "source_names": [
+      "1"
+     ],
+     "mapped_to": "insulator",
+     "files_seen": 1720,
+     "skipped_no_label_file": 0
+    }
+   ],
+   "stats": {
+    "cplid": {
+     "images": {
+      "train": 553,
+      "val": 159,
+      "test": 136
+     },
+     "instances": {
+      "insulator": 1321,
+      "insulator_defect": 248,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "powerline-co": {
+     "images": {
+      "train": 1794,
+      "val": 77,
+      "test": 41
+     },
+     "instances": {
+      "insulator": 7124,
+      "insulator_defect": 1232,
+      "bird_nest": 0,
+      "vegetation": 309,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "broken-insul": {
+     "images": {
+      "train": 162,
+      "val": 41,
+      "test": 0
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 203,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdclpole": {
+     "images": {
+      "train": 1665,
+      "val": 293,
+      "test": 294
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 2425,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdclvege": {
+     "images": {
+      "train": 1245,
+      "val": 253,
+      "test": 283
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 4587,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "epdcllean": {
+     "images": {
+      "train": 1441,
+      "val": 181,
+      "test": 179
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 2182,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "railfod": {
+     "images": {
+      "train": 3000,
+      "val": 400,
+      "test": 400
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 2476,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 7995,
+      "corrosion": 0
+     }
+    },
+    "vpmbgi": {
+     "images": {
+      "train": 686,
+      "val": 163,
+      "test": 161
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 1188,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "corros": {
+     "images": {
+      "train": 840,
+      "val": 304,
+      "test": 105
+     },
+     "instances": {
+      "insulator": 0,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 1657
+     }
+    },
+    "toxin0": {
+     "images": {
+      "train": 3000,
+      "val": 400,
+      "test": 400
+     },
+     "instances": {
+      "insulator": 10070,
+      "insulator_defect": 1091,
+      "bird_nest": 130,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "mpidporc": {
+     "images": {
+      "train": 1868,
+      "val": 400,
+      "test": 374
+     },
+     "instances": {
+      "insulator": 3308,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "mpidcomp": {
+     "images": {
+      "train": 461,
+      "val": 93,
+      "test": 92
+     },
+     "instances": {
+      "insulator": 905,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    },
+    "mpidglas": {
+     "images": {
+      "train": 1189,
+      "val": 273,
+      "test": 258
+     },
+     "instances": {
+      "insulator": 4143,
+      "insulator_defect": 0,
+      "bird_nest": 0,
+      "vegetation": 0,
+      "dropper": 0,
+      "number_plate": 0,
+      "catenary": 0,
+      "pantograph": 0,
+      "mast": 0,
+      "foreign_object": 0,
+      "corrosion": 0
+     }
+    }
+   }
+  },
+  "onnx_mb": 10.6,
+  "imgsz": 640
+ },
+ "notes": [
+  "Public data are drone views of transmission lines, not ground-level 25 kV railway OHE: results show the pipeline works and give starting weights; they are not field performance (HLD \u00a712.1).",
+  "Per-class results only; overall mAP does not certify any defect family (HLD \u00a715.1).",
+  "yolo11n is AGPL-3.0 (Ultralytics). The HLD core baseline is RT-DETRv2-R18 (Apache-2.0)."
+ ]
+}
