@@ -103,6 +103,7 @@ class Models:
     view: pipeline.ViewCheck | None = None
     scene = None                # open-vocabulary whole-photo inventory model (scene_detector.onnx), optional
     scene_vocab: dict | None = None
+    routed = None               # set when a second detector handles some classes (ohe_route.json)
     calib: dict | None = None   # per-class confidence calibration (ohe_calibration.json), None = uncalibrated
 
     @classmethod
@@ -111,6 +112,10 @@ class Models:
         names = settings.model_dir / "ohe_detector.names.json"
         if p.exists() and names.exists():
             base = pipeline.OnnxYoloDetector(str(p), json.loads(names.read_text()))
+            pb, nb, route = (settings.model_dir / f for f in ("ohe_detector_b.onnx", "ohe_detector_b.names.json", "ohe_route.json"))
+            if pb.exists() and nb.exists() and route.exists():   # second detector for the classes it is better at
+                base = cls.routed = pipeline.Routed(base, pipeline.OnnxYoloDetector(str(pb), json.loads(nb.read_text())),
+                                                    set(json.loads(route.read_text())["from_b"]))
             n = max(1, settings.rotation_views)   # look at each photo at n rotations: parts are found at any angle
             angles = tuple(round(i * 360 / n) for i in range(n))
             cls.detector = (pipeline.Sectioned(base, full_angles=angles) if settings.sections else
@@ -130,6 +135,12 @@ class Models:
                 print("scene model not loaded:", e)
         cal = settings.model_dir / "ohe_calibration.json"
         cls.calib = json.loads(cal.read_text()) if cal.exists() else None
+        cal_b = settings.model_dir / "ohe_calibration_b.json"
+        if cls.calib is not None and cal_b.exists() and cls.routed is not None:
+            fb = cls.routed.from_b   # each class keeps the calibration of the model that detects it
+            cb = json.loads(cal_b.read_text()).get("classes", {})
+            cls.calib = cls.calib | {"classes": {k: v for k, v in cls.calib.get("classes", {}).items() if k not in fb}
+                                     | {k: v for k, v in cb.items() if k in fb}}
         try:
             cls.ocr = pipeline.RapidOcrAdapter()
         except ImportError:  # optional dependency (installed in the server image)

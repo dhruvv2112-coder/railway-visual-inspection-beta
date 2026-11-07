@@ -685,3 +685,11 @@ def test_printable_report_shows_location_confidence_notes_inventory(client, mode
     rid = client.post(f"/ohe/sessions/{sid}/end", headers=PATROL).json()["report_id"]
     h = client.get(f"/ohe/reports/{rid}/html").text
     assert "26.91240, 75.78730 (photo stamp)" in h and "matches note" in h and "Everything seen in each photo" in h
+
+
+def test_routed_detectors_take_each_class_from_its_better_model():
+    from app.ohe import pipeline
+    a = FixDet([Det("insulator", 0.6, (0, 0, 10, 10)), Det("bird_nest", 0.9, (20, 20, 40, 40))])
+    b = FixDet([Det("insulator", 0.8, (1, 1, 11, 11)), Det("bird_nest", 0.3, (50, 50, 60, 60))])
+    out = pipeline.Routed(a, b, {"insulator"}).detect(None)
+    assert sorted((d.cls, d.score) for d in out) == [("bird_nest", 0.9), ("insulator", 0.8)]
