@@ -123,8 +123,9 @@ class Models:
             n = max(1, int(rcfg.get("rotation_views", settings.rotation_views)))
             secs = bool(rcfg.get("sections", settings.sections))
             angles = tuple(round(i * 360 / n) for i in range(n))
+            tiles = tuple(rcfg.get("tile_angles", (0, 90) if n > 1 else (0,)))
             if secs:
-                cls.detector = pipeline.Sectioned(base, full_angles=angles, tile_angles=(0, 90) if n > 1 else (0,))
+                cls.detector = pipeline.Sectioned(base, full_angles=angles, tile_angles=tiles)
             else:
                 cls.detector = pipeline.RotationTTA(base, angles=angles) if n > 1 else base
         vc = settings.model_dir / "ohe_assess.onnx"

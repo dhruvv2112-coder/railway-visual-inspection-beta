@@ -8,6 +8,7 @@ on:
       detector: {description: "current | v2 | combo (v2 for the classes in route, current for the rest)", default: "current"}
       route: {description: "Classes taken from v2 in combo mode, separated by |", default: "insulator|insulator_defect"}
       sections: {description: "v2: also inspect overlapping sections (true/false)", default: "true"}
+      rotation_views: {description: "v2: whole-photo views at right angles (1 or 4; 4 measured best)", default: "4"}
 permissions:
   contents: write
 concurrency: {group: draft, cancel-in-progress: false}
@@ -72,8 +73,9 @@ jobs:
             git fetch -q --depth 1 origin ci-ohe-calib-v2; git show FETCH_HEAD:reports/ohe_calibration.json > v2/ohe_calibration.json
             if [ "$DET" = v2 ]; then
               cp v2/ohe_detector.onnx v2/ohe_detector.names.json v2/ohe_calibration.json models/; echo "detector: v2"
-              # trained with rotation: one pass per view, no rotation merge (it added false alarms in tests)
-              echo '{"rotation_views": 1, "sections": ${{ github.event.inputs.sections || 'true' }}}' > models/ohe_runtime.json; cat models/ohe_runtime.json
+              # trained with rotation: 4 right-angle views (0.63 mAP50 upright and turned in tests); no 45-degree views,
+              # which added false alarms
+              echo '{"rotation_views": ${{ github.event.inputs.rotation_views || '4' }}, "sections": ${{ github.event.inputs.sections || 'true' }}, "tile_angles": [0]}' > models/ohe_runtime.json; cat models/ohe_runtime.json
             else
               cp v2/ohe_detector.onnx models/ohe_detector_b.onnx; cp v2/ohe_detector.names.json models/ohe_detector_b.names.json
               cp v2/ohe_calibration.json models/ohe_calibration_b.json
