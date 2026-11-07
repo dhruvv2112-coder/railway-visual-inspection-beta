@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
     inputs:
       tag: {description: "Release tag", default: "draft-1"}
+      detector: {description: "current | v2 | combo (v2 for the classes in route, current for the rest)", default: "current"}
+      route: {description: "Classes taken from v2 in combo mode, separated by |", default: "insulator|insulator_defect"}
 permissions:
   contents: write
 concurrency: {group: draft, cancel-in-progress: false}
@@ -61,6 +63,20 @@ jobs:
           git show FETCH_HEAD:reports/ohe_assess.json > models/ohe_assess.json
           if git fetch -q --depth 1 origin ci-ohe-calib 2>/dev/null; then
             git show FETCH_HEAD:reports/ohe_calibration.json > models/ohe_calibration.json && echo "calibration included"
+          fi
+          DET="${{ github.event.inputs.detector || 'current' }}"
+          if [ "$DET" != current ]; then
+            git fetch -q --depth 1 origin ci-ohe-train-v2; mkdir -p v2
+            git show FETCH_HEAD:reports/ohe_detector.onnx > v2/ohe_detector.onnx; git show FETCH_HEAD:reports/ohe_detector.names.json > v2/ohe_detector.names.json
+            git fetch -q --depth 1 origin ci-ohe-calib-v2; git show FETCH_HEAD:reports/ohe_calibration.json > v2/ohe_calibration.json
+            if [ "$DET" = v2 ]; then
+              cp v2/ohe_detector.onnx v2/ohe_detector.names.json v2/ohe_calibration.json models/; echo "detector: v2"
+            else
+              cp v2/ohe_detector.onnx models/ohe_detector_b.onnx; cp v2/ohe_detector.names.json models/ohe_detector_b.names.json
+              cp v2/ohe_calibration.json models/ohe_calibration_b.json
+              python3 -c "import json,sys; print(json.dumps({'from_b': sys.argv[1].split('|')}))" "${{ github.event.inputs.route }}" > models/ohe_route.json
+              echo "detector: combo, v2 for $(cat models/ohe_route.json)"
+            fi
           fi
           git fetch -q --depth 1 origin ci-scene-model      # whole-photo inventory (open vocabulary)
           for f in scene_detector.onnx scene_detector.names.json scene_vocabulary.json; do git show FETCH_HEAD:reports/$f > models/$f; done
