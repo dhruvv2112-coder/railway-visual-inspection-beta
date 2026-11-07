@@ -1,0 +1,567 @@
+{"source": "CPLID github.com/InsulatorData/InsulatorDataSet", "licence": "undetermined (user: use for training)", "source_names": ["defect", "insulator"]}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Repo card metadata block was not found. Setting CardData to empty.
+Generating train split:   0%|          | 0/1794 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 1794/1794 [00:00<00:00, 18629.72 examples/s]
+Generating validation split:   0%|          | 0/77 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 77/77 [00:00<00:00, 13615.57 examples/s]
+Generating test split:   0%|          | 0/41 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 41/41 [00:00<00:00, 14851.58 examples/s]
+features docmhvr/powerline-components-and-faults {'image': Image(mode=None, decode=True), 'bboxes': List(List(Value('float32'))), 'labels': List(ClassLabel(names=['Broken Cable', 'Broken Insulator', 'Cable', 'Insulators', 'Tower', 'Vegetation']))}
+box format evidence {'boxes': 3142, 'valid_as_xyxy': 1.0, 'overrun_as_xywh': 0.739}
+box format docmhvr/powerline-components-and-faults {'normalised': False, 'xyxy': True}
+sample docmhvr/powerline-components-and-faults train (640, 640) [[289.9665832519531, 88.19859313964844, 435.8779602050781, 321.6927185058594]] [0]
+sample docmhvr/powerline-components-and-faults validation (640, 640) [[340.25, 53.75, 353.75, 150.25], [407.5, 57.5, 415.5, 139.5], [400.5, 227.75, 411.5, 297.25]] [3, 3, 3]
+sample docmhvr/powerline-components-and-faults test (640, 640) [[393.0, 409.25, 442.0, 431.75], [266.0, 341.0, 489.0, 640.0], [150.0, 0.0, 640.0, 640.0]] [1, 3, 4]
+{"source": "hf:docmhvr/powerline-components-and-faults", "licence": "MIT", "source_names": ["Broken Cable", "Broken Insulator", "Cable", "Insulators", "Tower", "Vegetation"], "bbox_column": "bboxes"}
+Downloading data:   0%|          | 0/162 [00:00<?, ?files/s]Downloading data:  10%|▉         | 16/162 [00:01<00:14, 10.34files/s]Downloading data:  20%|█▉        | 32/162 [00:02<00:10, 12.86files/s]Downloading data:  30%|██▉       | 48/162 [00:03<00:08, 13.98files/s]Downloading data:  40%|███▉      | 64/162 [00:04<00:06, 14.85files/s]Downloading data:  49%|████▉     | 80/162 [00:05<00:05, 15.21files/s]Downloading data:  59%|█████▉    | 96/162 [00:06<00:04, 15.75files/s]Downloading data:  69%|██████▉   | 112/162 [00:07<00:03, 15.76files/s]Downloading data:  79%|███████▉  | 128/162 [00:07<00:02, 16.01files/s]Downloading data:  89%|████████▉ | 144/162 [00:08<00:01, 16.14files/s]Downloading data:  99%|█████████▉| 160/162 [00:09<00:00, 16.26files/s]Downloading data: 100%|██████████| 162/162 [00:10<00:00, 16.17files/s]
+Downloading data:   0%|          | 0/41 [00:00<?, ?files/s]Downloading data:  39%|███▉      | 16/41 [00:01<00:01, 13.75files/s]Downloading data:  78%|███████▊  | 32/41 [00:02<00:00, 14.96files/s]Downloading data: 100%|██████████| 41/41 [00:02<00:00, 15.86files/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 162 examples [00:00, 24368.87 examples/s]
+Generating validation split: 0 examples [00:00, ? examples/s]Generating validation split: 41 examples [00:00, 17554.76 examples/s]
+features silera/broken-insulators-synthetic-detection {'image': Image(mode=None, decode=True), 'objects': {'bbox': List(List(Value('int64'))), 'category': List(Value('int64'))}}
+box format evidence {'boxes': 203, 'valid_as_xyxy': 0.0, 'overrun_as_xywh': 0.0}
+box format silera/broken-insulators-synthetic-detection {'normalised': False, 'xyxy': False}
+sample silera/broken-insulators-synthetic-detection train (640, 640) [[280, 513, 58, 46]] [1]
+sample silera/broken-insulators-synthetic-detection validation (640, 640) [[325, 232, 43, 88]] [1]
+{"source": "hf:silera/broken-insulators-synthetic-detection", "licence": "CC BY 4.0", "source_names": [], "bbox_column": "objects"}
+{"source": "roboflow railway catenary/panto sets", "skipped": "no ROBOFLOW_API_KEY"}
+hf_files EPDCL/pd-defect 16489 files {'vegetation_conductor/train': 1324, 'pole_lean_assessment/object_detection/train/images': 1441, 'pole_detection/train/images': 1665, 'pole_detection/test/images': 294, 'pole_lean_assessment/object_detection/test/images': 179, 'pole_detection/valid/images': 293, 'vegetation_conductor/valid': 457, 'pole_lean_assessment/object_detection/valid/images': 181, 'vegetation_conductor/examples': 3, 'pole_detection/examples': 1}
+epdcl pole_detection # Pole Detection Module - PD-Defect
+
+Collection, licensing, and citation are documented on the [main dataset card](../README.md).
+
+## TL;DR
+
+Object detection of distribution poles in full-frame smartphone images. The release contains 2,252 annotated images and 2,425 pole instances.
+
+## Task Definition
+
+Localize poles from top to base in full-frame field images, including scenes that contain more than one pole.
+
+## Label Definitions
+
+- **Pole:** a distribution pole annotated from top to base. The released class name is `Pole` (class 0).
+
+## Annotation Protocol
+
+Only structurally identifiable distribution poles are annotated. Telecommunication poles and other non-distribution vertical structures are not labeled. Bounding boxes run from pole top to base and follow the shaft tightly. Attached components such as crossarms and insulators are included when they overlap the visible pole extent; this differs from [Pole Lean Assessment](../pole_lean_assessment/README.md) object detection, where those fittings are excluded. When the base is only partially visible, annotators estimate the ground-contact location according to protocol. Samples that cannot be interpreted reliably are excluded.
+
+
+yolo_tree epdclpole: 2252 images, 0 skipped (no label file)
+epdcl vegetation_conductor # Vegetation–Conductor Segmentation Module - PD-Defect
+
+Collection, licensing, and citation are documented on the [main dataset card](../README.md).
+
+## TL;DR
+
+Semantic segmentation of vegetation and conductors in distribution scenes. Annotations are COCO polygons (`1 = Conductor`, `2 = Vegetation`) that rasterize to per-class masks. The release contains 1,781 images (1,324 train (74.34%) / 457 validation (25.66%)) and has no test split. An image-level Risky / Safe Ground Truth file is provided for the validation split. Thin low-contrast conductors, occlusion, and severe class imbalance are present in the data.
+
+## Task Definition
+
+Segment vegetation and conductors at the pixel level.
+
+## Label Definitions
+
+- **Vegetation:** trees, branches, leaves, and other plant structure within the conductor corridor or its immediate vicinity relevant to clearance assessment (see Annotation Protocol).
+- **Conductor:** electrical conductors associated with distribution infrastructure
+- **Background:** all regions not covered by a Conductor or Vegetation polygon (implicit; not separately annotated)
+
+The masks define regions only. They do not encode distance or clearance risk. Risk labels are prov
+epdcl pole_lean_assessment/object_detection no README
+yolo_tree epdcllean: 1801 images, 0 skipped (no label file)
+{"source": "hf:EPDCL/pd-defect/pole_lean_assessment/object_detection", "licence": "CC BY 4.0", "source_names": ["Leaned_Pole", "Straight_Pole"], "mapped_to": null, "files_seen": 1801, "skipped_no_label_file": 0}
+downloaded RailFOD23_v2.zip 6504.7 MB
+railfod23 jsons ['coco/New_an/instances_train2017.json', 'coco/New_an/instances_val2017.json', 'coco/New_an/train_val.json'] images 14615
+{"source": "figshare:RailFOD23 (24180738)", "licence": "CC BY 4.0", "source_names": ["niaocao", "piaofuwu", "qiqiu", "suliaodai"], "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"}
+downloaded vpmbgi.zip 71.2 MB
+yolo_tree vpmbgi: 1010 images, 0 skipped (no label file)
+{"source": "github:phd-benel/VPMBGI", "licence": "CC BY 4.0", "source_names": ["iso_broken_glass"], "mapped_to": null, "files_seen": 1010, "skipped_no_label_file": 0}
+yolo_tree corros: 1249 images, 0 skipped (no label file)
+{"source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)", "licence": "CC BY 4.0", "source_names": ["Slippage", "corrosion", "crack"], "mapped_to": null, "files_seen": 1249, "skipped_no_label_file": 0}
+hf_files ToXiN0/Powerlines-detection 9198 files {'images/train': 3000, 'images/val': 1598}
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Ftrain%2FINSULATOR%20ANNOTATION.V1I.COCO_196C2_jpg.rf.1115e686de149937d8be3f325b5602d7.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Ftrain%2FINSULATOR+ANNOTATION.V1I.COCO_196C2_jpg.rf.1115e686de149937d8be3f325b5602d7.txt=&etag=%22c8ed1abb6e0ba8d8bbca76f9dcbed5500473b6c8%22
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_197W1_jpg.rf.6113aafc5628a25cacf2a6b4f94a90ae.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_198C2_jpg.rf.27855906d8e20b80fc6120c36828c1bd.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_199W1_jpg.rf.25079fcbb982eb3b38ee9444c78ca991.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_19W1_jpg.rf.090cdd256a9247b2977883480bc72c99.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_196W2_jpg.rf.2898bf093e32f89b5cdeded2c0eac059.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_197C2_jpg.rf.ed6be385055f87d855336f42129c71fb.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/INSULATOR%20ANNOTATION.V1I.COCO_19W2_jpg.rf.efd3f993e599944b6e9327ca767ae6eb.txt
+Rate limited. Waiting 39.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Ftrain%2FMONITORING-VL-POLYMER-2024-05-07_DJI_0008_JPG.rf.97b0a9d215eabcd483ded837f4a6cb17.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Ftrain%2FMONITORING-VL-POLYMER-2024-05-07_DJI_0008_JPG.rf.97b0a9d215eabcd483ded837f4a6cb17.txt=&etag=%2258ab940dac2c4582e1e6c7edb6daa392f2c45d7c%22
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/MONITORING-VL-POLYMER-2024-05-07_DJI_0010_JPG.rf.6bf53dcb09654a75a7b0130ed57b6271.txt
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Ftrain%2FMONITORING-VL-POLYMER-2024-05-07_DJI_0009_JPG.rf.00dd73a9700a5e5272120cd4ecaafe17.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Ftrain%2FMONITORING-VL-POLYMER-2024-05-07_DJI_0009_JPG.rf.00dd73a9700a5e5272120cd4ecaafe17.txt=&etag=%22880f102181dfb91c7c4a30c89e4a20b3a32b3e98%22
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/MONITORING-VL-POLYMER-2024-05-07_DJI_0011_JPG.rf.2b280bcd969e4623e91ac29ab3952d60.txt
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/MONITORING-VL-POLYMER-2024-05-07_DJI_0011_JPG.rf.9ffdb516bcdbc1cd24a9c576e2bf61eb.txt
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/MONITORING-VL-POLYMER-2024-05-07_DJI_0009_JPG.rf.544584d298887348afb84c70b77170e1.txt
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/MONITORING-VL-POLYMER-2024-05-07_DJI_0009_JPG.rf.d3a777161d1c51ea71ff82dc415e0acf.txt
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/MONITORING-VL-POLYMER-2024-05-07_DJI_0012_JPG.rf.c0b52aa48d019d7ca4d0cb23f397b792.txt
+Rate limited. Waiting 259.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Ftrain%2Fpolymer_insulators_IMG-4549_jpg.rf.cece9f08db8939d9d9e54bbbf875dd9e.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Ftrain%2Fpolymer_insulators_IMG-4549_jpg.rf.cece9f08db8939d9d9e54bbbf875dd9e.txt=&etag=%22ca2ff4e1579d1cf6d2ffa05f989599f70abacf96%22
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Ftrain%2Fpolymer_insulators_IMG-4566_jpg.rf.2e9e0fc97e0a89104f2184e997e9bfae.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Ftrain%2Fpolymer_insulators_IMG-4566_jpg.rf.2e9e0fc97e0a89104f2184e997e9bfae.txt=&etag=%2249843398169c2eac844f0bc26eec607c3b1ae7a3%22
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/polymer_insulators_IMG-4552_jpg.rf.9aa827f1099f4a27003e61f150809afd.txt
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/polymer_insulators_IMG-4552_jpg.rf.e90abf370cc34472a079d12b5af73f35.txt
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/polymer_insulators_IMG-4568_jpg.rf.7c68c816d3161684e0ae3b0396027af4.txt
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/polymer_insulators_IMG-4568_jpg.rf.fdbf06ee80af1586b55777d0f9717f6a.txt
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/polymer_insulators_IMG-4569_jpg.rf.85e12a51b170efb73cf822843c021825.txt
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/train/polymer_insulators_IMG-4570_jpg.rf.691873de4e16cefc03d7e21fbcd9ecc2.txt
+Rate limited. Waiting 258.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Fval%2FIRASET.V1I.YOLOV7PYTORCH.1_z3941022635675_2550373ce55eff1bf17caaf094d3f1c9_jpg.rf.1a51bc111bf87e8f1aeb8db82eadeb8e.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Fval%2FIRASET.V1I.YOLOV7PYTORCH.1_z3941022635675_2550373ce55eff1bf17caaf094d3f1c9_jpg.rf.1a51bc111bf87e8f1aeb8db82eadeb8e.txt=&etag=%2269f1b00683e5147aee1cdde03c870b0031ed8668%22
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Fval%2FIRASET.V1I.YOLOV7PYTORCH.1_z3941022655061_40c245dc2168a2c18df8b7772b684fbb_jpg.rf.8187f0e840bfbd698504ce122dd10b44.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Fval%2FIRASET.V1I.YOLOV7PYTORCH.1_z3941022655061_40c245dc2168a2c18df8b7772b684fbb_jpg.rf.8187f0e840bfbd698504ce122dd10b44.txt=&etag=%22b8e17f1d0ab5d7712ee0e79f9827ae9fa519accc%22
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting GET https://huggingface.co/api/resolve-cache/datasets/ToXiN0/Powerlines-detection/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels%2Fval%2FIRASET.V1I.YOLOV7PYTORCH.1_z3941022729816_73fb45d2de1d3e926510d94fe0b22394_jpg.rf.7c7bea944102bb9368ab29232da4d809.txt?%2Fdatasets%2FToXiN0%2FPowerlines-detection%2Fresolve%2Fc5bce8f4a034724afeb5158d05f00937f42ee11c%2Flabels%2Fval%2FIRASET.V1I.YOLOV7PYTORCH.1_z3941022729816_73fb45d2de1d3e926510d94fe0b22394_jpg.rf.7c7bea944102bb9368ab29232da4d809.txt=&etag=%226d3c65f3ffee9c2f7fa0a459f8786c7bec4010d2%22
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/val/IRASET.V1I.YOLOV7PYTORCH.1_z3943444283420_e57a3713c7d07674c8b49de38a133992_jpg.rf.7ee77d12c648c59a2374b04c4fffa673.txt
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/val/IRASET.V1I.YOLOV7PYTORCH.1_z3943444268827_212a1bc43376d2fa2cb7617e54b55140_jpg.rf.5a1ef869538ed9692987a2e4157643eb.txt
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/val/IRASET.V1I.YOLOV7PYTORCH.1_z3941022809586_aac3b2ea974218cf76bb9190c73e93fa_jpg.rf.423206efb71a87ea685cb060b91ea5eb.txt
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/val/IRASET.V1I.YOLOV7PYTORCH.1_z3941022752560_37bbd1bba348f1173c65f8ea4c83353e_jpg.rf.c39dbbb61fa1919e9f3b9acb97284fc8.txt
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+HTTP Error 429 thrown while requesting HEAD https://huggingface.co/datasets/ToXiN0/Powerlines-detection/resolve/c5bce8f4a034724afeb5158d05f00937f42ee11c/labels/val/IRASET.V1I.YOLOV7PYTORCH.1_z3943444286758_479d969fc56128fb2eddfa7b754e9c7a_jpg.rf.14a779c855baaa9470af5649d3cfb5b4.txt
+Rate limited. Waiting 260.0s before retry [Retry 1/5].
+yolo_tree toxin0: 4598 images, 0 skipped (no label file)
+{"source": "hf:ToXiN0/Powerlines-detection", "licence": "Apache-2.0", "source_names": ["vibration_damper", "festoon_insulators", "polymer_insulators", "traverse", "nest", "bad_insulator", "damaged_insulator", "safety_sign+"], "mapped_to": null, "files_seen": 4598, "skipped_no_label_file": 0}
+downloaded porcelain_MPID-20250106T111149Z-001.zip 1625.4 MB
+yolo_tree mpidporc: 2653 images, 0 skipped (no label file)
+downloaded composite_MPID-20250106T113900Z-001.zip 389.6 MB
+yolo_tree mpidcomp: 646 images, 0 skipped (no label file)
+downloaded glass_MPID-20250106T113616Z-001.zip 1863.8 MB
+yolo_tree mpidglas: 1720 images, 0 skipped (no label file)
+{"source": "zenodo:14604384/glass_MPID-20250106T113616Z-001.zip", "licence": "CC BY 4.0", "source_names": ["1"], "mapped_to": "insulator", "files_seen": 1720, "skipped_no_label_file": 0}
+{
+ "target_names": [
+  "insulator",
+  "insulator_defect",
+  "bird_nest",
+  "vegetation",
+  "mast",
+  "foreign_object",
+  "corrosion"
+ ],
+ "sources": [
+  {
+   "source": "CPLID github.com/InsulatorData/InsulatorDataSet",
+   "licence": "undetermined (user: use for training)",
+   "source_names": [
+    "defect",
+    "insulator"
+   ]
+  },
+  {
+   "source": "hf:docmhvr/powerline-components-and-faults",
+   "licence": "MIT",
+   "source_names": [
+    "Broken Cable",
+    "Broken Insulator",
+    "Cable",
+    "Insulators",
+    "Tower",
+    "Vegetation"
+   ],
+   "bbox_column": "bboxes"
+  },
+  {
+   "source": "hf:silera/broken-insulators-synthetic-detection",
+   "licence": "CC BY 4.0",
+   "source_names": [],
+   "bbox_column": "objects"
+  },
+  {
+   "source": "roboflow railway catenary/panto sets",
+   "skipped": "no ROBOFLOW_API_KEY"
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/pole_detection",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Pole"
+   ],
+   "mapped_to": null,
+   "files_seen": 2252,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/vegetation_conductor",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Conductor",
+    "Vegetation"
+   ],
+   "files_seen": 1781
+  },
+  {
+   "source": "hf:EPDCL/pd-defect/pole_lean_assessment/object_detection",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Leaned_Pole",
+    "Straight_Pole"
+   ],
+   "mapped_to": null,
+   "files_seen": 1801,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "figshare:RailFOD23 (24180738)",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "niaocao",
+    "piaofuwu",
+    "qiqiu",
+    "suliaodai"
+   ],
+   "note": "railway transmission-line foreign objects; part of the set is synthesised (paper)"
+  },
+  {
+   "source": "github:phd-benel/VPMBGI",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "iso_broken_glass"
+   ],
+   "mapped_to": null,
+   "files_seen": 1010,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "hf:LibreYOLO/corrosion-bi3q3 (Roboflow 100)",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "Slippage",
+    "corrosion",
+    "crack"
+   ],
+   "mapped_to": null,
+   "files_seen": 1249,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "hf:ToXiN0/Powerlines-detection",
+   "licence": "Apache-2.0",
+   "source_names": [
+    "vibration_damper",
+    "festoon_insulators",
+    "polymer_insulators",
+    "traverse",
+    "nest",
+    "bad_insulator",
+    "damaged_insulator",
+    "safety_sign+"
+   ],
+   "mapped_to": null,
+   "files_seen": 4598,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "zenodo:14604384/porcelain_MPID-20250106T111149Z-001.zip",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "iso-su"
+   ],
+   "mapped_to": "insulator",
+   "files_seen": 2653,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "zenodo:14604384/composite_MPID-20250106T113900Z-001.zip",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "iso_poly"
+   ],
+   "mapped_to": "insulator",
+   "files_seen": 646,
+   "skipped_no_label_file": 0
+  },
+  {
+   "source": "zenodo:14604384/glass_MPID-20250106T113616Z-001.zip",
+   "licence": "CC BY 4.0",
+   "source_names": [
+    "1"
+   ],
+   "mapped_to": "insulator",
+   "files_seen": 1720,
+   "skipped_no_label_file": 0
+  }
+ ],
+ "stats": {
+  "cplid": {
+   "images": {
+    "train": 553,
+    "val": 159,
+    "test": 136
+   },
+   "instances": {
+    "insulator": 1321,
+    "insulator_defect": 248,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "powerline-co": {
+   "images": {
+    "train": 1794,
+    "val": 77,
+    "test": 41
+   },
+   "instances": {
+    "insulator": 7124,
+    "insulator_defect": 1232,
+    "bird_nest": 0,
+    "vegetation": 309,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "broken-insul": {
+   "images": {
+    "train": 162,
+    "val": 41,
+    "test": 0
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 203,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdclpole": {
+   "images": {
+    "train": 1665,
+    "val": 293,
+    "test": 294
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 2425,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdclvege": {
+   "images": {
+    "train": 1245,
+    "val": 253,
+    "test": 283
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 4587,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "epdcllean": {
+   "images": {
+    "train": 1441,
+    "val": 181,
+    "test": 179
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 2182,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "railfod": {
+   "images": {
+    "train": 3000,
+    "val": 400,
+    "test": 400
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 2476,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 7995,
+    "corrosion": 0
+   }
+  },
+  "vpmbgi": {
+   "images": {
+    "train": 686,
+    "val": 163,
+    "test": 161
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 1188,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "corros": {
+   "images": {
+    "train": 840,
+    "val": 304,
+    "test": 105
+   },
+   "instances": {
+    "insulator": 0,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 1657
+   }
+  },
+  "toxin0": {
+   "images": {
+    "train": 3000,
+    "val": 400,
+    "test": 400
+   },
+   "instances": {
+    "insulator": 10070,
+    "insulator_defect": 1091,
+    "bird_nest": 130,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "mpidporc": {
+   "images": {
+    "train": 1868,
+    "val": 400,
+    "test": 374
+   },
+   "instances": {
+    "insulator": 3308,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "mpidcomp": {
+   "images": {
+    "train": 461,
+    "val": 93,
+    "test": 92
+   },
+   "instances": {
+    "insulator": 905,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  },
+  "mpidglas": {
+   "images": {
+    "train": 1189,
+    "val": 273,
+    "test": 258
+   },
+   "instances": {
+    "insulator": 4143,
+    "insulator_defect": 0,
+    "bird_nest": 0,
+    "vegetation": 0,
+    "dropper": 0,
+    "number_plate": 0,
+    "catenary": 0,
+    "pantograph": 0,
+    "mast": 0,
+    "foreign_object": 0,
+    "corrosion": 0
+   }
+  }
+ }
+}
